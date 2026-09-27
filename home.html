@@ -1,0 +1,467 @@
+<title>About Me</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=Schibsted+Grotesk:wght@500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* ── Tokens ─────────────────────────────────────────────── */
+:root {
+  --paper:    #ECEEE9;   /* the desk / margins */
+  --page:     #F7F8F4;   /* the sheet you read on */
+  --ink:      #1C2230;   /* blue-black fountain-pen ink */
+  --graphite: #5E6573;   /* prompts, meta, secondary */
+  --rule:     #CDD1C8;
+  --accent:   #2D4B8E;   /* ink blue: links, "changed" marks */
+  --accent-soft: #DCE3F1;
+  --shadow:   rgba(28, 34, 48, .08);
+
+  --serif: "Newsreader", "Iowan Old Style", "Palatino", Georgia, serif;
+  --label: "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --mono:  "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* Type scale (pt ≈ CSS px on iPad) */
+  --t-hero: clamp(56px, 8vw, 92px);
+  --t-chapter: clamp(34px, 4.2vw, 44px);
+  --t-now: clamp(24px, 2.6vw, 30px);
+  --t-body: 19px;
+  --t-small: 15px;
+  --t-label: 12px;
+  --t-meta: 12.5px;
+
+  /* Book column */
+  --measure: 640px;
+  --gutter: clamp(20px, 7vw, 96px);
+  --bar-h: 56px;
+  --side-w: 232px;
+  --ctx-w: 300px;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #12151B; --page: #191D25; --ink: #E4E7E1; --graphite: #9AA1AD;
+    --rule: #2D333E; --accent: #93AAE2; --accent-soft: #232C40; --shadow: rgba(0,0,0,.35);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #12151B; --page: #191D25; --ink: #E4E7E1; --graphite: #9AA1AD;
+  --rule: #2D333E; --accent: #93AAE2; --accent-soft: #232C40; --shadow: rgba(0,0,0,.35);
+  color-scheme: dark;
+}
+
+/* ── Base ───────────────────────────────────────────────── */
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--page); color: var(--ink);
+  font: 400 var(--t-body)/1.55 var(--serif);
+  font-optical-sizing: auto; -webkit-font-smoothing: antialiased;
+}
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+a { color: inherit; text-decoration: none; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+h1, h2, h3 { font-weight: 400; margin: 0; text-wrap: balance; }
+p { margin: 0; }
+.label {
+  font: 600 var(--t-label)/1 var(--label); letter-spacing: .14em; text-transform: uppercase; color: var(--graphite);
+}
+.meta { font: 400 var(--t-meta)/1.4 var(--mono); color: var(--graphite); font-variant-numeric: tabular-nums; }
+
+/* ── App frame: one column by default (portrait / compact) ─ */
+.app { min-height: 100dvh; display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 1fr; }
+.topbar {
+  grid-column: 1 / -1; position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
+  height: var(--bar-h); display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
+  padding-inline: max(16px, env(safe-area-inset-left, 0px)) max(16px, env(safe-area-inset-right, 0px));
+  background: color-mix(in srgb, var(--page) 88%, transparent);
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid transparent; transition: border-color .2s;
+}
+.topbar.scrolled { border-bottom-color: var(--rule); }
+.topbar .wordmark { font: 600 13px/1 var(--label); letter-spacing: .24em; text-transform: uppercase; }
+.topbar .end { justify-self: end; display: flex; gap: 4px; }
+.icon-btn {
+  width: 44px; height: 44px; display: grid; place-items: center; border-radius: 22px; color: var(--ink);
+}
+.icon-btn:hover { background: var(--accent-soft); }
+.icon-btn svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.6; stroke-linecap: round; }
+.more-btn { display: none; }
+
+.sidebar, .context { display: none; }
+.main { min-width: 0; padding-inline: var(--gutter); padding-block: 40px 120px; }
+.column { max-width: var(--measure); margin-inline: auto; }
+
+/* ── Landscape, regular width: sidebar + page ───────────── */
+@media (orientation: landscape) and (min-width: 900px) {
+  .app { grid-template-columns: var(--side-w) minmax(0, 1fr); background: var(--paper); }
+  .topbar { grid-template-columns: var(--side-w) 1fr auto; background: color-mix(in srgb, var(--paper) 90%, transparent); }
+  .topbar .start { display: none; }
+  .topbar .wordmark { justify-self: start; padding-left: 12px; }
+  .more-btn { display: grid; }
+  .sidebar {
+    display: block; position: sticky; top: calc(var(--bar-h) + env(safe-area-inset-top, 0px));
+    align-self: start; height: calc(100dvh - var(--bar-h) - env(safe-area-inset-top, 0px));
+    overflow-y: auto; padding: 24px 12px 32px max(12px, env(safe-area-inset-left, 0px));
+  }
+  .main {
+    background: var(--page); border-radius: 14px 0 0 0;
+    box-shadow: -1px 0 0 var(--rule), -12px 0 24px -18px var(--shadow);   /* the spine */
+    padding-inline: clamp(40px, 5vw, 80px); padding-block: 56px 120px;
+  }
+  .chapters-index { display: none; }   /* the sidebar is the index now */
+  .home-toc-note { display: block; }
+}
+/* ── Landscape, wide: + context panel ───────────────────── */
+@media (orientation: landscape) and (min-width: 1100px) {
+  .app { grid-template-columns: var(--side-w) minmax(0, 1fr) var(--ctx-w); }
+  .topbar { grid-template-columns: var(--side-w) 1fr auto; }
+  .main { border-radius: 14px 14px 0 0; box-shadow: -1px 0 0 var(--rule), 1px 0 0 var(--rule), -12px 0 24px -18px var(--shadow); }
+  .context {
+    display: block; position: sticky; top: calc(var(--bar-h) + env(safe-area-inset-top, 0px)); align-self: start;
+    height: calc(100dvh - var(--bar-h) - env(safe-area-inset-top, 0px)); overflow-y: auto;
+    padding: 32px max(24px, env(safe-area-inset-right, 0px)) 32px 28px;
+  }
+}
+
+/* ── Sidebar / drawer nav ───────────────────────────────── */
+.nav { display: grid; gap: 2px; }
+.nav a {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 8px;
+  padding: 10px 12px; border-radius: 8px; font: 500 13px/1.2 var(--label); letter-spacing: .12em; text-transform: uppercase; color: var(--graphite);
+}
+.nav a:hover { color: var(--ink); background: color-mix(in srgb, var(--accent-soft) 60%, transparent); }
+.nav a[aria-current="page"] { color: var(--ink); background: var(--page); box-shadow: 0 1px 0 var(--rule); }
+.nav a .count { font: 400 11px/1 var(--mono); letter-spacing: 0; color: var(--graphite); }
+.nav .gap { height: 14px; }
+.nav-foot { margin-top: 28px; padding: 16px 12px 0; border-top: 1px solid var(--rule); }
+
+/* ── Home: masthead ─────────────────────────────────────── */
+.masthead { display: grid; gap: 14px; padding-block: 24px 8px; }
+.masthead h1 { font-size: var(--t-hero); line-height: .95; letter-spacing: -.02em; font-weight: 350; }
+.masthead .sub { font-style: italic; font-size: 24px; color: var(--graphite); font-weight: 300; }
+.masthead .meta { margin-top: 6px; }
+
+.section { margin-top: 88px; }
+.section-head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding-bottom: 14px; border-bottom: 1px solid var(--rule); }
+
+/* ── Right now ──────────────────────────────────────────── */
+.now { display: grid; gap: 0; }
+.now li { list-style: none; padding-block: 22px; border-bottom: 1px solid var(--rule); display: grid; gap: 8px; }
+.now ul { margin: 0; padding: 0; }
+.now .sentence { font-size: var(--t-now); line-height: 1.3; font-weight: 380; }
+.now .sentence em { font-style: italic; color: var(--graphite); font-weight: 300; }
+.add-line {
+  margin-top: 18px; display: inline-flex; align-items: center; gap: 10px; font: 500 14px/1 var(--label); color: var(--accent); padding: 10px 0;
+}
+.add-line::before { content: "+"; font: 300 22px/1 var(--serif); }
+
+/* ── Chapters (portrait): sections of a book, not buttons ─ */
+.chapters-index { margin-top: 104px; }
+.chapter {
+  display: grid; gap: 10px; padding-block: 44px; border-top: 1px solid var(--rule);
+  grid-template-columns: minmax(0, 1fr) auto; column-gap: 24px;
+}
+.chapter:last-child { border-bottom: 1px solid var(--rule); }
+.chapter .label { grid-column: 1 / -1; }
+.chapter h2 { font-size: var(--t-chapter); line-height: 1.05; font-weight: 350; letter-spacing: -.01em; }
+.chapter .go { align-self: end; font: 300 30px/1 var(--serif); color: var(--graphite); transition: transform .2s, color .2s; }
+.chapter:hover .go { color: var(--accent); transform: translateX(4px); }
+.chapter .contents { grid-column: 1 / -1; font-size: 20px; line-height: 1.6; color: var(--ink); }
+.chapter .contents span + span::before { content: "·"; color: var(--rule); padding-inline: .45em; }
+.chapter .meta { grid-column: 1 / -1; margin-top: 4px; }
+.chapter .meta b { font-weight: 500; color: var(--accent); }
+
+.home-toc-note { display: none; }
+
+/* ── Lately: the evolution record ───────────────────────── */
+.thread { margin-top: 28px; display: grid; gap: 0; position: relative; padding-left: 28px; }
+.thread::before { content: ""; position: absolute; left: 5px; top: 10px; bottom: 10px; width: 1px; background: var(--rule); }
+.thread .step { position: relative; padding-block: 10px 18px; display: grid; gap: 4px; }
+.thread .step::before {
+  content: ""; position: absolute; left: -28px; top: 18px; width: 11px; height: 11px; border-radius: 50%;
+  background: var(--page); border: 1.5px solid var(--graphite);
+}
+.thread .step.now-step::before { background: var(--accent); border-color: var(--accent); }
+.thread .quote { font-size: 23px; line-height: 1.35; font-style: italic; font-weight: 330; }
+.thread .step:not(.now-step) .quote { color: var(--graphite); }
+.thread-title { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-top: 40px; }
+.thread-title h3 { font-size: 26px; font-weight: 400; }
+
+.change { margin-top: 48px; display: grid; grid-template-columns: 1fr auto 1fr; gap: 8px 20px; align-items: baseline; }
+.change .col { display: grid; gap: 6px; }
+.change .was { font-size: 22px; color: var(--graphite); text-decoration: line-through; text-decoration-color: color-mix(in srgb, var(--graphite) 55%, transparent); text-decoration-thickness: 1px; }
+.change .is { font-size: 22px; }
+.change .arrow { font: 300 26px/1 var(--serif); color: var(--accent); align-self: end; padding-bottom: 2px; }
+.change .why { grid-column: 1 / -1; margin-top: 12px; font-size: 19px; font-style: italic; color: var(--ink); padding-left: 16px; border-left: 2px solid var(--accent-soft); }
+.link { font: 500 14px/1 var(--label); color: var(--accent); white-space: nowrap; }
+.link:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+.sample-note { margin-top: 96px; }
+
+/* ── Context panel (landscape wide) ─────────────────────── */
+.ctx-block { display: grid; gap: 18px; }
+.ctx-block + .ctx-block { margin-top: 40px; padding-top: 28px; border-top: 1px solid var(--rule); }
+.ctx-item { display: grid; gap: 4px; }
+.ctx-item .v { font-size: 19px; line-height: 1.3; }
+.ctx-item .v.changed { color: var(--accent); }
+
+/* ── Chapter page ───────────────────────────────────────── */
+.chapter-page .opening { display: grid; gap: 12px; padding-block: 24px 16px; }
+.chapter-page h1 { font-size: var(--t-hero); line-height: .95; font-weight: 350; letter-spacing: -.02em; }
+.chapter-page .tagline { font-style: italic; font-size: 24px; color: var(--graphite); font-weight: 300; }
+.part { padding-block: 32px; border-bottom: 1px solid var(--rule); display: grid; gap: 8px; }
+.part:first-of-type { border-top: 1px solid var(--rule); margin-top: 48px; }
+.part h2 { font: 600 13px/1.2 var(--label); letter-spacing: .16em; text-transform: uppercase; }
+.part .desc { font-style: italic; color: var(--graphite); font-size: 18px; }
+.part .entry { font-size: 21px; line-height: 1.4; margin-top: 6px; }
+.part .row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.history-foot { margin-top: 64px; padding: 28px 0; display: grid; gap: 8px; }
+.history-foot p { font-size: 21px; }
+
+/* ── Drawer + search sheet ──────────────────────────────── */
+.scrim { position: fixed; inset: 0; z-index: 40; background: rgba(12, 16, 24, .32); opacity: 0; pointer-events: none; transition: opacity .25s; }
+.scrim.open { opacity: 1; pointer-events: auto; }
+.drawer {
+  position: fixed; z-index: 50; top: 0; bottom: 0; left: 0; width: min(320px, 86vw);
+  background: var(--paper); transform: translateX(-102%); transition: transform .3s cubic-bezier(.2,.8,.2,1);
+  padding: calc(env(safe-area-inset-top, 0px) + 16px) 16px 24px max(16px, env(safe-area-inset-left, 0px)); overflow-y: auto;
+  box-shadow: 1px 0 0 var(--rule);
+}
+.drawer.open { transform: none; }
+.drawer-head { display: flex; justify-content: space-between; align-items: center; padding: 0 0 16px 12px; }
+.sheet {
+  position: fixed; z-index: 50; left: 50%; top: calc(env(safe-area-inset-top, 0px) + 72px); width: min(640px, calc(100vw - 32px));
+  transform: translate(-50%, -12px); opacity: 0; pointer-events: none; transition: opacity .2s, transform .25s;
+  background: var(--page); border-radius: 16px; box-shadow: 0 0 0 1px var(--rule), 0 24px 60px -20px var(--shadow);
+  padding: 8px; max-height: 70dvh; display: flex; flex-direction: column;
+}
+.sheet.open { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
+.sheet input {
+  width: 100%; border: 0; background: transparent; font: 400 24px/1.2 var(--serif); color: var(--ink); padding: 14px 14px; outline: none;
+}
+.sheet input::placeholder { color: var(--graphite); font-style: italic; }
+.results { overflow-y: auto; border-top: 1px solid var(--rule); }
+.results a { display: flex; justify-content: space-between; gap: 12px; padding: 12px 14px; border-radius: 8px; font-size: 18px; }
+.results a:hover, .results a:focus-visible { background: var(--accent-soft); }
+.results .empty { padding: 16px 14px; color: var(--graphite); font-style: italic; }
+
+@media (max-width: 520px) {
+  .change { grid-template-columns: 1fr; }
+  .change .arrow { transform: rotate(90deg); justify-self: start; }
+  .section { margin-top: 64px; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="app" id="app">
+  <header class="topbar" id="topbar">
+    <div class="start">
+      <button class="icon-btn" id="menuBtn" aria-label="Open contents" aria-controls="drawer">
+        <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
+      </button>
+    </div>
+    <a class="wordmark" href="#home">About Me</a>
+    <div class="end">
+      <button class="icon-btn" id="searchBtn" aria-label="Search the archive">
+        <svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 20 20"/></svg>
+      </button>
+      <button class="icon-btn more-btn" aria-label="More options">
+        <svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="19" cy="12" r="1.3"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <aside class="sidebar" aria-label="Contents"><nav class="nav" id="sideNav"></nav><div class="nav-foot meta" id="sideFoot"></div></aside>
+  <main class="main" id="main"></main>
+  <aside class="context" id="context" aria-label="Context"></aside>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="Contents">
+  <div class="drawer-head">
+    <span class="label">Contents</span>
+    <button class="icon-btn" id="drawerClose" aria-label="Close contents"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+  </div>
+  <nav class="nav" id="drawerNav"></nav>
+</aside>
+<div class="sheet" id="sheet" role="dialog" aria-label="Search">
+  <input id="q" type="search" placeholder="Search everything you’ve written…" autocomplete="off">
+  <div class="results" id="results"></div>
+</div>
+
+<script>
+/* ── Sample archive (placeholder content from the brief) ── */
+const person = { name: "London", line: "An ongoing record of me.", begun: "January 2026", entries: 214 };
+
+const rightNow = [
+  { lead: "I’m into", text: "design, and the way good apps feel in your hand.", since: "Aug 2026" },
+  { lead: "I’m thinking about", text: "moving somewhere with more light and more space.", since: "Sep 2026" },
+  { lead: "I’m learning", text: "web development, one small project at a time.", since: "Apr 2026" },
+  { lead: "I’m working toward", text: "a portfolio I’m proud to send people.", since: "Jul 2026" },
+];
+
+const chapters = [
+  { id: "myself", title: "Myself", tagline: "Who I am", entries: 41, changes: 4,
+    parts: [
+      ["Personality", "How I naturally behave.", "I recharge alone, but I light up in small groups."],
+      ["Values", "What matters to me.", "Honesty over comfort, almost always."],
+      ["Standards", "What I expect from myself and other people.", "Say what you mean and follow through."],
+      ["Beliefs", "What I hold to be true.", null],
+      ["Perspectives", "How I currently see things.", "Most things take longer than they should, and that’s fine."],
+      ["Things I care about", null, null], ["Things I don’t care about", null, null], ["How I see myself", null, null] ] },
+  { id: "life", title: "My Life", tagline: "The shape of things", entries: 58, changes: 7,
+    parts: [["Career", "What I do and want to do.", "Web and app development."], ["Education", null, null], ["Money", null, null], ["Home", null, null],
+      ["Health", null, null], ["Relationships", null, null], ["Friendships", null, null], ["Goals", null, null], ["Plans", null, null]] },
+  { id: "taste", title: "My Taste", tagline: "What I’m drawn to", entries: 49, changes: 3,
+    parts: [["Colors", null, "Deep blues, anything close to ink."], ["Clothing", null, null], ["Music", null, null], ["Movies", null, null], ["Shows", null, null],
+      ["Food", null, null], ["Design", null, "Quiet interfaces with one bold idea."], ["Places", null, null], ["Things I like", null, null], ["Things I dislike", null, null]] },
+  { id: "people", title: "My People", tagline: "Who’s in my life", entries: 17, changes: 3,
+    parts: [["Family", null, null], ["Friends", null, "Fewer, closer."], ["People I admire", null, null], ["People I’ve lost touch with", null, null]] },
+  { id: "mind", title: "My Mind", tagline: "What I’m working out", entries: 36, changes: 2,
+    parts: [["Thoughts", null, null], ["Feelings", null, null], ["Ideas", null, "An app that remembers who you used to be."], ["Questions", null, null],
+      ["Realizations", null, "I like building the thing more than describing it."], ["Things I’m figuring out", null, null]] },
+  { id: "history", title: "My History", tagline: "How I got here", entries: 13, changes: 0,
+    parts: [["Decisions", "What I decided, and why.", "Start building apps. September 2026."], ["What Changed", "Before and after.", null],
+      ["Timeline", null, null], ["Old Thoughts", null, null], ["Memories", null, null], ["Past Versions of Me", null, null]] },
+];
+
+const thread = { topic: "Friendships", chapter: "people", steps: [
+  { date: "Feb 2026", quote: "I want to make new friends." },
+  { date: "May 2026", quote: "I’ve actually started making friends." },
+  { date: "Sep 2026", quote: "I don’t think I need a huge friend group anymore." },
+]};
+const change = { topic: "Career", chapter: "life", was: "Web design", is: "Web + app development", date: "Sep 2026",
+  why: "I realized I enjoy building the actual product, not just designing the website." };
+
+/* ── Rendering ─────────────────────────────────────────── */
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+function navHTML(current) {
+  const item = (id, label, count) =>
+    `<a href="#${id}" ${current === id ? 'aria-current="page"' : ""}><span>${label}</span>${count != null ? `<span class="count">${count}</span>` : ""}</a>`;
+  return item("home", "About Me") + item("now", "Right Now") + `<div class="gap"></div>` +
+    chapters.map(c => item(c.id, c.title, c.entries)).join("");
+}
+
+function homeHTML() {
+  return `<div class="column">
+    <header class="masthead">
+      <span class="label">About Me</span>
+      <h1>${esc(person.name)}</h1>
+      <p class="sub">${esc(person.line)}</p>
+      <p class="meta">Begun ${person.begun} · ${person.entries} entries</p>
+    </header>
+
+    <section class="section now" id="now" aria-labelledby="nowLabel">
+      <div class="section-head"><span class="label" id="nowLabel">Right Now</span><span class="meta">Updated 3 days ago</span></div>
+      <ul>${rightNow.map(r => `<li><p class="sentence"><em>${r.lead}</em> ${esc(r.text)}</p><span class="meta">since ${r.since}</span></li>`).join("")}</ul>
+      <button class="add-line" type="button">Add to right now</button>
+    </section>
+
+    <section class="chapters-index" aria-label="Chapters">
+      ${chapters.map(c => `<a class="chapter" href="#${c.id}">
+        <span class="label">${esc(c.tagline)}</span>
+        <h2>${esc(c.title)}</h2><span class="go" aria-hidden="true">→</span>
+        <p class="contents">${c.parts.slice(0, 6).map(p => `<span>${esc(p[0])}</span>`).join("")}${c.parts.length > 6 ? `<span>${c.parts.length - 6} more</span>` : ""}</p>
+        <p class="meta">${c.entries} entries${c.changes ? ` · <b>changed ${c.changes} times</b>` : ""}</p>
+      </a>`).join("")}
+    </section>
+
+    <section class="section" aria-labelledby="latelyLabel">
+      <div class="section-head"><span class="label" id="latelyLabel">What Changed, Lately</span><a class="link" href="#history">Timeline →</a></div>
+
+      <div class="thread-title"><h3>${thread.topic}</h3><span class="meta">3 versions</span></div>
+      <div class="thread">${thread.steps.map((s, i) => `<div class="step ${i === thread.steps.length - 1 ? "now-step" : ""}">
+        <span class="meta">${s.date}${i === thread.steps.length - 1 ? " · now" : ""}</span><p class="quote">“${esc(s.quote)}”</p></div>`).join("")}</div>
+
+      <div class="change">
+        <div class="col"><span class="label">Previously</span><span class="was">${esc(change.was)}</span></div>
+        <span class="arrow" aria-hidden="true">→</span>
+        <div class="col"><span class="label">Now · ${change.date}</span><span class="is">${esc(change.is)}</span></div>
+        <p class="why">“${esc(change.why)}”</p>
+      </div>
+    </section>
+
+    <p class="meta sample-note">Entries shown are sample content from the design brief.</p>
+  </div>`;
+}
+
+function chapterHTML(c) {
+  return `<article class="column chapter-page">
+    <header class="opening">
+      <span class="label">${esc(c.tagline)}</span>
+      <h1>${esc(c.title)}</h1>
+      <p class="meta">${c.entries} entries · ${c.parts.length} parts</p>
+    </header>
+    ${c.parts.map(([name, desc, entry]) => `<section class="part">
+      <div class="row"><h2>${esc(name)}</h2><span class="meta">${entry ? "latest" : "nothing yet"}</span></div>
+      ${desc ? `<p class="desc">${esc(desc)}</p>` : ""}
+      ${entry ? `<p class="entry">${esc(entry)}</p>` : ""}
+    </section>`).join("")}
+    <footer class="history-foot">
+      <span class="label">What Changed</span>
+      <p>${c.changes ? `This chapter has evolved ${c.changes} times.` : "Nothing here has changed yet."}</p>
+      ${c.changes ? `<a class="link" href="#history">View history →</a>` : ""}
+    </footer>
+  </article>`;
+}
+
+function contextHTML(route) {
+  const c = chapters.find(x => x.id === route);
+  if (c) {
+    const related = [thread, change].filter(t => t.chapter === c.id);
+    return `<div class="ctx-block"><span class="label">This chapter</span>
+      <div class="ctx-item"><span class="meta">Entries</span><span class="v">${c.entries}</span></div>
+      <div class="ctx-item"><span class="meta">Times it changed</span><span class="v">${c.changes}</span></div></div>
+      <div class="ctx-block"><span class="label">Recent changes</span>${related.length ? related.map(t => `<div class="ctx-item"><span class="meta">${esc(t.topic)}</span><span class="v changed">${esc(t.is || t.steps.at(-1).quote)}</span></div>`).join("") : `<p class="meta">None yet.</p>`}</div>`;
+  }
+  const short = [["Learning", "Web development"], ["Thinking about", "Moving"], ["Interested in", "Design"], ["Working toward", "Building my portfolio"]];
+  return `<div class="ctx-block"><span class="label">Currently</span>
+      ${short.map(([k, v]) => `<div class="ctx-item"><span class="meta">${k}</span><span class="v">${v}</span></div>`).join("")}
+      <div class="ctx-item"><span class="meta">Changed recently</span><span class="v changed">Career direction</span></div></div>
+    <div class="ctx-block"><span class="label">This archive</span>
+      <div class="ctx-item"><span class="meta">Begun</span><span class="v">${person.begun}</span></div>
+      <div class="ctx-item"><span class="meta">Entries</span><span class="v">${person.entries}</span></div>
+      <div class="ctx-item"><span class="meta">Things that changed</span><span class="v">${chapters.reduce((n, c) => n + c.changes, 0)}</span></div></div>`;
+}
+
+function render() {
+  const raw = location.hash.slice(1) || "home";
+  const chapter = chapters.find(c => c.id === raw);
+  const route = chapter ? raw : raw === "now" ? "now" : "home";
+  $("#main").innerHTML = chapter ? chapterHTML(chapter) : homeHTML();
+  $("#sideNav").innerHTML = navHTML(route);
+  $("#drawerNav").innerHTML = navHTML(route);
+  $("#context").innerHTML = contextHTML(route);
+  $("#sideFoot").textContent = `${person.entries} entries since ${person.begun}`;
+  if (route === "now") $("#now")?.scrollIntoView({ block: "start" });
+  else window.scrollTo(0, 0);
+  closeAll();
+}
+
+/* ── Drawer, search, scroll state ──────────────────────── */
+function closeAll() { ["#drawer", "#sheet", "#scrim"].forEach(s => $(s).classList.remove("open")); }
+$("#menuBtn").onclick = () => { $("#drawer").classList.add("open"); $("#scrim").classList.add("open"); };
+$("#drawerClose").onclick = closeAll;
+$("#scrim").onclick = closeAll;
+$("#searchBtn").onclick = () => { $("#sheet").classList.add("open"); $("#scrim").classList.add("open"); search(""); setTimeout(() => $("#q").focus(), 50); };
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeAll(); });
+
+const index = [
+  ...chapters.map(c => ({ text: c.title, where: "Chapter", id: c.id })),
+  ...chapters.flatMap(c => c.parts.map(p => ({ text: p[0] + (p[2] ? ` — ${p[2]}` : ""), where: c.title, id: c.id }))),
+  ...rightNow.map(r => ({ text: `${r.lead} ${r.text}`, where: "Right Now", id: "now" })),
+  ...thread.steps.map(s => ({ text: s.quote, where: `${thread.topic} · ${s.date}`, id: thread.chapter })),
+];
+function search(q) {
+  const t = q.trim().toLowerCase();
+  const hits = t ? index.filter(i => i.text.toLowerCase().includes(t)).slice(0, 12) : index.slice(0, 6);
+  $("#results").innerHTML = hits.length
+    ? hits.map(h => `<a href="#${h.id}"><span>${esc(h.text)}</span><span class="meta">${esc(h.where)}</span></a>`).join("")
+    : `<p class="empty">Nothing in the archive mentions “${esc(q)}” yet.</p>`;
+}
+$("#q").addEventListener("input", e => search(e.target.value));
+
+addEventListener("scroll", () => $("#topbar").classList.toggle("scrolled", scrollY > 8), { passive: true });
+addEventListener("hashchange", render);
+render();
+</script>
