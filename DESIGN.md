@@ -4,6 +4,8 @@ The prototype is `home.html`. Open it in Safari on the iPad and rotate the devic
 
 Metaphor: **a personal book with an archive.** It has chapters instead of cards and sentences instead of fields. Old versions stay on the record.
 
+Visual direction (v2): **one bold statement on white.** Pure white page, heavy black grotesk, centered, and mostly empty space, like an Apple product page (the "Create More." reference). The home screen opens on a single full-screen statement, **About Me.**, and everything else sits below it.
+
 ---
 
 ## 1. Reference canvases vs. real iPads
@@ -26,7 +28,7 @@ Note: a 1200pt canvas is wider than any real iPad (13" iPad Pro is 1032 × 1376p
 Top to bottom, one column, scrolls:
 
 1. **Top bar** (56pt, translucent, hairline appears once scrolled): Menu · ABOUT ME · Search
-2. **Masthead**: `ABOUT ME` label · **London** (display, ~90pt) · *An ongoing record of me.* · `Begun January 2026 · 214 entries`
+2. **Statement (fills the first screen)**: **About / Me.** centered in 800-weight grotesk (~130pt), with one small line under it: **London** · An ongoing record of me. A thin gold hairline marks the bottom of the first screen.
 3. **Right Now**: four sentences, not fields: *I'm into* design, and the way… Each has a `since Aug 2026` stamp. Then **+ Add to right now**.
 4. **Chapters**: Myself, My Life, My Taste, My People, My Mind, My History. Each one is a chapter opening, not a button: tagline label ("Who I am"), big serif title, its contents as an inline index (Personality · Values · Standards …), and `41 entries · changed 4 times`. The whole block is the tap target.
 5. **What Changed, Lately**: one evolution thread (Friendships: three dated versions, the newest marked *now*) and one before → after change (Career), with the *why* quoted.
@@ -44,15 +46,15 @@ Content and features are the same as portrait. Only the arrangement changes.
 
 ## 4. Typography
 
-| Role | Face | Size |
-|---|---|---|
-| Display (name, chapter titles) | Newsreader, light 350 | 56–92 / 34–44 |
-| Right Now sentences | Newsreader 380, lead-in italic in graphite | 24–30 |
-| Body / entries | Newsreader | 19–21 |
-| Labels (RIGHT NOW, MYSELF) | Schibsted Grotesk 600, caps, +0.14em | 12–13 |
-| Dates, counts, "since" stamps | IBM Plex Mono | 12.5 |
+One family: **SF Pro** on iPad (Inter Tight as the web fallback). Hierarchy comes from weight and size, not from mixing faces.
 
-Serif carries everything the person *wrote*. Grotesk labels are the book's structure. Mono is the archive's record-keeping (dates, counts, versions). For the native app: New York can stand in for Newsreader, SF Pro for the grotesk, and SF Mono for the mono.
+| Role | Weight | Size | Tracking |
+|---|---|---|---|
+| Statement (About Me.) | 800 | 64–132 | −4.5% |
+| Section / chapter titles (Right now., Myself) | 800 | 40–56 | −3.5% |
+| Right Now sentences, versions | 700 (lead-in in light grey) | 24–34 | −2.5% |
+| Body, contents lists | 500 | 17–20 | −1% |
+| Labels, dates, counts | 400–600, grey | 13–14 | 0 |
 
 ## 5. Margins & spacing
 
@@ -72,11 +74,13 @@ Serif carries everything the person *wrote*. Grotesk labels are the book's struc
 
 | Token | Light | Dark | Use |
 |---|---|---|---|
-| paper | `#ECEEE9` | `#12151B` | desk behind the page (landscape) |
-| page | `#F7F8F4` | `#191D25` | reading surface |
-| ink | `#1C2230` | `#E4E7E1` | what you wrote |
-| graphite | `#5E6573` | `#9AA1AD` | prompts, labels, earlier versions |
-| accent | `#2D4B8E` | `#93AAE2` | links, "changed", the *now* marker |
+| bg | `#FFFFFF` | `#000000` | everything |
+| ink | `#0B0B0C` | `#F5F5F7` | headlines, what you wrote |
+| muted | `#6E6E73` | `#A1A1A6` | secondary text |
+| faint | `#A1A1A6` | `#6E6E73` | earlier versions, meta |
+| gold | `#B3A06B` / text `#8A7640` | `#CDB98A` | the one accent: hairline, "changed" |
+
+Landscape uses hairline dividers instead of a raised page, so all three columns stay pure white.
 
 History is shown by fading, not deleting. Earlier versions turn graphite, and replaced facts get a thin strike. The current version is ink, marked with the blue dot.
 
