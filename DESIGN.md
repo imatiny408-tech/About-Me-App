@@ -6,7 +6,7 @@ Metaphor: **a personal book with an archive.** It has chapters instead of cards 
 
 Visual direction (v2): **one bold statement on white.** Pure white page, heavy black grotesk, centered, and mostly empty space, like an Apple product page (the "Create More." reference). The home screen leads with the statement **About Me.**
 
-**Rule: on iPad the home screen never scrolls.** It is one composed screen in every orientation and window size down to 700 × 600pt. Type sizes scale with window height (`vh` clamps), so the same composition fits an iPad mini as well as a 13" iPad Pro. Only narrower windows (Slide Over, iPhone) fall back to scrolling. Chapter pages can scroll.
+**Rule: on iPad the home screen never scrolls.** It is one composed screen in every orientation and window size down to 700 × 600pt. Type sizes scale with window height (`vh` clamps), so the same composition fits an iPad mini as well as a 13" iPad Pro. Only narrower windows (Slide Over, iPhone) fall back to scrolling. **This applies to every page**, the chapter pages as well as home.
 
 ---
 
@@ -43,6 +43,16 @@ Note: a 1200pt canvas is wider than any real iPad (13" iPad Pro is 1032 × 1376p
 - Between 900 and 1100pt wide (split view) there's no right panel, so the two-line What changed. strip returns to the centre.
 
 Content and features are the same as portrait. Only the arrangement changes.
+
+## 3b. Chapter pages (one screen)
+
+They use the same composition as home, so every page feels like the same book:
+
+1. **Opening**: the tagline in small grey ("What I'm drawn to"), the chapter title as the statement (**My Taste.**), then "49 entries · 10 parts · 2 with recent entries" and the gold hairline.
+2. **Parts**: a 2-column grid (up to 10 parts, 5 rows). Each part has its name in bold and one line under it: the latest entry in black, or its description in grey, or "Nothing yet. Tap to write the first entry." in light grey. Clamped to 2 lines.
+3. **What changed.**: the chapter's evolution lines (e.g. Career: ~~Web design~~ → Web + app development) and "This chapter has evolved N times", with **View history →**. In wide landscape this moves to the right panel with the chapter's stats.
+
+Verified with no overflow on all 6 chapters and home at 1200×1600, 1600×1200, iPad mini, 11" and 13" in both orientations, and a 1000×744 split-view window.
 
 ## 4. Typography
 
