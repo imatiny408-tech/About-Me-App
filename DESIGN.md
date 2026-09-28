@@ -4,7 +4,9 @@ The prototype is `home.html`. Open it in Safari on the iPad and rotate the devic
 
 Metaphor: **a personal book with an archive.** It has chapters instead of cards and sentences instead of fields. Old versions stay on the record.
 
-Visual direction (v2): **one bold statement on white.** Pure white page, heavy black grotesk, centered, and mostly empty space, like an Apple product page (the "Create More." reference). The home screen opens on a single full-screen statement, **About Me.**, and everything else sits below it.
+Visual direction (v2): **one bold statement on white.** Pure white page, heavy black grotesk, centered, and mostly empty space, like an Apple product page (the "Create More." reference). The home screen leads with the statement **About Me.**
+
+**Rule: on iPad the home screen never scrolls.** It is one composed screen in every orientation and window size down to 700 × 600pt. Type sizes scale with window height (`vh` clamps), so the same composition fits an iPad mini as well as a 13" iPad Pro. Only narrower windows (Slide Over, iPhone) fall back to scrolling. Chapter pages can scroll.
 
 ---
 
@@ -23,24 +25,22 @@ Rule: *landscape-shaped **and** ≥ 900pt wide* switches to the archive layout. 
 
 Note: a 1200pt canvas is wider than any real iPad (13" iPad Pro is 1032 × 1376pt). So spacing is defined as a fixed text measure plus flexible margins, not as fixed pixel offsets from the canvas.
 
-## 2. Portrait home: "the book"
+## 2. Portrait home: "the book" (one screen)
 
-Top to bottom, one column, scrolls:
+1. **Top bar** (56pt): Menu · About Me · Search
+2. **Statement**: **About / Me.** on two lines, centered, 800 weight, then **London** · An ongoing record of me., then a short gold hairline.
+3. **Right now.**: a 2 × 2 grid. Each cell has a grey lead-in with date ("I'm into · since Aug 2026") and a bold sentence. Then **+ Add to right now**.
+4. **Chapters**: a 3 × 2 grid of type only, with no boxes: tagline, big title (Myself), the first three parts plus a count, and "41 entries · changed 4×". Each block is a tap target.
+5. **What changed.**: two lines. Friendships: first version → latest version (3 versions). Career: ~~Web design~~ → Web + app development.
 
-1. **Top bar** (56pt, translucent, hairline appears once scrolled): Menu · ABOUT ME · Search
-2. **Statement (fills the first screen)**: **About / Me.** centered in 800-weight grotesk (~130pt), with one small line under it: **London** · An ongoing record of me. A thin gold hairline marks the bottom of the first screen.
-3. **Right Now**: four sentences, not fields: *I'm into* design, and the way… Each has a `since Aug 2026` stamp. Then **+ Add to right now**.
-4. **Chapters**: Myself, My Life, My Taste, My People, My Mind, My History. Each one is a chapter opening, not a button: tagline label ("Who I am"), big serif title, its contents as an inline index (Personality · Values · Standards …), and `41 entries · changed 4 times`. The whole block is the tap target.
-5. **What Changed, Lately**: one evolution thread (Friendships: three dated versions, the newest marked *now*) and one before → after change (Career), with the *why* quoted.
+## 3. Landscape home: "the archive" (one screen)
 
-You never see everything at once. The chapters sit below the fold on purpose.
-
-## 3. Landscape home: "the archive"
-
-- **Top bar** across the full width: ABOUT ME (left) · Search · ⋯ (right)
-- **Left, 232pt, sidebar**: About Me, Right Now, then the six chapters with entry counts. It replaces the chapter list, so the chapter index is hidden in this layout.
-- **Center, the page**: a raised sheet with a soft left shadow acting as the spine. Same masthead, Right Now, and What Changed as portrait.
-- **Right, 300pt, context**: on Home it shows **Currently** (Learning / Thinking about / Interested in / Working toward / Changed recently) and **This archive** (begun, entries, number of changes). On a chapter page it switches to that chapter's stats and recent changes, so the panel is contextual rather than duplicated.
+- **Top bar** across the full width: About Me (left) · Search · ⋯ (right)
+- **Left, 232pt, sidebar**: About Me, Right Now, and the six chapters with counts. This replaces the chapter grid.
+- **Centre**: the statement on one line (**About Me.**) and the Right now. grid, vertically centered.
+- **Right, 300pt, What changed**: the full Friendships thread (three dated versions, the newest marked *now*) and the Career before → after with the *why*. On a chapter page this panel shows that chapter's changes.
+- So the three columns read: where to go · who I am now · how I got here. The earlier "Currently" panel was cut because it repeated Right now. word for word, which the no-scroll screen has no room for.
+- Between 900 and 1100pt wide (split view) there's no right panel, so the two-line What changed. strip returns to the centre.
 
 Content and features are the same as portrait. Only the arrangement changes.
 
