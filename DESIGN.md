@@ -77,6 +77,7 @@ One family: **SF Pro** on iPad (Inter Tight as the web fallback). Hierarchy come
 
 ## 6. Navigation
 
+- **Back button:** every page except home shows **‹ Back** in the top-left corner, where the menu button sits on home. It returns to the home screen.
 - **Portrait:** the content is the navigation. Tapping a chapter opens it. The menu opens a left drawer with the same contents list. Search opens a sheet that searches chapters, parts, Right Now, and old versions.
 - **Landscape:** no sidebar. Same as portrait: the contents list on home, plus the Menu drawer.
 - No bottom tab bar. It isn't needed, and it would make the app feel like a utility.

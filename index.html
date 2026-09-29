@@ -43,6 +43,7 @@
 
 /* ── Base ───────────────────────────────────────────────── */
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 body {
   margin: 0; background: var(--bg); color: var(--ink);
   font: 400 var(--t-body)/1.5 var(--sans); letter-spacing: -.01em;
@@ -73,6 +74,9 @@ p { margin: 0; }
 .icon-btn:hover { background: var(--hover); }
 .icon-btn svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; }
 .more-btn { display: none; }
+.back-btn { display: inline-flex; align-items: center; gap: 2px; height: 44px; padding-right: 12px; border-radius: 22px; font: 600 17px/1 var(--sans); letter-spacing: -.01em; color: var(--ink); }
+.back-btn svg { width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.back-btn:hover { color: var(--muted); }
 
 .context { display: none; }
 .main { min-width: 0; padding-inline: var(--gutter); padding-block: 0 140px; }
@@ -231,6 +235,9 @@ p { margin: 0; }
       <button class="icon-btn" id="menuBtn" aria-label="Open contents" aria-controls="drawer">
         <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
       </button>
+      <a class="back-btn" id="backBtn" href="#home" aria-label="Back to About Me" hidden>
+        <svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg><span>Back</span>
+      </a>
     </div>
     <a class="wordmark" href="#home">About Me</a>
     <div class="end">
@@ -420,6 +427,9 @@ function render() {
   $("#main").innerHTML = chapter ? chapterHTML(chapter) : route === "now" ? nowHTML() : homeHTML();
   $("#drawerNav").innerHTML = navHTML(route);
   $("#context").innerHTML = contextHTML(route);
+  const isHome = route === "home";
+  $("#menuBtn").hidden = !isHome;
+  $("#backBtn").hidden = isHome;
   document.documentElement.classList.add("fit");
   $("#main").classList.add("is-home");
   window.scrollTo(0, 0);
