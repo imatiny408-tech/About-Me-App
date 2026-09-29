@@ -320,6 +320,49 @@ html.fit .home.history-page { align-content: stretch !important; grid-template-r
 .layout-menu .ck { grid-row: 1 / span 2; grid-column: 2; align-self: center; font: 700 16px/1 var(--sans); visibility: hidden; }
 .layout-menu [aria-checked="true"] .ck { visibility: visible; }
 
+/* ── Annotate: draw on the screen, explain it, save it ── */
+.annot { position: fixed; inset: 0; z-index: 80; }
+.annot canvas { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none; cursor: crosshair; }
+.annot::before { content: ""; position: absolute; inset: 0; box-shadow: inset 0 0 0 3px #E5484D; pointer-events: none; }
+.annot-bar {
+  position: absolute; left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 20px); transform: translateX(-50%);
+  display: flex; align-items: center; gap: 4px; padding: 6px; border-radius: 16px; background: var(--bg);
+  box-shadow: 0 0 0 1px var(--rule), 0 16px 40px -12px rgba(0,0,0,.35); max-width: calc(100vw - 24px); overflow-x: auto;
+}
+.annot-bar button { height: 40px; padding: 0 12px; border-radius: 11px; font: 600 15px/1 var(--sans); white-space: nowrap; }
+.annot-bar button:hover { background: var(--hover); }
+.annot-bar .primary, .as-actions .primary { background: var(--ink); color: var(--bg); }
+.annot-bar .swatch { width: 40px; padding: 0; display: grid; place-items: center; }
+.swatch span { width: 20px; height: 20px; border-radius: 50%; box-shadow: 0 0 0 2px var(--bg), 0 0 0 3px var(--rule); }
+.swatch.on span { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--ink); }
+.annot-sep { width: 1px; height: 24px; background: var(--rule); margin: 0 4px; flex: none; }
+.annot-sheet {
+  position: fixed; z-index: 90; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(560px, calc(100vw - 32px));
+  max-height: calc(100dvh - 48px); overflow-y: auto; background: var(--bg); border-radius: 20px;
+  box-shadow: 0 0 0 1px var(--rule), 0 30px 80px -20px rgba(0,0,0,.4); padding: 8px 20px 20px;
+}
+.as-head { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; }
+.as-head h2 { font: 800 22px/1.2 var(--sans); letter-spacing: -.02em; }
+.as-body { display: grid; gap: 10px; }
+.as-body img { width: 100%; border-radius: 12px; border: 1px solid var(--rule); }
+.as-label { font: 600 14px/1.2 var(--sans); color: var(--muted); }
+.as-body textarea { width: 100%; font: 400 17px/1.45 var(--sans); color: var(--ink); background: var(--bg); border: 1px solid var(--rule); border-radius: 12px; padding: 12px 14px; resize: vertical; }
+.as-body textarea:focus { outline: 2px solid var(--ink); outline-offset: 1px; }
+.as-status { font: 500 14px/1.4 var(--sans); color: var(--muted); min-height: 1.4em; }
+.as-actions { display: flex; justify-content: flex-end; gap: 8px; }
+.as-actions button, .as-item button { height: 42px; padding: 0 16px; border-radius: 12px; font: 600 15px/1 var(--sans); border: 1px solid var(--rule); }
+.as-actions .primary { border-color: var(--ink); }
+.as-actions button:disabled { opacity: .5; }
+.as-where { font: 400 14px/1.4 var(--sans); color: var(--muted); margin-bottom: 12px; }
+.as-list { display: grid; gap: 14px; }
+.as-item { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 14px; padding-top: 14px; border-top: 1px solid var(--rule); }
+.as-item img { width: 120px; border-radius: 8px; border: 1px solid var(--rule); }
+.as-item .meta { margin-bottom: 4px; }
+.as-item p.n { font: 500 16px/1.4 var(--sans); white-space: pre-wrap; }
+.as-item .btns { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+.as-item button { height: 34px; padding: 0 12px; font-size: 14px; }
+.as-empty { color: var(--muted); padding: 12px 0; }
+
 /* ── Drawer + search sheet ──────────────────────────────── */
 .scrim { position: fixed; inset: 0; z-index: 40; background: rgba(0, 0, 0, .25); opacity: 0; pointer-events: none; transition: opacity .25s; }
 .scrim.open { opacity: 1; pointer-events: auto; }
@@ -364,6 +407,9 @@ html.fit .home.history-page { align-content: stretch !important; grid-template-r
     </div>
     <a class="wordmark" href="#home">About Me</a>
     <div class="end">
+      <button class="icon-btn" id="annotateBtn" aria-label="Annotate this screen" data-html2canvas-ignore>
+        <svg viewBox="0 0 24 24"><path d="M4 20l4-1 11-11-3-3L5 16l-1 4z"/><path d="M14 6l3 3"/></svg>
+      </button>
       <button class="icon-btn" id="layoutBtn" aria-label="Change layout" aria-haspopup="menu" aria-controls="layoutMenu" hidden>
         <svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>
       </button>
@@ -380,6 +426,36 @@ html.fit .home.history-page { align-content: stretch !important; grid-template-r
   <aside class="context" id="context" aria-label="Context"></aside>
 </div>
 
+<div class="annot" id="annot" hidden data-html2canvas-ignore>
+  <canvas id="annotCanvas" aria-label="Drawing layer: draw on the screen with your finger or Apple Pencil"></canvas>
+  <div class="annot-bar" role="toolbar" aria-label="Annotate">
+    <button type="button" class="swatch on" data-color="#E5484D" aria-label="Red pen"><span style="background:#E5484D"></span></button>
+    <button type="button" class="swatch" data-color="#0B0B0C" aria-label="Black pen"><span style="background:#0B0B0C"></span></button>
+    <button type="button" class="swatch" data-color="#2F6FEB" aria-label="Blue pen"><span style="background:#2F6FEB"></span></button>
+    <span class="annot-sep"></span>
+    <button type="button" id="annotUndo">Undo</button>
+    <button type="button" id="annotClear">Clear</button>
+    <button type="button" id="annotSaved">Saved</button>
+    <span class="annot-sep"></span>
+    <button type="button" id="annotCancel">Cancel</button>
+    <button type="button" id="annotDone" class="primary">Done</button>
+  </div>
+</div>
+<div class="annot-sheet" id="annotSheet" role="dialog" aria-label="Describe the change" hidden data-html2canvas-ignore>
+  <div class="as-head"><h2>What should change?</h2><button type="button" class="icon-btn" id="asClose" aria-label="Back to drawing"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+  <div class="as-body">
+    <img id="asPreview" alt="Your drawing on this screen">
+    <label class="as-label" for="asNote">Explain what you drew and why</label>
+    <textarea id="asNote" rows="5" placeholder="e.g. Make this title smaller so the list stands out."></textarea>
+    <p class="as-status" id="asStatus" role="status"></p>
+    <div class="as-actions"><button type="button" id="asBack">Keep drawing</button><button type="button" id="asSave" class="primary">Save comment</button></div>
+  </div>
+</div>
+<div class="annot-sheet" id="savedSheet" role="dialog" aria-label="Saved comments" hidden data-html2canvas-ignore>
+  <div class="as-head"><h2>Saved comments</h2><button type="button" class="icon-btn" id="ssClose" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+  <p class="as-where" id="ssWhere"></p>
+  <div class="as-list" id="ssList"></div>
+</div>
 <div class="layout-menu" id="layoutMenu" role="menu" aria-label="Layout" hidden></div>
 <div class="scrim" id="scrim"></div>
 <aside class="drawer" id="drawer" aria-label="Contents">
@@ -746,6 +822,190 @@ function search(q) {
 $("#q").addEventListener("input", e => search(e.target.value));
 
 addEventListener("scroll", () => $("#topbar").classList.toggle("scrolled", scrollY > 8), { passive: true });
+/* ── Annotate ─────────────────────────────────────────────
+   Draw over the current screen, explain the change, save it.
+   In the Claude preview comments go to the artifact's private database,
+   where Claude can read them. Elsewhere (the Home Screen app) they are
+   kept on this device, with Share to send them on. */
+const annot = { strokes: [], color: "#E5484D", drawing: null, shot: null };
+let dbReady = null;   // the artifact database, when this view has it
+let dbTried = false;
+async function annotDB() {
+  if (dbTried) return dbReady;
+  dbTried = true;
+  try { dbReady = window.claude && window.claude.use ? await window.claude.use("db") : null; } catch (e) { dbReady = null; }
+  return dbReady;
+}
+function sizeCanvas() {
+  const c = $("#annotCanvas"), r = window.devicePixelRatio || 1;
+  c.width = Math.round(innerWidth * r); c.height = Math.round(innerHeight * r);
+  redraw();
+}
+function redraw() {
+  const c = $("#annotCanvas"), ctx = c.getContext("2d"), r = c.width / innerWidth;
+  ctx.setTransform(r, 0, 0, r, 0, 0); ctx.clearRect(0, 0, innerWidth, innerHeight);
+  ctx.lineCap = "round"; ctx.lineJoin = "round";
+  for (const st of annot.strokes) {
+    for (let i = 1; i < st.pts.length; i++) {
+      const a = st.pts[i - 1], b = st.pts[i];
+      ctx.strokeStyle = st.color; ctx.lineWidth = 2 + 4 * (b.p || .5);
+      ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+    }
+    if (st.pts.length === 1) { const a = st.pts[0]; ctx.fillStyle = st.color; ctx.beginPath(); ctx.arc(a.x, a.y, 3, 0, 7); ctx.fill(); }
+  }
+}
+function openAnnotate() {
+  closeAll();
+  annot.strokes = [];
+  $("#annot").hidden = false;
+  sizeCanvas();
+}
+function closeAnnotate() { $("#annot").hidden = true; $("#annotSheet").hidden = true; annot.strokes = []; }
+$("#annotateBtn").onclick = openAnnotate;
+addEventListener("resize", () => { if (!$("#annot").hidden) sizeCanvas(); });
+(() => {
+  const c = $("#annotCanvas");
+  c.addEventListener("pointerdown", e => {
+    c.setPointerCapture(e.pointerId);
+    annot.drawing = { color: annot.color, pts: [{ x: e.clientX, y: e.clientY, p: e.pressure || .5 }] };
+    annot.strokes.push(annot.drawing); redraw();
+  });
+  c.addEventListener("pointermove", e => {
+    if (!annot.drawing) return;
+    const evs = e.getCoalescedEvents ? e.getCoalescedEvents() : [e];
+    for (const ev of evs) annot.drawing.pts.push({ x: ev.clientX, y: ev.clientY, p: ev.pressure || .5 });
+    redraw();
+  });
+  const end = () => { annot.drawing = null; };
+  c.addEventListener("pointerup", end); c.addEventListener("pointercancel", end);
+})();
+document.querySelectorAll(".swatch").forEach(b => b.onclick = () => {
+  annot.color = b.dataset.color;
+  document.querySelectorAll(".swatch").forEach(x => x.classList.toggle("on", x === b));
+});
+$("#annotUndo").onclick = () => { annot.strokes.pop(); redraw(); };
+$("#annotClear").onclick = () => { annot.strokes = []; redraw(); };
+$("#annotCancel").onclick = closeAnnotate;
+
+function loadHtml2canvas() {
+  if (window.html2canvas) return Promise.resolve(window.html2canvas);
+  return new Promise((ok, fail) => {
+    const s = document.createElement("script");
+    s.src = "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js";
+    s.onload = () => ok(window.html2canvas); s.onerror = fail;
+    document.head.appendChild(s);
+  });
+}
+// The screen as it looks right now, with the drawing on top, as a small JPEG
+async function captureScreen() {
+  const w = innerWidth, h = innerHeight, scale = Math.min(1, 900 / w);
+  const out = document.createElement("canvas");
+  out.width = Math.round(w * scale); out.height = Math.round(h * scale);
+  const ctx = out.getContext("2d");
+  ctx.fillStyle = getComputedStyle(document.body).backgroundColor || "#fff"; ctx.fillRect(0, 0, out.width, out.height);
+  try {
+    const h2c = await loadHtml2canvas();
+    const page = await h2c(document.body, { x: scrollX, y: scrollY, width: w, height: h, windowWidth: w, windowHeight: h, scale, useCORS: true, logging: false,
+      backgroundColor: null,
+      // the screenshot library can't read color-mix(); give the copy solid backgrounds instead
+      onclone: doc => { const st = doc.createElement("style"); st.textContent = ".topbar{background:var(--bg)!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}*{animation:none!important;transition:none!important}"; doc.head.appendChild(st); } });
+    ctx.drawImage(page, 0, 0, out.width, out.height);
+  } catch (e) { /* no screenshot: the drawing alone still says a lot */ }
+  ctx.drawImage($("#annotCanvas"), 0, 0, out.width, out.height);
+  let q = .72, url = out.toDataURL("image/jpeg", q);
+  while (url.length > 180000 && q > .3) { q -= .12; url = out.toDataURL("image/jpeg", q); }
+  return url;
+}
+function pageName() {
+  const raw = location.hash.slice(1) || "home", c = chapters.find(x => x.id === raw);
+  return c ? c.title : raw === "now" ? "Right Now" : "Home";
+}
+$("#annotDone").onclick = async () => {
+  $("#annotDone").disabled = true; $("#annotDone").textContent = "…";
+  annot.shot = await captureScreen();
+  $("#annotDone").disabled = false; $("#annotDone").textContent = "Done";
+  $("#asPreview").src = annot.shot;
+  $("#asStatus").textContent = "";
+  $("#annotSheet").hidden = false;
+  setTimeout(() => $("#asNote").focus(), 50);
+};
+$("#asBack").onclick = $("#asClose").onclick = () => { $("#annotSheet").hidden = true; };
+
+const LOCAL_KEY = "about-me-annotations";
+function localList() { try { return JSON.parse(localStorage.getItem(LOCAL_KEY) || "[]"); } catch (e) { return []; } }
+function localSave(list) { try { localStorage.setItem(LOCAL_KEY, JSON.stringify(list)); return true; } catch (e) { return false; } }
+
+$("#asSave").onclick = async () => {
+  const note = $("#asNote").value.trim();
+  if (!note && !annot.strokes.length) { $("#asStatus").textContent = "Draw something or write a note first."; return; }
+  const item = {
+    page: location.hash.slice(1) || "home", pageName: pageName(), note, image: annot.shot,
+    orientation: innerWidth > innerHeight ? "landscape" : "portrait", size: `${innerWidth}×${innerHeight}`,
+    layout: (() => { const c = chapters.find(x => x.id === location.hash.slice(1)); return c ? getLayout(c.id) : null; })(),
+    createdAt: new Date().toISOString(),
+  };
+  $("#asSave").disabled = true; $("#asStatus").textContent = "Saving…";
+  const db = await annotDB();
+  let saved = false, where = "";
+  if (db) {
+    try { await db.collection("annotations").doc("a" + Date.now()).set(item); saved = true; where = "Saved. Claude can read it now."; }
+    catch (e) { where = ""; }
+  }
+  if (!saved) {
+    const list = localList(); list.unshift({ id: "a" + Date.now(), ...item });
+    saved = localSave(list.slice(0, 40));
+    where = saved ? "Saved on this iPad. Open Saved and tap Share to send it to Claude." : "";
+  }
+  $("#asSave").disabled = false;
+  if (!saved) { $("#asStatus").textContent = "Couldn’t save. Your note is still here; try again in a moment."; return; }
+  $("#asStatus").textContent = where;
+  $("#asNote").value = "";
+  setTimeout(() => { closeAnnotate(); }, 1400);
+};
+
+async function listSaved() {
+  const db = await annotDB();
+  if (db) {
+    try {
+      const snap = await db.collection("annotations").orderBy("createdAt", "desc").limit(50).get();
+      return { where: "db", items: snap.docs.map(d => ({ id: d.id, ...d.data() })) };
+    } catch (e) { /* fall back to this device */ }
+  }
+  return { where: "local", items: localList() };
+}
+async function showSaved() {
+  $("#savedSheet").hidden = false;
+  $("#ssList").innerHTML = `<p class="as-empty">Loading…</p>`;
+  const { where, items } = await listSaved();
+  $("#ssWhere").textContent = where === "db" ? "Saved to this preview. Claude can read these." : "Saved on this iPad. Tap Share to send one to Claude.";
+  $("#ssList").innerHTML = items.length ? items.map(it => `<div class="as-item" data-id="${esc(it.id)}">
+      ${it.image ? `<img src="${it.image}" alt="Drawing on ${esc(it.pageName)}">` : "<span></span>"}
+      <div><p class="meta">${esc(it.pageName)} · ${new Date(it.createdAt).toLocaleString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}</p>
+        <p class="n">${esc(it.note || "(no note)")}</p>
+        <div class="btns">${where === "local" && navigator.share ? `<button type="button" data-act="share">Share</button>` : ""}<button type="button" data-act="delete">Delete</button></div></div>
+    </div>`).join("") : `<p class="as-empty">No saved comments yet.</p>`;
+  $("#ssList").onclick = async e => {
+    const btn = e.target.closest("[data-act]"); if (!btn) return;
+    const id = btn.closest(".as-item").dataset.id, it = items.find(x => x.id === id);
+    if (btn.dataset.act === "delete") {
+      if (where === "db") { try { await (await annotDB()).collection("annotations").doc(id).delete(); } catch (err) {} }
+      else localSave(localList().filter(x => x.id !== id));
+      showSaved();
+    }
+    if (btn.dataset.act === "share") {
+      const text = `About Me feedback — ${it.pageName} (${it.orientation}, ${it.size}):\n${it.note}`;
+      try {
+        const blob = await (await fetch(it.image)).blob();
+        const file = new File([blob], `about-me-${it.page}.jpg`, { type: "image/jpeg" });
+        if (navigator.canShare && navigator.canShare({ files: [file] })) await navigator.share({ files: [file], text });
+        else await navigator.share({ text });
+      } catch (err) { /* share sheet closed */ }
+    }
+  };
+}
+$("#annotSaved").onclick = showSaved;
+$("#ssClose").onclick = () => { $("#savedSheet").hidden = true; };
+
 addEventListener("hashchange", render);
 render();
 </script>

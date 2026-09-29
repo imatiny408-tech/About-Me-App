@@ -78,6 +78,13 @@ My History doesn't use the layout switcher. It is a **focus card driven by a tim
 - **Topics are meaningful, not decorative:** ✦ Career, ♡ Relationships, ⌂ Home, ✎ Learning, ◌ Identity, $ Money, → Goals, ◎ Perspective.
 - Portrait puts the card on top and the timeline under it. The page never scrolls; only the timeline does. Tapping a moment or pressing ↑/↓ also moves through it.
 
+## 3e. Annotate (feedback while designing)
+
+The pencil button in the top bar (every page) turns the screen into a drawing layer: draw with a finger or Apple Pencil in red, black or blue, with Undo and Clear. **Done** takes a screenshot of the screen with the drawing on top and asks "What should change?" for a note. **Save comment** stores the picture, the note, the page, the orientation, the window size and the section's layout.
+
+- In the Claude preview, comments go to the artifact's private database (collection `annotations`, owner-only), where Claude reads them directly.
+- In the Home Screen app they're kept on the iPad (last 40). **Saved** lists them, with **Share** to send one to Claude and **Delete**.
+
 ## 4. Typography
 
 One family: **SF Pro** on iPad (Inter Tight as the web fallback). Hierarchy comes from weight and size, not from mixing faces.
