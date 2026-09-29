@@ -192,8 +192,10 @@ p { margin: 0; }
 /* ── Chapter page: same one-screen composition ───────── */
 .statement .eyebrow { font: 600 13px/1.2 var(--sans); color: var(--faint); }
 /* Topics as a Notes-style list: date groups, rounded card, three-line rows */
-.notes { width: 100%; max-width: 760px; justify-self: center; }
-.chapter-page { gap: clamp(28px, 4vh, 48px); padding-block: clamp(32px, 6vh, 72px) 96px; }
+.notes { width: 100%; }
+/* Section pages use the full width of the screen */
+.home.chapter-page { max-width: none; gap: clamp(28px, 4vh, 48px); padding-block: clamp(32px, 6vh, 72px) 96px; }
+html:not(.fit) .main { padding-inline: max(20px, env(safe-area-inset-left, 0px)) max(20px, env(safe-area-inset-right, 0px)); }
 .ngroup { margin-bottom: clamp(12px, 1.8vh, 22px); }
 .ngroup h2 { break-after: avoid; font: 700 clamp(18px, 1.9vh, 22px)/1.2 var(--sans); letter-spacing: -.02em; margin: 0 0 8px 4px; }
 .ncard { border: 1px solid var(--rule); border-radius: 12px; background: var(--bg); -webkit-box-decoration-break: clone; box-decoration-break: clone; }
