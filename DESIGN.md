@@ -69,6 +69,15 @@ A **layout button** (sliders icon) in the top-right corner of every section page
 
 Tiles use 3 columns in landscape, 2 in portrait and 1 on a phone; when there are more tiles than fit, the page scrolls down normally and nothing is cut off. Cards use 3, 2 and 1 columns in the same way. Empty cells close off the last row.
 
+## 3d. My History (one screen, its own design)
+
+My History doesn't use the layout switcher. It is a **focus card driven by a timeline**:
+
+- **Right: the timeline.** Every moment you recorded, oldest at the top, with a dot on a thin line, a topic icon, the date and what you said. It scrolls and snaps; the moment in the middle is selected (filled dot, icon a little larger, date in black). Moments fade the further they are from the middle, so only 3–5 are readable at once. It never lists empty months. It opens on the newest moment, so scrolling up is going back in time.
+- **Left: the moment you're on.** The topic (icon plus name, in small caps), the date, what you said in large bold type, and a line under a hairline about where it led. It changes as you scroll the timeline.
+- **Topics are meaningful, not decorative:** ✦ Career, ♡ Relationships, ⌂ Home, ✎ Learning, ◌ Identity, $ Money, → Goals, ◎ Perspective.
+- Portrait puts the card on top and the timeline under it. The page never scrolls; only the timeline does. Tapping a moment or pressing ↑/↓ also moves through it.
+
 ## 4. Typography
 
 One family: **SF Pro** on iPad (Inter Tight as the web fallback). Hierarchy comes from weight and size, not from mixing faces.

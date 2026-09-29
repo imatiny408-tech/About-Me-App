@@ -1,4 +1,4 @@
-// Checks the one-screen rule: home and Right Now may not scroll at any iPad window size.
+// Checks the one-screen rule: home, Right Now and My History may not scroll at any iPad window size.
 // Section pages are long lists and scroll by design, so they are only screenshotted.
 // `npm run check` reports overflow; `npm run screens` also refreshes screens/.
 import { chromium } from 'playwright';
@@ -20,7 +20,7 @@ const sizes = [
   ['landscape-split-1000x744', 1000, 744],
 ];
 const routes = ['home', 'now', 'myself', 'life', 'taste', 'people', 'mind', 'appearance', 'routines', 'little', 'history'];
-const fixed = new Set(['home', 'now']);
+const fixed = new Set(['home', 'now', 'history']);
 
 const browser = await chromium.launch();
 const failures = [];
@@ -50,4 +50,4 @@ for (const [name, width, height] of sizes) {
 await browser.close();
 
 if (failures.length) { console.error(failures.join('\n')); process.exit(1); }
-console.log(`Home and Right Now fit at ${sizes.length} window sizes; ${routes.length - fixed.size} section pages scroll.`);
+console.log(`Home, Right Now and My History fit at ${sizes.length} window sizes; ${routes.length - fixed.size} section pages scroll.`);
