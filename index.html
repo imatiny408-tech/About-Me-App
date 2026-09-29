@@ -1220,7 +1220,8 @@ function sceneControlsHTML() {
     ${sc === "white" ? "" : `<p class="mhead">Frost</p>`}<div class="chips">${FROSTS.map(x => `<button type="button" class="chip-opt" data-frost="${x.id}" aria-pressed="${x.id === fr}">${x.name}</button>`).join("")}</div>`.replace(sc === "white" ? /<div class="chips">(?![\s\S]*<div class="chips">)[\s\S]*$/ : /$^/, "");
 }
 function handleSceneClick(e) {
-  const s1 = e.target.closest("[data-scene]"), f1 = e.target.closest("[data-frost]");
+  // Only the chips count: the <html> element itself carries data-scene / data-frost / data-look
+  const s1 = e.target.closest(".chip-opt[data-scene]"), f1 = e.target.closest(".chip-opt[data-frost]");
   if (!s1 && !f1) return false;
   if (s1) keep("about-me-scene2", s1.dataset.scene); else keep("about-me-frost", f1.dataset.frost);
   applyScene(); return true;
@@ -1231,7 +1232,7 @@ function renderLooks() {
     <span class="chip" style="background:${l.c1};--c2:${l.c2}"></span>${l.name}<span class="ck" aria-hidden="true">✓</span></button>`).join("")
     + (now === "natural" ? `<div class="scene-ctl">${sceneControlsHTML()}</div>` : "");
 }
-$("#looks").onclick = e => { if (handleSceneClick(e)) return renderLooks(); const b = e.target.closest("[data-look]"); if (!b) return; keep("about-me-look", b.dataset.look); applyLook(b.dataset.look); renderLooks(); };
+$("#looks").onclick = e => { if (handleSceneClick(e)) return renderLooks(); const b = e.target.closest(".look-opt[data-look]"); if (!b) return; keep("about-me-look", b.dataset.look); applyLook(b.dataset.look); renderLooks(); };
 applyLook(currentLook());
 
 /* ── Annotate ─────────────────────────────────────────────
