@@ -191,14 +191,28 @@ p { margin: 0; }
 
 /* ── Chapter page: same one-screen composition ───────── */
 .statement .eyebrow { font: 600 13px/1.2 var(--sans); color: var(--faint); }
-.parts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 40px; align-content: center; }
-.pt { display: grid; align-content: start; gap: 3px; min-width: 0; padding-block: clamp(10px, 1.5vh, 22px); border-top: 1px solid var(--rule); }
-.pt .top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
-.pt h2 { font: 700 clamp(18px, 2.1vh, 28px)/1.15 var(--sans); letter-spacing: -.025em; }
-.pt p { font: 500 clamp(14px, 1.45vh, 18px)/1.4 var(--sans); color: var(--muted);
-  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.pt p.entry { color: var(--ink); }
-.pt p.empty { color: var(--faint); }
+/* Topics as a Notes-style list: date groups, rounded card, three-line rows */
+.notes { align-self: center; width: 100%; max-width: 760px; justify-self: center; }
+.ngroup { margin-bottom: clamp(12px, 1.8vh, 22px); }
+.ngroup h2 { break-after: avoid; font: 700 clamp(18px, 1.9vh, 22px)/1.2 var(--sans); letter-spacing: -.02em; margin: 0 0 8px 4px; }
+.ncard { border: 1px solid var(--rule); border-radius: 12px; background: var(--bg); -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+.note { break-inside: avoid; display: flex; align-items: center; gap: 12px; padding: clamp(7px, .95vh, 12px) 14px; position: relative; min-width: 0; }
+.note + .note::before { content: ""; position: absolute; top: 0; left: 14px; right: 0; height: 1px; background: var(--rule); }
+.note:hover { background: var(--hover); border-radius: 11px; }
+.note .txt { flex: 1; min-width: 0; display: grid; gap: 1px; }
+.note h3 { font: 700 clamp(15px, 1.55vh, 18px)/1.25 var(--sans); letter-spacing: -.015em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.note .l2 { font: 400 clamp(13px, 1.35vh, 15px)/1.3 var(--sans); color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.note .l2 b { font-weight: 500; color: var(--ink); margin-right: 6px; }
+.note .l2.empty { color: var(--faint); }
+.note .l3 { display: flex; align-items: center; gap: 5px; font: 400 clamp(12px, 1.25vh, 14px)/1.3 var(--sans); color: var(--faint); }
+.note .l3 svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 1.6; }
+.note .thumb { flex: none; width: clamp(36px, 4.2vh, 48px); aspect-ratio: 1; border-radius: 8px; border: 1px solid var(--rule); }
+@media (min-width: 700px) {
+  .notes { max-width: none; columns: 2; column-gap: 28px; }
+}
+@media (orientation: landscape) and (min-width: 900px) {
+  .notes { columns: 3; column-gap: 24px; }
+}
 
 /* ── Drawer + search sheet ──────────────────────────────── */
 .scrim { position: fixed; inset: 0; z-index: 40; background: rgba(0, 0, 0, .25); opacity: 0; pointer-events: none; transition: opacity .25s; }
@@ -314,6 +328,15 @@ const chapters = [
       ["Timeline", null, null], ["Old Thoughts", null, null], ["Memories", null, null], ["Past Versions of Me", null, null]] },
 ];
 
+/* When each topic was last written in (sample), and optional thumbnails */
+const when = {
+  "myself/Personality": "Today 9:40 AM", "myself/Values": "Yesterday 8:15 PM", "myself/Standards": "Sep 24", "myself/Perspectives": "Sep 12",
+  "life/Career": "Today 11:02 AM", "taste/Colors": "Today 9:12 AM", "taste/Design": "Yesterday 4:30 PM", "people/Friends": "Today 8:05 AM",
+  "mind/Ideas": "Yesterday 10:47 PM", "mind/Realizations": "Sep 20", "appearance/Style": "Sep 26", "routines/Mornings": "Today 7:30 AM",
+  "little/Small joys": "Yesterday 7:02 AM", "history/Decisions": "Sep 18",
+};
+const thumbs = { "taste/Colors": "#1F3A6B", "taste/Design": "#0B0B0C", "appearance/Style": "#3A3A3F" };
+
 const thread = { topic: "Friendships", chapter: "people", steps: [
   { date: "Feb 2026", quote: "I want to make new friends." },
   { date: "May 2026", quote: "I’ve actually started making friends." },
@@ -372,6 +395,18 @@ function nowHTML() {
   </div>`;
 }
 
+function noteGroups(c) {
+  const order = ["Today", "Yesterday", "Earlier", "Nothing yet"];
+  const groups = Object.fromEntries(order.map(k => [k, []]));
+  for (const [name, desc, entry] of c.parts) {
+    const key = `${c.id}/${name}`, w = entry ? when[key] || "Earlier" : null;
+    const label = !entry ? "Nothing yet" : w.startsWith("Today") ? "Today" : w.startsWith("Yesterday") ? "Yesterday" : "Earlier";
+    const stamp = w ? w.replace(/^(Today|Yesterday) /, "") : "";
+    groups[label].push({ name, desc, entry, stamp, thumb: thumbs[key] });
+  }
+  return order.filter(k => groups[k].length).map(k => ({ label: k, rows: groups[k] }));
+}
+
 function chapterHTML(c) {
   const filled = c.parts.filter(p => p[2]).length;
   return `<div class="home chapter-page">
@@ -381,11 +416,17 @@ function chapterHTML(c) {
       <p class="sub"><b>${c.entries} entries</b> · ${c.parts.length} parts · ${filled} with recent entries</p>
     </header>
 
-    <section class="parts" aria-label="Parts of ${esc(c.title)}">
-      ${c.parts.map(([name, desc, entry]) => `<a class="pt" href="#${c.id}">
-        <div class="top"><h2>${esc(name)}</h2><span class="meta">${entry ? "latest" : ""}</span></div>
-        ${entry ? `<p class="entry">${esc(entry)}</p>` : desc ? `<p>${esc(desc)}</p>` : `<p class="empty">Nothing yet. Tap to write the first entry.</p>`}
-      </a>`).join("")}
+    <section class="notes" aria-label="Topics in ${esc(c.title)}">
+      ${noteGroups(c).map(g => `<div class="ngroup"><h2>${g.label}</h2><div class="ncard">
+        ${g.rows.map(r => `<a class="note" href="#${c.id}">
+          <div class="txt">
+            <h3>${esc(r.name)}</h3>
+            ${r.entry ? `<p class="l2"><b>${esc(r.stamp)}</b>${esc(r.entry)}</p>` : `<p class="l2 empty">${esc(r.desc || "Tap to write the first entry.")}</p>`}
+            ${r.entry ? `<p class="l3"><svg viewBox="0 0 16 16"><path d="M1.5 4.5v8h13v-7h-6.5l-1.5-1.5h-5z"/></svg>${esc(c.title)}</p>` : ""}
+          </div>
+          ${r.thumb ? `<span class="thumb" style="background:${r.thumb}"></span>` : ""}
+        </a>`).join("")}
+      </div></div>`).join("")}
     </section>
 
   </div>`;
