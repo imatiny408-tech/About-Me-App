@@ -6,7 +6,7 @@ Metaphor: **a personal book with an archive.** It has chapters instead of cards 
 
 Visual direction (v2): **one bold statement on white.** Pure white page, heavy black grotesk, centered, and mostly empty space, like an Apple product page (the "Create More." reference). The home screen leads with the statement **About Me.**
 
-**Rule: on iPad the home screen never scrolls.** It is one composed screen in every orientation and window size down to 700 × 600pt. Type sizes scale with window height (`vh` clamps), so the same composition fits an iPad mini as well as a 13" iPad Pro. Only narrower windows (Slide Over, iPhone) fall back to scrolling. **This applies to every page**, the chapter pages as well as home.
+**Rule: on iPad the home screen never scrolls.** It is one composed screen in every orientation and window size down to 700 × 600pt. Type sizes scale with window height (`vh` clamps), so the same composition fits an iPad mini as well as a 13" iPad Pro. Only narrower windows (Slide Over, iPhone) fall back to scrolling. This applies to home and Right Now. **Section pages are the exception**: they are long lists and scroll.
 
 ---
 
@@ -51,7 +51,7 @@ Right Now has its own page (`#now`): the statement **Right now.**, then the four
 They use the same composition as home, so every page feels like the same book:
 
 1. **Opening**: the tagline in small grey ("What I'm drawn to"), the chapter title as the statement (**My Taste.**), then "49 entries · 10 parts · 2 with recent entries" and the gold hairline.
-2. **Topics, as a Notes-style list**: grouped by when you last wrote in them (**Today**, **Yesterday**, **Earlier**, **Nothing yet**), each group a rounded card with hairline separators. A row with an entry shows the topic in bold, then the time and the latest entry on one line, then a folder icon and the section name, with an optional square tile on the right (e.g. a colour swatch). An empty topic shows two lines: the name and "Tap to write the first entry." The groups flow across 2 columns in portrait and 3 in landscape, continuing a long group into the next column, so the page never scrolls.
+2. **Topics, as one straight Notes-style list that scrolls**: grouped by when you last wrote in them (**Today**, **Yesterday**, **Earlier**, **Nothing yet**), each group a rounded card with hairline separators. Every row is two lines: the topic in bold, then one grey line (the latest entry, the topic's description, or "Tap to write the first entry."). No times, folder labels or tiles.
 3. **No What changed.** It appears only on the home screen. Section pages show just their title and parts, full width, in both orientations.
 
 Verified with no overflow on all 9 chapters, Right Now and home at 1200×1600, 1600×1200, iPad mini, 11" and 13" in both orientations, and a 1000×744 split-view window.
