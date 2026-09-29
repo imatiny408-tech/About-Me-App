@@ -36,7 +36,7 @@ Note: a 1200pt canvas is wider than any real iPad (13" iPad Pro is 1032 × 1376p
 
 - **Top bar** across the full width: Menu · About Me · Search · ⋯. There's no sidebar: the home contents list and the Menu drawer are how you move around, the same as in portrait.
 - **Centre**: the statement on one line (**About Me.**) and the same contents list, vertically centred.
-- **Right, 300pt, What changed**: the full Friendships thread (three dated versions, the newest marked *now*) and the Career before → after with the *why*. On a chapter page this panel shows that chapter's changes.
+- **Right, 300pt, What changed**: the full Friendships thread (three dated versions, the newest marked *now*) and the Career before → after with the *why*. The panel appears only on home; every other page is full width.
 - So the two columns read: who I am now · how I got here. The earlier "Currently" panel was cut because it repeated Right now. word for word, which the no-scroll screen has no room for.
 - Between 900 and 1100pt wide (split view) there's no right panel, so the two-line What changed. strip returns to the centre.
 
@@ -52,7 +52,7 @@ They use the same composition as home, so every page feels like the same book:
 
 1. **Opening**: the tagline in small grey ("What I'm drawn to"), the chapter title as the statement (**My Taste.**), then "49 entries · 10 parts · 2 with recent entries" and the gold hairline.
 2. **Parts**: a 2-column grid (up to 10 parts, 5 rows). Each part has its name in bold and one line under it: the latest entry in black, or its description in grey, or "Nothing yet. Tap to write the first entry." in light grey. Clamped to 2 lines.
-3. **What changed.**: the chapter's evolution lines (e.g. Career: ~~Web design~~ → Web + app development) and "This chapter has evolved N times", with **View history →**. In wide landscape this moves to the right panel with the chapter's stats.
+3. **No What changed.** It appears only on the home screen. Section pages show just their title and parts, full width, in both orientations.
 
 Verified with no overflow on all 9 chapters, Right Now and home at 1200×1600, 1600×1200, iPad mini, 11" and 13" in both orientations, and a 1000×744 split-view window.
 

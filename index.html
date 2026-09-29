@@ -99,6 +99,8 @@ p { margin: 0; }
     padding: 32px max(24px, env(safe-area-inset-right, 0px)) 32px 28px; border-left: 1px solid var(--rule);
   }
   .home .latest { display: none; }                  /* lives in the context panel */
+  .app.inner { grid-template-columns: minmax(0, 1fr); }
+  .app.inner .context { display: none; }
 }
 
 /* ── Drawer nav ───────────────────────────────── */
@@ -371,7 +373,6 @@ function nowHTML() {
 }
 
 function chapterHTML(c) {
-  const related = [thread, change].filter(t => t.chapter === c.id);
   const filled = c.parts.filter(p => p[2]).length;
   return `<div class="home chapter-page">
     <header class="statement">
@@ -387,27 +388,10 @@ function chapterHTML(c) {
       </a>`).join("")}
     </section>
 
-    <section class="latest" aria-labelledby="chLatest">
-      <div class="block-head"><h2 id="chLatest">What changed.</h2>${c.changes ? `<a class="link" href="#history">View history →</a>` : ""}</div>
-      <div class="rows">
-        ${related.map(t => t.steps
-          ? `<p class="row"><span class="topic">${t.topic}</span><span><span class="old">“${esc(t.steps[0].quote)}”</span><span class="to">→</span><span>“${esc(t.steps.at(-1).quote)}”</span><span class="meta">${t.steps.length} versions</span></span></p>`
-          : `<p class="row"><span class="topic">${t.topic}</span><span><span class="was">${esc(t.was)}</span><span class="to">→</span><span>${esc(t.is)}</span><span class="meta">${t.date}</span></span></p>`).join("")}
-        <p class="row"><span class="topic">Overall</span><span><span>${c.changes ? `This chapter has evolved ${c.changes} times.` : "Nothing here has changed yet."}</span></span></p>
-      </div>
-    </section>
   </div>`;
 }
 
 function contextHTML(route) {
-  const c = chapters.find(x => x.id === route);
-  if (c) {
-    const related = [thread, change].filter(t => t.chapter === c.id);
-    return `<div class="ctx-block"><span class="label">This chapter</span>
-      <div class="ctx-item"><span class="meta">Entries</span><span class="v">${c.entries}</span></div>
-      <div class="ctx-item"><span class="meta">Times it changed</span><span class="v">${c.changes}</span></div></div>
-      <div class="ctx-block"><span class="label">What changed</span><p class="ctx-item"><span class="v">${c.changes ? `Evolved ${c.changes} times.` : "Nothing yet."}</span></p>${c.changes ? `<a class="link" href="#history">View history →</a>` : ""}${related.length ? related.map(t => `<div class="ctx-item"><span class="meta">${esc(t.topic)}</span><span class="v changed">${esc(t.is || t.steps.at(-1).quote)}</span></div>`).join("") : ""}</div>`;
-  }
   const last = thread.steps.length - 1;
   return `<div class="ctx-block"><span class="label">What changed</span>
       <div class="ctx-item"><span class="meta">${thread.topic}</span></div>
@@ -430,6 +414,7 @@ function render() {
   const isHome = route === "home";
   $("#menuBtn").hidden = !isHome;
   $("#backBtn").hidden = isHome;
+  $("#app").classList.toggle("inner", !isHome);           /* no What changed panel off the home screen */
   document.documentElement.classList.add("fit");
   $("#main").classList.add("is-home");
   window.scrollTo(0, 0);
