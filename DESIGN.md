@@ -90,6 +90,25 @@ The pencil button in the top bar (every page) turns the screen into a drawing la
 
 Hover effects (grey backgrounds, nudges) only apply on devices with a real pointer. On iPad a tap never leaves a tile grey. There is no line under the top bar.
 
+## 3g. Sections are curated (show/hide only)
+
+The sections inside each category (Career, Money, Friendships…) are defined by the app, in a fixed order, so no part of someone's identity ranks above another: Career isn't "above" Friendships, Appearance isn't "above" Mind. The order stays the same everywhere.
+
+People **can**: hide an official section, show it again, and keep every entry while it's hidden.
+People **cannot**: reorder, rename, create or delete sections.
+
+- **⋯ → Sections** on a category page lists that category's sections in the app's order, each with an on/off switch. The page title line counts hidden sections ("8 sections · 1 hidden").
+- Tapping a section opens it: its latest entry with **Delete**, and **Hide this section**.
+- If every section is hidden, the page says so and offers **Show sections**.
+- Hiding never deletes anything and never sends anything to Trash. Search follows what's visible.
+
+## 3h. Trash
+
+Trash is a utility, not a category: a small bin in the bottom-right corner of the homepage, with a count when it holds anything.
+
+- Deleting an entry moves it to Trash. It stays for **7 days**, then it is permanently deleted.
+- Each item shows where it came from (My Taste › Colors), the entry, and the time left ("7 days left", "12 hours left", "5 minutes left"), with **Restore**.
+
 ## 4. Typography
 
 One family: **SF Pro** on iPad (Inter Tight as the web fallback). Hierarchy comes from weight and size, not from mixing faces.

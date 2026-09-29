@@ -72,7 +72,6 @@ p { margin: 0; }
 .icon-btn { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 22px; color: var(--ink); }
 @media (hover: hover) { .icon-btn:hover { background: var(--hover); } }
 .icon-btn svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; }
-.more-btn { display: none; }
 .back-btn { display: inline-flex; align-items: center; gap: 2px; height: 44px; padding-right: 12px; border-radius: 22px; font: 600 17px/1 var(--sans); letter-spacing: -.01em; color: var(--ink); }
 .back-btn svg { width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 @media (hover: hover) { .back-btn:hover { color: var(--muted); } }
@@ -83,7 +82,6 @@ p { margin: 0; }
 
 /* ── Landscape, regular width: wider page ──────────────── */
 @media (orientation: landscape) and (min-width: 900px) {
-  .more-btn { display: grid; }
   .main { padding-inline: clamp(40px, 5vw, 80px); }
   html.fit .home { align-content: center !important; gap: clamp(16px, 3.2vh, 64px) !important; }
   .home .statement h1 span { display: inline; }            /* one line in landscape */
@@ -380,6 +378,32 @@ html.fit .tiles-page .tile { min-height: 0; }
 .as-item button { height: 34px; padding: 0 12px; font-size: 14px; }
 .as-empty { color: var(--muted); padding: 12px 0; }
 
+/* ── Sections, entries and Trash ── */
+.pill { height: 38px; padding: 0 14px; border-radius: 12px; border: 1px solid var(--rule); font: 600 15px/1 var(--sans); }
+@media (hover: hover) { .pill:hover { background: var(--hover); } }
+.entry-card { border: 1px solid var(--rule); border-radius: 14px; padding: 16px; display: grid; gap: 6px; }
+.et { font: 600 19px/1.35 var(--sans); letter-spacing: -.015em; }
+.entry-card .btns { margin-top: 6px; }
+.sheet-foot { display: grid; gap: 8px; justify-items: start; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--rule); }
+.switches { display: grid; }
+.sw-row { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 12px 2px; border-top: 1px solid var(--rule); font: 500 17px/1.3 var(--sans); cursor: pointer; }
+.sw-row input { position: absolute; opacity: 0; pointer-events: none; }
+.sw-row i { flex: none; width: 46px; height: 28px; border-radius: 14px; background: var(--rule); position: relative; transition: background .2s; }
+.sw-row i::after { content: ""; position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.25); transition: transform .2s; }
+.sw-row input:checked + i { background: var(--ink); }
+.sw-row input:checked + i::after { transform: translateX(18px); }
+.sw-row input:focus-visible + i { outline: 2px solid var(--ink); outline-offset: 2px; }
+.all-hidden { display: grid; gap: 14px; justify-items: center; align-content: center; text-align: center; color: var(--muted); padding: 48px 0; }
+.trash-btn {
+  position: fixed; z-index: 30; right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
+  width: 40px; height: 40px; border-radius: 20px; display: grid; place-items: center; color: var(--faint);
+}
+@media (hover: hover) { .trash-btn:hover { color: var(--ink); background: var(--hover); } }
+.trash-btn svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.trash-btn span { position: absolute; top: 4px; right: 3px; min-width: 16px; height: 16px; padding: 0 4px; border-radius: 8px; background: var(--ink); color: var(--bg); font: 700 10px/16px var(--sans); text-align: center; }
+.trash-item { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 14px; align-items: center; padding-top: 14px; border-top: 1px solid var(--rule); }
+.trash-item .left { font: 600 13px/1.3 var(--sans); color: var(--gold-ink); margin-top: 4px; }
+
 /* ── Drawer + search sheet ──────────────────────────────── */
 .scrim { position: fixed; inset: 0; z-index: 40; background: rgba(0, 0, 0, .25); opacity: 0; pointer-events: none; transition: opacity .25s; }
 .scrim.open { opacity: 1; pointer-events: auto; }
@@ -433,7 +457,7 @@ html.fit .tiles-page .tile { min-height: 0; }
       <button class="icon-btn" id="searchBtn" aria-label="Search the archive">
         <svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 20 20"/></svg>
       </button>
-      <button class="icon-btn more-btn" aria-label="More options">
+      <button class="icon-btn more-btn" id="moreBtn" aria-label="Show or hide sections" hidden>
         <svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="19" cy="12" r="1.3"/></svg>
       </button>
     </div>
@@ -473,6 +497,12 @@ html.fit .tiles-page .tile { min-height: 0; }
   <p class="as-where" id="ssWhere"></p>
   <div class="as-list" id="ssList"></div>
 </div>
+<button type="button" class="trash-btn" id="trashBtn" aria-label="Trash" hidden data-html2canvas-ignore>
+  <svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4.5h6V7M6.5 7l1 13h9l1-13M10 11v6M14 11v6"/></svg><span id="trashCount" hidden></span>
+</button>
+<div class="annot-sheet" id="entrySheet" role="dialog" aria-label="Section" hidden data-html2canvas-ignore></div>
+<div class="annot-sheet" id="sectionsSheet" role="dialog" aria-label="Sections" hidden data-html2canvas-ignore></div>
+<div class="annot-sheet" id="trashSheet" role="dialog" aria-label="Trash" hidden data-html2canvas-ignore></div>
 <div class="layout-menu" id="layoutMenu" role="menu" aria-label="Layout" hidden></div>
 <div class="scrim" id="scrim"></div>
 <aside class="drawer" id="drawer" aria-label="Contents">
@@ -647,7 +677,7 @@ function nowHTML() {
 function noteGroups(c) {
   const order = ["Today", "Yesterday", "Earlier", "Nothing yet"];
   const groups = Object.fromEntries(order.map(k => [k, []]));
-  for (const [name, desc, entry] of c.parts) {
+  for (const [name, desc, entry] of partsFor(c)) {
     const key = `${c.id}/${name}`, w = entry ? when[key] || "Earlier" : null;
     const label = !entry ? "Nothing yet" : w.startsWith("Today") ? "Today" : w.startsWith("Yesterday") ? "Yesterday" : "Earlier";
     groups[label].push({ name, desc, entry });
@@ -657,32 +687,32 @@ function noteGroups(c) {
 
 function topicsHTML(c, layout) {
   const label = `aria-label="Topics in ${esc(c.title)}"`;
-  const rows = c.parts.map(([name, desc, entry]) => ({ name, desc, entry, when: entry ? when[`${c.id}/${name}`] || "" : "", color: visuals[`${c.id}/${name}`] }));
+  const rows = partsFor(c).map(([name, desc, entry]) => ({ name, desc, entry, when: entry ? when[`${c.id}/${name}`] || "" : "", color: visuals[`${c.id}/${name}`] }));
   // Empty cells that close off the last row: one set for the 3-column grid, one for the 2-column grid
   const blanks = (n, cls) => [[3, "fill3"], [2, "fill2"]].map(([cols, fill]) =>
     Array.from({ length: (cols - n % cols) % cols }, () => `<div class="${cls} blank ${fill}" aria-hidden="true"></div>`).join("")).join("");
   if (layout === "cards") {
     const ordered = [...rows.filter(r => r.entry), ...rows.filter(r => !r.entry)];
     return `<section class="cards" ${label}>${ordered.map(r => r.entry
-      ? `<a class="cardx" href="#${c.id}"><div class="body">${r.color ? `<div class="sw" style="background:${r.color}"></div>` : ""}<p class="quote">${esc(r.entry)}</p></div>
+      ? `<a class="cardx" href="#${c.id}" data-part="${esc(r.name)}"><div class="body">${r.color ? `<div class="sw" style="background:${r.color}"></div>` : ""}<p class="quote">${esc(r.entry)}</p></div>
          <p class="cap"><b>${esc(r.name)}</b>${r.when ? ` · ${esc(r.when)}` : ""}</p></a>`
-      : `<a class="cardx empty" href="#${c.id}"><div class="body">+ Add</div><p class="cap"><b>${esc(r.name)}</b></p></a>`).join("")}</section>`;
+      : `<a class="cardx empty" href="#${c.id}" data-part="${esc(r.name)}"><div class="body">+ Add</div><p class="cap"><b>${esc(r.name)}</b></p></a>`).join("")}</section>`;
   }
   if (layout === "grid") {
     // Two rows that you swipe through left to right; an odd count gets one empty cell to close the last column
     const pad = rows.length % 2 ? `<div class="cell blank" aria-hidden="true"></div>` : "";
-    return `<section class="gridx swipe" ${label}>${rows.map(r => `<a class="cell ${r.entry ? "" : "empty"}" href="#${c.id}">
+    return `<section class="gridx swipe" ${label}>${rows.map(r => `<a class="cell ${r.entry ? "" : "empty"}" href="#${c.id}" data-part="${esc(r.name)}">
       <h3>${esc(r.name)}</h3>${r.entry ? `<p>${esc(r.entry)}</p>` : ""}</a>`).join("")}${pad}</section>`;
   }
   if (layout === "tiles") {
     // No empty filler boxes: the last row's tiles stretch to fill it (3 across in landscape, 2 in portrait)
     const n = rows.length;
     const fit = i => [n % 3 === 1 && i === n - 1 ? "last3-1" : "", n % 3 === 2 && i >= n - 2 ? "last3-2" : "", n % 2 === 1 && i === n - 1 ? "last2-1" : ""].join(" ");
-    return `<section class="gridx tiles6" ${label}>${rows.map((r, i) => `<a class="tile ${fit(i)}" href="#${c.id}">${esc(r.name)}</a>`).join("")}</section>`;
+    return `<section class="gridx tiles6" ${label}>${rows.map((r, i) => `<a class="tile ${fit(i)}" href="#${c.id}" data-part="${esc(r.name)}">${esc(r.name)}</a>`).join("")}</section>`;
   }
   return `<section class="notes" ${label}>
       ${noteGroups(c).map(g => `<div class="ngroup"><h2>${g.label}</h2><div class="ncard">
-        ${g.rows.map(r => `<a class="note" href="#${c.id}">
+        ${g.rows.map(r => `<a class="note" href="#${c.id}" data-part="${esc(r.name)}">
           <div class="txt">
             <h3>${esc(r.name)}</h3>
             <p class="l2">${esc(r.entry || r.desc || "Tap to write the first entry.")}</p>
@@ -753,15 +783,15 @@ function initHistory() {
 
 function chapterHTML(c) {
   if (c.id === "history") return historyHTML(c);
-  const filled = c.parts.filter(p => p[2]).length;
+  const shown = partsFor(c), filled = shown.filter(p => p[2]).length, hiddenCount = c.parts.length - shown.length;
   return `<div class="home chapter-page ${getLayout(c.id) === "tiles" ? "tiles-page" : ""}">
     <header class="statement">
       <span class="eyebrow">${esc(c.tagline)}</span>
       <h1>${esc(c.title)}.</h1>
-      <p class="sub"><b>${c.entries} entries</b> · ${c.parts.length} parts · ${filled} with recent entries</p>
+      <p class="sub"><b>${c.entries} entries</b> · ${shown.length} sections${hiddenCount ? ` · ${hiddenCount} hidden` : ""} · ${filled} with recent entries</p>
     </header>
 
-    ${topicsHTML(c, getLayout(c.id))}
+    ${shown.length ? topicsHTML(c, getLayout(c.id)) : `<div class="all-hidden"><p>All sections here are hidden. Everything in them is still saved.</p><button type="button" class="pill" data-open-sections>Show sections</button></div>`}
 
   </div>`;
 }
@@ -790,6 +820,8 @@ function render() {
   $("#menuBtn").hidden = !isHome;
   $("#backBtn").hidden = isHome;
   $("#layoutBtn").hidden = !chapter || chapter.id === "history";
+  $("#moreBtn").hidden = !chapter || chapter.id === "history";
+  $("#trashBtn").hidden = !isHome; trashBadge();
   $("#app").classList.toggle("inner", !isHome);           /* no What changed panel off the home screen */
   document.documentElement.classList.toggle("fit", !chapter || chapter.id === "history" || getLayout(chapter.id) === "tiles");   /* home, Right Now, History and Tiles pages fit one screen; other layouts scroll */
   window.scrollTo(0, 0);
@@ -798,7 +830,7 @@ function render() {
 }
 
 /* ── Drawer, search, scroll state ──────────────────────── */
-function closeAll() { ["#drawer", "#sheet", "#scrim"].forEach(s => $(s).classList.remove("open")); closeLayoutMenu(); }
+function closeAll() { ["#drawer", "#sheet", "#scrim"].forEach(s => $(s).classList.remove("open")); closeLayoutMenu(); closeSheets(); }
 
 /* Layout menu */
 function currentChapter() { return chapters.find(c => c.id === location.hash.slice(1)); }
@@ -828,14 +860,15 @@ $("#scrim").onclick = closeAll;
 $("#searchBtn").onclick = () => { $("#sheet").classList.add("open"); $("#scrim").classList.add("open"); search(""); setTimeout(() => $("#q").focus(), 50); };
 document.addEventListener("keydown", e => { if (e.key === "Escape") closeAll(); });
 
-const index = [
+const buildIndex = () => [
   ...chapters.map(c => ({ text: c.title, where: "Chapter", id: c.id })),
-  ...chapters.flatMap(c => c.parts.map(p => ({ text: p[0] + (p[2] ? ` — ${p[2]}` : ""), where: c.title, id: c.id }))),
+  ...chapters.flatMap(c => partsFor(c).map(p => ({ text: p[0] + (p[2] ? ` — ${p[2]}` : ""), where: c.title, id: c.id }))),
   ...rightNow.map(r => ({ text: `${r.lead} ${r.text}`, where: "Right Now", id: "now" })),
   ...thread.steps.map(s => ({ text: s.quote, where: `${thread.topic} · ${s.date}`, id: thread.chapter })),
 ];
 function search(q) {
   const t = q.trim().toLowerCase();
+  const index = buildIndex();
   const hits = t ? index.filter(i => i.text.toLowerCase().includes(t)).slice(0, 12) : index.slice(0, 6);
   $("#results").innerHTML = hits.length
     ? hits.map(h => `<a href="#${h.id}"><span>${esc(h.text)}</span><span class="meta">${esc(h.where)}</span></a>`).join("")
@@ -844,6 +877,105 @@ function search(q) {
 $("#q").addEventListener("input", e => search(e.target.value));
 
 addEventListener("scroll", () => $("#topbar").classList.toggle("scrolled", scrollY > 8), { passive: true });
+/* ── Sections and Trash ────────────────────────────────────
+   Sections are curated: their order, names and definitions are fixed by the app,
+   so no part of someone ranks above another. People can only hide a section and
+   show it again; hiding never touches its entries. Deleting an entry moves it to
+   Trash for 7 days, then it's gone for good. */
+const TRASH_DAYS = 7, DAY = 86400000;
+function store(key, fallback) { try { const v = JSON.parse(localStorage.getItem(key)); return v ?? fallback; } catch (e) { return fallback; } }
+function keep(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) {} }
+const hiddenOf = id => store("about-me-hidden", {})[id] || [];
+function setHidden(id, name, hide) {
+  const all = store("about-me-hidden", {}), set = new Set(all[id] || []);
+  hide ? set.add(name) : set.delete(name);
+  all[id] = [...set]; keep("about-me-hidden", all);
+}
+function purgeTrash() {   // anything past 7 days is permanently deleted
+  const now = Date.now(), trash = store("about-me-trash", []), purged = new Set(store("about-me-purged", []));
+  const live = trash.filter(t => now - t.deletedAt < TRASH_DAYS * DAY || (purged.add(t.key), false));
+  keep("about-me-trash", live); keep("about-me-purged", [...purged]);
+  return live;
+}
+function isGone(key) { return store("about-me-trash", []).some(t => t.key === key) || store("about-me-purged", []).includes(key); }
+function partsFor(c) {
+  const hid = new Set(hiddenOf(c.id));
+  return c.parts.filter(p => !hid.has(p[0])).map(([n, d, e]) => [n, d, e && !isGone(`${c.id}/${n}`) ? e : null]);
+}
+function timeLeft(t) {
+  const ms = t.deletedAt + TRASH_DAYS * DAY - Date.now();
+  const d = Math.ceil(ms / DAY), h = Math.ceil(ms / 3600000), m = Math.max(1, Math.ceil(ms / 60000));
+  return ms > DAY ? `${d} days left` : ms > 3600000 ? `${h} hour${h > 1 ? "s" : ""} left` : `${m} minute${m > 1 ? "s" : ""} left`;
+}
+function openSheet(id) { closeAll(); $(id).hidden = false; $("#scrim").classList.add("open"); }
+function closeSheets() { ["#entrySheet", "#sectionsSheet", "#trashSheet"].forEach(s => $(s).hidden = true); }
+
+// Tapping a section opens its entry, with Delete (to Trash) and Hide this section
+function openEntry(c, name) {
+  const part = c.parts.find(p => p[0] === name); if (!part) return;
+  const key = `${c.id}/${name}`, entry = part[2] && !isGone(key) ? part[2] : null;
+  $("#entrySheet").innerHTML = `<div class="as-head"><div><p class="meta">${esc(c.title)}</p><h2>${esc(name)}</h2></div>
+      <button type="button" class="icon-btn" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+    ${part[1] ? `<p class="as-where">${esc(part[1])}</p>` : ""}
+    ${entry ? `<div class="entry-card"><p class="meta">${esc(when[key] || "Earlier")}</p><p class="et">${esc(entry)}</p>
+      <div class="btns"><button type="button" class="pill" data-delete>Delete</button></div></div>`
+      : `<p class="as-empty">No entries yet. Writing entries comes next.</p>`}
+    <p class="as-status" id="entryStatus" role="status"></p>
+    <div class="sheet-foot"><button type="button" class="pill" data-hide>Hide this section</button>
+      <span class="meta">Hiding keeps everything. Show it again from ⋯ → Sections.</span></div>`;
+  openSheet("#entrySheet");
+  $("#entrySheet").onclick = e => {
+    if (e.target.closest("[data-close]")) return closeAll();
+    if (e.target.closest("[data-delete]")) {
+      const trash = purgeTrash(); trash.unshift({ key, chapter: c.id, chapterTitle: c.title, part: name, text: entry, when: when[key] || "", deletedAt: Date.now() });
+      keep("about-me-trash", trash); render(); openEntry(c, name);
+      $("#entryStatus").textContent = `Moved to Trash. You can restore it for ${TRASH_DAYS} days from the bin on the homepage.`;
+    }
+    if (e.target.closest("[data-hide]")) { setHidden(c.id, name, true); closeAll(); render(); }
+  };
+}
+$("#main").addEventListener("click", e => {
+  if (e.target.closest("[data-open-sections]")) return openSections();
+  const a = e.target.closest("[data-part]"), c = chapters.find(x => x.id === location.hash.slice(1));
+  if (!a || !c) return;
+  e.preventDefault(); openEntry(c, a.dataset.part);
+});
+
+// ⋯ on a category page: show or hide its sections, in the app's fixed order
+function openSections() {
+  const c = chapters.find(x => x.id === location.hash.slice(1)); if (!c) return;
+  const hid = new Set(hiddenOf(c.id));
+  $("#sectionsSheet").innerHTML = `<div class="as-head"><h2>Sections</h2>
+      <button type="button" class="icon-btn" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+    <p class="as-where">Choose which sections of ${esc(c.title)} you see. Hidden sections keep all their entries. The order is set by the app so no part of you ranks above another.</p>
+    <div class="switches">${c.parts.map(([n]) => `<label class="sw-row"><span>${esc(n)}</span>
+      <input type="checkbox" role="switch" data-sec="${esc(n)}" ${hid.has(n) ? "" : "checked"}><i aria-hidden="true"></i></label>`).join("")}</div>`;
+  openSheet("#sectionsSheet");
+  $("#sectionsSheet").onclick = e => { if (e.target.closest("[data-close]")) closeAll(); };
+  $("#sectionsSheet").onchange = e => { const i = e.target.closest("[data-sec]"); if (!i) return; setHidden(c.id, i.dataset.sec, !i.checked); render(); openSections(); };
+}
+$("#moreBtn").onclick = openSections;
+
+// Trash, from the small bin on the homepage
+function trashBadge() { const n = purgeTrash().length; $("#trashCount").textContent = n || ""; $("#trashCount").hidden = !n; }
+function openTrash() {
+  const items = purgeTrash();
+  $("#trashSheet").innerHTML = `<div class="as-head"><h2>Trash</h2>
+      <button type="button" class="icon-btn" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+    <p class="as-where">Deleted entries stay here for ${TRASH_DAYS} days, then they’re deleted for good. Hidden sections never come here.</p>
+    <div class="as-list">${items.length ? items.map(t => `<div class="trash-item" data-key="${esc(t.key)}">
+      <div><p class="meta">${esc(t.chapterTitle)} › ${esc(t.part)}</p><p class="et">${esc(t.text)}</p><p class="left">${timeLeft(t)}</p></div>
+      <button type="button" class="pill" data-restore>Restore</button></div>`).join("") : `<p class="as-empty">Trash is empty.</p>`}</div>`;
+  openSheet("#trashSheet");
+  $("#trashSheet").onclick = e => {
+    if (e.target.closest("[data-close]")) return closeAll();
+    const r = e.target.closest("[data-restore]"); if (!r) return;
+    const key = r.closest("[data-key]").dataset.key;
+    keep("about-me-trash", purgeTrash().filter(t => t.key !== key)); render(); openTrash();
+  };
+}
+$("#trashBtn").onclick = openTrash;
+
 /* ── Annotate ─────────────────────────────────────────────
    Draw over the current screen, explain the change, save it.
    In the Claude preview comments go to the artifact's private database,
