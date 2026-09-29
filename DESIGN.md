@@ -117,6 +117,20 @@ Trash is a utility, not a category: a small bin in the bottom-right corner of th
 
 **Context under each section.** Every section has a one-line description (Career: "What I do and want to do.", Education: "What I've studied and what I'm learning."). Tiles show it in grey under the name (up to two lines); Grid shows it under the title, above your latest words; List shows it when there's no entry yet.
 
+## 3j. Section pages
+
+Every section in every category has its own page (`#life/career`, `#taste/things-i-dislike`), opened by tapping it in any layout or from search. Back returns to the category.
+
+- **Header:** the category (a link back), the section name in the gradient title, its context line, and "N entries · last written …".
+- **Write:** a soft grey box ("What's true now?") with a pill **Add entry** button (⌘↩ on a keyboard). Entries are saved on the device. A new entry becomes the latest, and the one before it moves down to Earlier versions, so nothing is overwritten.
+- **Latest:** the newest entry, large, in a white card with its date.
+- **Earlier versions:** older entries in date order under a hairline list, each with its date.
+- **Delete:** the small bin on any entry moves just that one to Trash for 7 days, with **Undo** right there.
+- **Previous / Next:** cards to the neighbouring sections in the category's curated order (hidden ones are skipped).
+- **Hide this section:** hides it and returns to the category; everything is kept.
+
+Tiles, Grid, List and Cards always show each section's latest entry, including ones you wrote.
+
 ## 4. Typography
 
 One family: **SF Pro** on iPad (Inter Tight as the web fallback). Hierarchy comes from weight and size, not from mixing faces.

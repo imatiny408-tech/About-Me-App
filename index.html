@@ -442,6 +442,43 @@ html.fit .tiles-page .tile { min-height: 0; }
 .trash-item { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 14px; align-items: center; padding-top: 14px; border-top: 1px solid var(--rule); }
 .trash-item .left { font: 600 13px/1.3 var(--sans); color: var(--gold-ink); margin-top: 4px; }
 
+/* ── Section page: one section, its entries and earlier versions ── */
+.entry-page { max-width: 760px; margin-inline: auto; padding-block: clamp(20px, 3.5vh, 44px) 120px; display: grid; gap: 22px; }
+.entry-page .statement { justify-items: start; text-align: left; gap: 8px; }
+.entry-page .statement h1 { font-size: clamp(40px, 5.4vh, 68px); }
+.entry-page .statement .sub { font-size: clamp(16px, 1.7vh, 19px); }
+.entry-page .statement::after { display: none; }
+.entry-page a.eyebrow { color: var(--muted); }
+@media (hover: hover) { .entry-page a.eyebrow:hover { color: var(--ink); } }
+.compose { background: #F3F4F6; border-radius: 24px; padding: 18px 18px 14px 20px; display: grid; gap: 10px; transition: box-shadow .2s; }
+.compose:focus-within { box-shadow: 0 0 0 2px var(--g2, var(--ink)); }
+.compose textarea { width: 100%; border: 0; background: transparent; resize: none; outline: none; color: var(--ink); font: 500 19px/1.45 var(--sans); letter-spacing: -.01em; min-height: 56px; }
+.compose textarea::placeholder { color: var(--faint); }
+.compose-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.btn-primary { height: 40px; padding: 0 18px; border-radius: 999px; background: var(--ink); color: #fff; font: 600 15px/1 var(--sans); flex: none; transition: opacity .2s; }
+.btn-primary:disabled { opacity: .3; cursor: default; }
+.entry-page .as-status:empty { display: none; }
+.entry-page .as-status .link { margin-left: 6px; color: var(--g1, var(--ink)); }
+.latest-card { border: 1px solid var(--rule); border-radius: 24px; padding: 18px 20px 24px 24px; display: grid; gap: 8px; box-shadow: 0 16px 36px -28px rgba(11,11,15,.35); }
+.e-top { display: flex; justify-content: space-between; align-items: center; }
+.e-label { display: inline-flex; align-items: center; gap: 8px; font: 600 13px/1.2 var(--sans); color: var(--muted); }
+.e-label::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: linear-gradient(135deg, var(--g1, var(--ink)), var(--g3, var(--ink))); }
+.latest-card .big { font: 600 clamp(22px, 2.6vw, 30px)/1.3 var(--sans); letter-spacing: -.02em; text-wrap: pretty; white-space: pre-wrap; }
+.e-del { width: 36px; height: 36px; border-radius: 18px; display: grid; place-items: center; color: var(--faint); flex: none; }
+.e-del svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+@media (hover: hover) { .e-del:hover { color: var(--ink); background: var(--hover); } }
+.earlier { display: grid; gap: 4px; }
+.earlier ol { list-style: none; margin: 0; padding: 0; }
+.earlier li { display: grid; grid-template-columns: 110px minmax(0, 1fr) auto; gap: 12px; align-items: start; padding: 12px 0 12px 4px; border-top: 1px solid var(--rule); }
+.earlier .e-when { font: 500 14px/1.9 var(--sans); color: var(--faint); }
+.earlier li p { font: 500 17px/1.45 var(--sans); color: var(--muted); padding-top: 4px; white-space: pre-wrap; }
+.sec-nav { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+.sec-nav a { display: grid; gap: 4px; padding: 16px 20px; border-radius: 20px; background: #F3F4F6; font: 600 17px/1.25 var(--sans); letter-spacing: -.01em; }
+.sec-nav a.next { text-align: right; }
+@media (hover: hover) { .sec-nav a:hover { background: #EAEBEE; } }
+.sec-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+@media (max-width: 520px) { .earlier li { grid-template-columns: minmax(0, 1fr) auto; } .earlier .e-when { grid-column: 1 / -1; line-height: 1.2; } }
+
 /* ── Drawer + search sheet ──────────────────────────────── */
 .scrim { position: fixed; inset: 0; z-index: 40; background: rgba(0, 0, 0, .25); opacity: 0; pointer-events: none; transition: opacity .25s; }
 .scrim.open { opacity: 1; pointer-events: auto; }
@@ -541,7 +578,6 @@ html.fit .tiles-page .tile { min-height: 0; }
 <button type="button" class="trash-btn" id="trashBtn" aria-label="Trash" hidden data-html2canvas-ignore>
   <svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4.5h6V7M6.5 7l1 13h9l1-13M10 11v6M14 11v6"/></svg><span id="trashCount" hidden></span>
 </button>
-<div class="annot-sheet" id="entrySheet" role="dialog" aria-label="Section" hidden data-html2canvas-ignore></div>
 <div class="annot-sheet" id="sectionsSheet" role="dialog" aria-label="Sections" hidden data-html2canvas-ignore></div>
 <div class="annot-sheet settings" id="settingsSheet" role="dialog" aria-label="Settings" hidden data-html2canvas-ignore></div>
 <div class="annot-sheet" id="trashSheet" role="dialog" aria-label="Trash" hidden data-html2canvas-ignore></div>
@@ -614,6 +650,14 @@ const when = {
   "life/Career": "Today 11:02 AM", "taste/Colors": "Today 9:12 AM", "taste/Design": "Yesterday 4:30 PM", "people/Friends": "Today 8:05 AM",
   "mind/Ideas": "Yesterday 10:47 PM", "mind/Realizations": "Sep 20", "appearance/Style": "Sep 26", "routines/Mornings": "Today 7:30 AM",
   "little/Small joys": "Yesterday 7:02 AM", "history/Decisions": "Sep 18",
+};
+
+/* Earlier versions of a few sections (sample) */
+const past = {
+  "life/Career": [{ text: "Web design.", when: "Jun 2026" }],
+  "people/Friends": [{ text: "I want to make new friends.", when: "Feb 2026" }, { text: "I’ve actually started making friends.", when: "May 2026" }],
+  "mind/Ideas": [{ text: "A journal that shows you how you’ve changed.", when: "Aug 2026" }],
+  "routines/Mornings": [{ text: "Phone first, coffee second.", when: "Mar 2026" }],
 };
 
 /* My History: moments in order, each tagged with a meaningful kind (sample content) */
@@ -719,8 +763,7 @@ function nowHTML() {
 function noteGroups(c) {
   const order = ["Today", "Yesterday", "Earlier", "Nothing yet"];
   const groups = Object.fromEntries(order.map(k => [k, []]));
-  for (const [name, desc, entry] of partsFor(c)) {
-    const key = `${c.id}/${name}`, w = entry ? when[key] || "Earlier" : null;
+  for (const [name, desc, entry, w] of partsFor(c)) {
     const label = !entry ? "Nothing yet" : w.startsWith("Today") ? "Today" : w.startsWith("Yesterday") ? "Yesterday" : "Earlier";
     groups[label].push({ name, desc, entry });
   }
@@ -729,32 +772,32 @@ function noteGroups(c) {
 
 function topicsHTML(c, layout) {
   const label = `aria-label="Topics in ${esc(c.title)}"`;
-  const rows = partsFor(c).map(([name, desc, entry]) => ({ name, desc, entry, when: entry ? when[`${c.id}/${name}`] || "" : "", color: visuals[`${c.id}/${name}`] }));
+  const rows = partsFor(c).map(([name, desc, entry, w]) => ({ name, desc, entry, when: w, color: visuals[`${c.id}/${name}`], href: `#${c.id}/${slug(name)}` }));
   // Empty cells that close off the last row: one set for the 3-column grid, one for the 2-column grid
   const blanks = (n, cls) => [[3, "fill3"], [2, "fill2"]].map(([cols, fill]) =>
     Array.from({ length: (cols - n % cols) % cols }, () => `<div class="${cls} blank ${fill}" aria-hidden="true"></div>`).join("")).join("");
   if (layout === "cards") {
     const ordered = [...rows.filter(r => r.entry), ...rows.filter(r => !r.entry)];
     return `<section class="cards" ${label}>${ordered.map(r => r.entry
-      ? `<a class="cardx" href="#${c.id}" data-part="${esc(r.name)}"><div class="body">${r.color ? `<div class="sw" style="background:${r.color}"></div>` : ""}<p class="quote">${esc(r.entry)}</p></div>
+      ? `<a class="cardx" href="${r.href}" data-part="${esc(r.name)}"><div class="body">${r.color ? `<div class="sw" style="background:${r.color}"></div>` : ""}<p class="quote">${esc(r.entry)}</p></div>
          <p class="cap"><b>${esc(r.name)}</b>${r.when ? ` · ${esc(r.when)}` : ""}</p></a>`
-      : `<a class="cardx empty" href="#${c.id}" data-part="${esc(r.name)}"><div class="body">+ Add</div><p class="cap"><b>${esc(r.name)}</b></p></a>`).join("")}</section>`;
+      : `<a class="cardx empty" href="${r.href}" data-part="${esc(r.name)}"><div class="body">+ Add</div><p class="cap"><b>${esc(r.name)}</b></p></a>`).join("")}</section>`;
   }
   if (layout === "grid") {
     // Two rows that you swipe through left to right; an odd count gets one empty cell to close the last column
     const pad = rows.length % 2 ? `<div class="cell blank" aria-hidden="true"></div>` : "";
-    return `<section class="gridx swipe" ${label}>${rows.map(r => `<a class="cell ${r.entry ? "" : "empty"}" href="#${c.id}" data-part="${esc(r.name)}">
+    return `<section class="gridx swipe" ${label}>${rows.map(r => `<a class="cell ${r.entry ? "" : "empty"}" href="${r.href}" data-part="${esc(r.name)}">
       <h3>${esc(r.name)}</h3>${r.desc ? `<span class="cd">${esc(r.desc)}</span>` : ""}${r.entry ? `<p>${esc(r.entry)}</p>` : ""}</a>`).join("")}${pad}</section>`;
   }
   if (layout === "tiles") {
     // No empty filler boxes: the last row's tiles stretch to fill it (3 across in landscape, 2 in portrait)
     const n = rows.length;
     const fit = i => [n % 3 === 1 && i === n - 1 ? "last3-1" : "", n % 3 === 2 && i >= n - 2 ? "last3-2" : "", n % 2 === 1 && i === n - 1 ? "last2-1" : ""].join(" ");
-    return `<section class="gridx tiles6" ${label}>${rows.map((r, i) => `<a class="tile ${fit(i)}" href="#${c.id}" data-part="${esc(r.name)}"><span class="tn">${esc(r.name)}</span>${r.desc ? `<span class="td">${esc(r.desc)}</span>` : ""}</a>`).join("")}</section>`;
+    return `<section class="gridx tiles6" ${label}>${rows.map((r, i) => `<a class="tile ${fit(i)}" href="${r.href}" data-part="${esc(r.name)}"><span class="tn">${esc(r.name)}</span>${r.desc ? `<span class="td">${esc(r.desc)}</span>` : ""}</a>`).join("")}</section>`;
   }
   return `<section class="notes" ${label}>
       ${noteGroups(c).map(g => `<div class="ngroup"><h2>${g.label}</h2><div class="ncard">
-        ${g.rows.map(r => `<a class="note" href="#${c.id}" data-part="${esc(r.name)}">
+        ${g.rows.map(r => `<a class="note" href="${r.href}" data-part="${esc(r.name)}">
           <div class="txt">
             <h3>${esc(r.name)}</h3>
             <p class="l2">${esc(r.entry || r.desc || "Tap to write the first entry.")}</p>
@@ -838,6 +881,59 @@ function chapterHTML(c) {
   </div>`;
 }
 
+const trashIcon = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4.5h6V7M6.5 7l1 13h9l1-13"/></svg>`;
+function sectionHTML(c, name) {
+  const [, desc] = c.parts.find(p => p[0] === name), list = entriesFor(c, name), [latest, ...earlier] = list;
+  const i = c.parts.findIndex(p => p[0] === name), hid = new Set(hiddenOf(c.id));
+  const around = step => { for (let j = i + step; j >= 0 && j < c.parts.length; j += step) if (!hid.has(c.parts[j][0])) return c.parts[j][0]; return null; };
+  const prev = around(-1), next = around(1);
+  return `<div class="entry-page" data-chapter="${c.id}" data-name="${esc(name)}">
+    <header class="statement">
+      <a class="eyebrow" href="#${c.id}">${esc(c.title)}</a>
+      <h1>${esc(name)}.</h1>
+      ${desc ? `<p class="sub">${esc(desc)}</p>` : ""}
+      <p class="meta">${list.length ? `${list.length} ${list.length === 1 ? "entry" : "entries"} · last written ${esc(latest.when)}` : "Nothing written yet"}</p>
+    </header>
+
+    <form class="compose" id="compose">
+      <textarea id="composeText" rows="3" placeholder="${list.length ? "What’s true now?" : `Start with one sentence about ${esc(name[0].toLowerCase() + name.slice(1))}…`}" aria-label="Write an entry"></textarea>
+      <div class="compose-row"><span class="meta">${list.length ? "Your last entry becomes an earlier version." : "Only you can see this."}</span>
+        <button type="submit" class="btn-primary" id="composeAdd" disabled>Add entry</button></div>
+    </form>
+    <p class="as-status" id="entryStatus" role="status"></p>
+
+    ${latest ? `<article class="latest-card">
+      <div class="e-top"><span class="e-label">Latest · ${esc(latest.when)}</span>
+        <button type="button" class="e-del" data-del="${esc(latest.tkey)}" aria-label="Delete this entry">${trashIcon}</button></div>
+      <p class="big">${esc(latest.text)}</p>
+    </article>` : ""}
+
+    ${earlier.length ? `<section class="earlier" aria-label="Earlier versions"><h2 class="label">Earlier versions</h2>
+      <ol>${earlier.map(e => `<li><span class="e-when">${esc(e.when)}</span><p>${esc(e.text)}</p>
+        <button type="button" class="e-del" data-del="${esc(e.tkey)}" aria-label="Delete this version">${trashIcon}</button></li>`).join("")}</ol></section>` : ""}
+
+    <nav class="sec-nav" aria-label="Other sections">
+      ${prev ? `<a href="#${c.id}/${slug(prev)}"><span class="meta">‹ Previous</span><b>${esc(prev)}</b></a>` : "<span></span>"}
+      ${next ? `<a class="next" href="#${c.id}/${slug(next)}"><span class="meta">Next ›</span><b>${esc(next)}</b></a>` : "<span></span>"}
+    </nav>
+    <div class="sec-foot"><button type="button" class="pill" data-hide>Hide this section</button>
+      <span class="meta">Hiding keeps everything. Show it again from ⋯ → Sections on ${esc(c.title)}.</span></div>
+  </div>`;
+}
+function initSection(c, name) {
+  const form = $("#compose"), ta = $("#composeText"), add = $("#composeAdd");
+  const grow = () => { ta.style.height = "auto"; ta.style.height = Math.min(ta.scrollHeight, 320) + "px"; add.disabled = !ta.value.trim(); };
+  ta.addEventListener("input", grow);
+  ta.addEventListener("keydown", e => { if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) form.requestSubmit(); });
+  form.onsubmit = e => { e.preventDefault(); const t = ta.value.trim(); if (!t) return; addEntry(c, name, t); render(); $("#entryStatus").textContent = "Saved."; };
+}
+function deleteEntry(c, name, tkey) {
+  const e = entriesFor(c, name).find(x => x.tkey === tkey); if (!e) return;
+  const trash = purgeTrash(); trash.unshift({ key: tkey, chapter: c.id, chapterTitle: c.title, part: name, text: e.text, when: e.when, deletedAt: Date.now() });
+  keep("about-me-trash", trash); render();
+  $("#entryStatus").innerHTML = `Moved to Trash for ${TRASH_DAYS} days. <button type="button" class="link" data-undo="${esc(tkey)}">Undo</button>`;
+}
+
 function contextHTML(route) {
   const last = thread.steps.length - 1;
   return `<div class="ctx-block"><span class="label">What changed</span>
@@ -852,24 +948,29 @@ function contextHTML(route) {
 }
 
 function render() {
-  const raw = location.hash.slice(1) || "home";
-  const chapter = chapters.find(c => c.id === raw);
-  const route = chapter ? raw : raw === "now" ? "now" : "home";
-  $("#main").innerHTML = chapter ? chapterHTML(chapter) : route === "now" ? nowHTML() : homeHTML();
+  const raw = decodeURIComponent(location.hash.slice(1)) || "home";
+  const [cid, sid] = raw.split("/");
+  let chapter = chapters.find(c => c.id === cid), section = null;
+  if (chapter && sid) { section = (chapter.parts.find(p => slug(p[0]) === sid) || [])[0] || null; if (!section) chapter = null; }
+  const route = chapter ? cid : raw === "now" ? "now" : "home";
+  $("#main").innerHTML = section ? sectionHTML(chapter, section) : chapter ? chapterHTML(chapter) : route === "now" ? nowHTML() : homeHTML();
   $("#drawerNav").innerHTML = navHTML(route);
   $("#context").innerHTML = contextHTML(route);
   const isHome = route === "home";
   $("#menuBtn").hidden = !isHome;
   $("#backBtn").hidden = isHome;
-  $("#layoutBtn").hidden = !chapter || chapter.id === "history";
-  $("#moreBtn").hidden = !chapter || chapter.id === "history";
+  $("#backBtn").href = section ? `#${chapter.id}` : "#home";
+  $("#backBtn").setAttribute("aria-label", section ? `Back to ${chapter.title}` : "Back to About Me");
+  $("#layoutBtn").hidden = !chapter || !!section || chapter.id === "history";
+  $("#moreBtn").hidden = !chapter || !!section || chapter.id === "history";
   $("#trashBtn").hidden = !isHome; trashBadge();
   $("#app").classList.toggle("inner", !isHome);
   document.documentElement.classList.toggle("inner", !isHome);
-  document.documentElement.classList.toggle("fit", !chapter || chapter.id === "history" || getLayout(chapter.id) === "tiles");   /* home, Right Now, History and Tiles pages fit one screen; other layouts scroll */
+  document.documentElement.classList.toggle("fit", !section && (!chapter || chapter.id === "history" || getLayout(chapter.id) === "tiles"));   /* home, Right Now, History and Tiles pages fit one screen; other layouts scroll */
   window.scrollTo(0, 0);
   closeAll();
-  if (chapter && chapter.id === "history") initHistory();
+  if (section) initSection(chapter, section);
+  else if (chapter && chapter.id === "history") initHistory();
 }
 
 /* ── Drawer, search, scroll state ──────────────────────── */
@@ -905,7 +1006,7 @@ document.addEventListener("keydown", e => { if (e.key === "Escape") closeAll(); 
 
 const buildIndex = () => [
   ...chapters.map(c => ({ text: c.title, where: "Chapter", id: c.id })),
-  ...chapters.flatMap(c => partsFor(c).map(p => ({ text: p[0] + (p[2] ? ` — ${p[2]}` : ""), where: c.title, id: c.id }))),
+  ...chapters.flatMap(c => partsFor(c).map(p => ({ text: p[0] + (p[2] ? ` — ${p[2]}` : ""), where: c.title, id: `${c.id}/${slug(p[0])}` }))),
   ...rightNow.map(r => ({ text: `${r.lead} ${r.text}`, where: "Right Now", id: "now" })),
   ...thread.steps.map(s => ({ text: s.quote, where: `${thread.topic} · ${s.date}`, id: thread.chapter })),
 ];
@@ -941,9 +1042,29 @@ function purgeTrash() {   // anything past 7 days is permanently deleted
   return live;
 }
 function isGone(key) { return store("about-me-trash", []).some(t => t.key === key) || store("about-me-purged", []).includes(key); }
-function partsFor(c) {
+/* Each entry carries its own Trash key: your entries "chapter/Section#id", the sample entry "chapter/Section",
+   sample earlier versions "chapter/Section~n". Deleting any of them moves just that one to Trash. */
+const slug = name => name.toLowerCase().replace(/[’']/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+function fmtWhen(ts) {
+  const d = new Date(ts), now = new Date(), time = d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
+  const days = Math.round((new Date(now.toDateString()) - new Date(d.toDateString())) / DAY);
+  return days === 0 ? `Today ${time}` : days === 1 ? `Yesterday ${time}` : d.toLocaleDateString("en-US", { month: "short", day: "numeric", ...(d.getFullYear() !== now.getFullYear() ? { year: "numeric" } : {}) });
+}
+function entriesFor(c, name) {
+  const key = `${c.id}/${name}`, part = c.parts.find(p => p[0] === name);
+  const mine = (store("about-me-entries", {})[key] || []).map(e => ({ tkey: `${key}#${e.id}`, text: e.text, when: fmtWhen(e.at), mine: true, at: e.at })).reverse();
+  const sample = part && part[2] ? [{ tkey: key, text: part[2], when: when[key] || "Earlier" }] : [];
+  const older = (past[key] || []).map((e, i) => ({ tkey: `${key}~${i}`, text: e.text, when: e.when })).reverse();
+  return [...mine, ...sample, ...older].filter(e => !isGone(e.tkey));
+}
+function addEntry(c, name, text) {
+  const all = store("about-me-entries", {}), key = `${c.id}/${name}`;
+  (all[key] = all[key] || []).push({ id: Date.now().toString(36), text, at: Date.now() });
+  keep("about-me-entries", all);
+}
+function partsFor(c) {   // [name, context, latest entry, when]
   const hid = new Set(hiddenOf(c.id));
-  return c.parts.filter(p => !hid.has(p[0])).map(([n, d, e]) => [n, d, e && !isGone(`${c.id}/${n}`) ? e : null]);
+  return c.parts.filter(p => !hid.has(p[0])).map(([n, d]) => { const e = entriesFor(c, n)[0]; return [n, d, e ? e.text : null, e ? e.when : ""]; });
 }
 function timeLeft(t) {
   const ms = t.deletedAt + TRASH_DAYS * DAY - Date.now();
@@ -951,37 +1072,17 @@ function timeLeft(t) {
   return ms > DAY ? `${d} days left` : ms > 3600000 ? `${h} hour${h > 1 ? "s" : ""} left` : `${m} minute${m > 1 ? "s" : ""} left`;
 }
 function openSheet(id) { closeAll(); $(id).hidden = false; $("#scrim").classList.add("open"); }
-function closeSheets() { ["#entrySheet", "#sectionsSheet", "#trashSheet", "#settingsSheet"].forEach(s => $(s).hidden = true); }
+function closeSheets() { ["#sectionsSheet", "#trashSheet", "#settingsSheet"].forEach(s => $(s).hidden = true); }
 
-// Tapping a section opens its entry, with Delete (to Trash) and Hide this section
-function openEntry(c, name) {
-  const part = c.parts.find(p => p[0] === name); if (!part) return;
-  const key = `${c.id}/${name}`, entry = part[2] && !isGone(key) ? part[2] : null;
-  $("#entrySheet").innerHTML = `<div class="as-head"><div><p class="meta">${esc(c.title)}</p><h2>${esc(name)}</h2></div>
-      <button type="button" class="icon-btn" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
-    ${part[1] ? `<p class="as-where">${esc(part[1])}</p>` : ""}
-    ${entry ? `<div class="entry-card"><p class="meta">${esc(when[key] || "Earlier")}</p><p class="et">${esc(entry)}</p>
-      <div class="btns"><button type="button" class="pill" data-delete>Delete</button></div></div>`
-      : `<p class="as-empty">No entries yet. Writing entries comes next.</p>`}
-    <p class="as-status" id="entryStatus" role="status"></p>
-    <div class="sheet-foot"><button type="button" class="pill" data-hide>Hide this section</button>
-      <span class="meta">Hiding keeps everything. Show it again from ⋯ → Sections.</span></div>`;
-  openSheet("#entrySheet");
-  $("#entrySheet").onclick = e => {
-    if (e.target.closest("[data-close]")) return closeAll();
-    if (e.target.closest("[data-delete]")) {
-      const trash = purgeTrash(); trash.unshift({ key, chapter: c.id, chapterTitle: c.title, part: name, text: entry, when: when[key] || "", deletedAt: Date.now() });
-      keep("about-me-trash", trash); render(); openEntry(c, name);
-      $("#entryStatus").textContent = `Moved to Trash. You can restore it for ${TRASH_DAYS} days from the bin on the homepage.`;
-    }
-    if (e.target.closest("[data-hide]")) { setHidden(c.id, name, true); closeAll(); render(); }
-  };
-}
+// Section pages: delete an entry (to Trash), undo it, or hide the section
 $("#main").addEventListener("click", e => {
   if (e.target.closest("[data-open-sections]")) return openSections();
-  const a = e.target.closest("[data-part]"), c = chapters.find(x => x.id === location.hash.slice(1));
-  if (!a || !c) return;
-  e.preventDefault(); openEntry(c, a.dataset.part);
+  const page = e.target.closest(".entry-page"); if (!page) return;
+  const c = chapters.find(x => x.id === page.dataset.chapter), name = page.dataset.name;
+  const del = e.target.closest("[data-del]"), undo = e.target.closest("[data-undo]");
+  if (del) return deleteEntry(c, name, del.dataset.del);
+  if (undo) { keep("about-me-trash", purgeTrash().filter(t => t.key !== undo.dataset.undo)); render(); return; }
+  if (e.target.closest("[data-hide]")) { setHidden(c.id, name, true); location.hash = c.id; }
 });
 
 // ⋯ on a category page: show or hide its sections, in the app's fixed order
