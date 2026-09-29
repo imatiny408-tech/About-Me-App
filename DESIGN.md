@@ -115,7 +115,7 @@ The menu on the homepage ends with **Look**: White (v1, the default), Paper, Sag
 
 ## 3j. Natural look (3D, pages outside the homepage)
 
-Inspired by the "Natural" phone setup reference: soft pearly spheres and a glossy ring floating slowly in a lavender-to-peach studio, frosted-glass surfaces, lavender-grey type and small pink accents.
+Inspired by the "Natural" phone setup reference: soft pearly spheres and a glossy ring floating slowly in a lavender-to-peach studio, frosted-glass surfaces. Type and accents use the homepage colors (near-black ink, grey secondary text, gold accent) so the whole app reads as one.
 
 - The scene is **live 3D (three.js)**, not a video: it's drawn every frame at the device's full pixel resolution (2x or 3x), so it's sharper than a fixed 4K file on any iPad and adds no download beyond the library. It pauses when the app is in the background, and holds still when Reduce Motion is on.
 - Tiles, cells, list cards and Cards become separate frosted-glass panels (22pt corners, 26pt blur) with gaps instead of hairlines; menus and sheets are frosted too.
