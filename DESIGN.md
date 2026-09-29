@@ -50,7 +50,7 @@ Right Now has its own page (`#now`): the statement **Right now.**, then the four
 
 They use the same composition as home, so every page feels like the same book:
 
-1. **Opening**: the tagline in small grey ("What I'm drawn to"), the chapter title as the statement (**My Taste.**), then "49 entries · 10 parts · 2 with recent entries" and the gold hairline.
+1. **Opening (kept small so the list leads)**: the tagline in small grey ("What I’m drawn to"), the chapter title at ~34–56pt (**My Taste.**), then "49 entries · 10 parts · 2 with recent entries" and the gold hairline.
 2. **Topics, as one straight Notes-style list that scrolls**: grouped by when you last wrote in them (**Today**, **Yesterday**, **Earlier**, **Nothing yet**), each group a rounded card with hairline separators. Every row is two lines: the topic in bold, then one grey line (the latest entry, the topic's description, or "Tap to write the first entry."). No times, folder labels or tiles. The list spans the full width of the screen, with a 20pt margin (or the safe-area inset) on each side.
 3. **No What changed.** It appears only on the home screen. Section pages show just their title and parts, full width, in both orientations.
 
