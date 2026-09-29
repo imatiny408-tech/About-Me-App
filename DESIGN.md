@@ -56,6 +56,19 @@ They use the same composition as home, so every page feels like the same book:
 
 Verified with no overflow on all 9 chapters, Right Now and home at 1200×1600, 1600×1200, iPad mini, 11" and 13" in both orientations, and a 1000×744 split-view window.
 
+## 3c. Section layouts (chosen per section)
+
+A **layout button** (sliders icon) in the top-right corner of every section page opens a menu with four layouts. The choice is remembered for each section on that device.
+
+| Layout | Looks like | Best for | Default for |
+|---|---|---|---|
+| **List** | iPhone Notes: grouped rows, bold title plus one grey line | Reading in order of when you wrote | (available everywhere) |
+| **Cards** | mymind: a masonry board of cards; picture or colour on top, your words in bold, the topic and date as a caption underneath; empty topics as dashed "+ Add" cards | Visual sections | My Taste, My Appearance |
+| **Grid** | Grid Diary: equal cells with hairline dividers; topic in bold, your latest words under it; empty topics in light grey | Sections you write in a lot | Myself, My Mind, My People, My Little Things |
+| **Tiles** | Grid Diary's "Personalize Template": equal tiles with only the topic name | A serious tone, or quick scanning | My Life, My Routines, My History |
+
+Grid and Tiles use 3 columns in landscape, 2 in portrait and 1 on a phone. Cards use 3, 2 and 1 columns in the same way. Empty cells close off the last row.
+
 ## 4. Typography
 
 One family: **SF Pro** on iPad (Inter Tight as the web fallback). Hierarchy comes from weight and size, not from mixing faces.

@@ -211,6 +211,54 @@ html:not(.fit) .main { padding-inline: max(20px, env(safe-area-inset-left, 0px))
 .note .l2 { font: 400 clamp(13px, 1.35vh, 15px)/1.3 var(--sans); color: var(--faint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 
+/* ── Section layouts: Cards, Grid, Tiles (List is the .notes style above) ── */
+.cards { columns: 3; column-gap: 16px; }
+.cardx { display: block; break-inside: avoid; margin-bottom: 18px; }
+.cardx .body { border: 1px solid var(--rule); border-radius: 12px; background: var(--bg); padding: 18px; display: grid; gap: 12px; transition: transform .2s; }
+.cardx:hover .body { transform: translateY(-2px); }
+.cardx .sw { height: 150px; border-radius: 8px; }
+.cardx .quote { font: 600 20px/1.3 var(--sans); letter-spacing: -.02em; text-wrap: balance; }
+.cardx.empty .body { border-style: dashed; min-height: 84px; place-content: center; color: var(--faint); font: 500 15px/1.3 var(--sans); }
+.cardx .cap { margin: 6px 4px 0; font: 400 13px/1.3 var(--sans); color: var(--faint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cardx .cap b { font-weight: 600; color: var(--muted); }
+
+.gridx { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); border-radius: 12px; overflow: hidden; }
+.cell { background: var(--bg); padding: 22px; min-height: 200px; display: grid; align-content: start; gap: 10px; }
+.cell:hover { background: var(--hover); }
+.cell h3 { font: 700 19px/1.25 var(--sans); letter-spacing: -.015em; }
+.cell p { font: 400 16px/1.5 var(--sans); color: var(--muted); display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden; }
+.cell.empty h3 { font-weight: 500; color: var(--faint); }
+.blank:hover { background: var(--bg); }
+.gridx .fill2 { display: none; }
+.tile { background: var(--bg); padding: 24px; min-height: 150px; display: flex; align-items: center; font: 500 20px/1.3 var(--sans); letter-spacing: -.015em; }
+.tile:hover { background: var(--hover); }
+
+@media (orientation: portrait), (max-width: 899px) {
+  .cards { columns: 2; }
+  .gridx { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .gridx .fill3 { display: none; }
+  .gridx .fill2 { display: flex; }
+}
+@media (max-width: 520px) {
+  .cards { columns: 1; }
+  .gridx { grid-template-columns: 1fr; }
+  .gridx .fill2, .gridx .fill3 { display: none; }
+}
+
+/* Layout menu, opened from the top-right button on section pages */
+.layout-menu {
+  position: fixed; z-index: 60; top: calc(env(safe-area-inset-top, 0px) + var(--bar-h) + 4px); right: max(12px, env(safe-area-inset-right, 0px));
+  width: min(300px, calc(100vw - 24px)); padding: 6px; border-radius: 14px; background: var(--bg);
+  box-shadow: 0 0 0 1px var(--rule), 0 20px 50px -18px rgba(0,0,0,.3);
+}
+.layout-menu .mhead { padding: 10px 12px 6px; font: 600 13px/1.2 var(--sans); color: var(--faint); }
+.layout-menu button { width: 100%; display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; text-align: left; padding: 10px 12px; border-radius: 10px; }
+.layout-menu button:hover, .layout-menu button:focus-visible { background: var(--hover); }
+.layout-menu .n { font: 600 16px/1.2 var(--sans); }
+.layout-menu .d { grid-column: 1; font: 400 13px/1.3 var(--sans); color: var(--muted); }
+.layout-menu .ck { grid-row: 1 / span 2; grid-column: 2; align-self: center; font: 700 16px/1 var(--sans); visibility: hidden; }
+.layout-menu [aria-checked="true"] .ck { visibility: visible; }
+
 /* ── Drawer + search sheet ──────────────────────────────── */
 .scrim { position: fixed; inset: 0; z-index: 40; background: rgba(0, 0, 0, .25); opacity: 0; pointer-events: none; transition: opacity .25s; }
 .scrim.open { opacity: 1; pointer-events: auto; }
@@ -255,6 +303,9 @@ html:not(.fit) .main { padding-inline: max(20px, env(safe-area-inset-left, 0px))
     </div>
     <a class="wordmark" href="#home">About Me</a>
     <div class="end">
+      <button class="icon-btn" id="layoutBtn" aria-label="Change layout" aria-haspopup="menu" aria-controls="layoutMenu" hidden>
+        <svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>
+      </button>
       <button class="icon-btn" id="searchBtn" aria-label="Search the archive">
         <svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 20 20"/></svg>
       </button>
@@ -268,6 +319,7 @@ html:not(.fit) .main { padding-inline: max(20px, env(safe-area-inset-left, 0px))
   <aside class="context" id="context" aria-label="Context"></aside>
 </div>
 
+<div class="layout-menu" id="layoutMenu" role="menu" aria-label="Layout" hidden></div>
 <div class="scrim" id="scrim"></div>
 <aside class="drawer" id="drawer" aria-label="Contents">
   <div class="drawer-head">
@@ -334,6 +386,22 @@ const when = {
   "mind/Ideas": "Yesterday 10:47 PM", "mind/Realizations": "Sep 20", "appearance/Style": "Sep 26", "routines/Mornings": "Today 7:30 AM",
   "little/Small joys": "Yesterday 7:02 AM", "history/Decisions": "Sep 18",
 };
+
+/* Section layouts: each section starts with the one that suits it; the choice is remembered per section */
+const layouts = [
+  { id: "list",  name: "List",  desc: "Notes style, grouped by when you wrote" },
+  { id: "cards", name: "Cards", desc: "A visual board, for picture-heavy sections" },
+  { id: "grid",  name: "Grid",  desc: "Each topic with your latest words" },
+  { id: "tiles", name: "Tiles", desc: "Just the topics, easy to scan" },
+];
+const defaultLayout = { taste: "cards", appearance: "cards", myself: "grid", mind: "grid", people: "grid", little: "grid", life: "tiles", routines: "tiles", history: "tiles" };
+const visuals = { "taste/Colors": "#1F3A6B", "taste/Design": "#0B0B0C", "appearance/Style": "#3A3A3F" };
+function getLayout(id) {
+  let saved = null;
+  try { saved = localStorage.getItem("about-me-layout:" + id); } catch (e) {}
+  return layouts.some(l => l.id === saved) ? saved : defaultLayout[id] || "list";
+}
+function setLayout(id, layout) { try { localStorage.setItem("about-me-layout:" + id, layout); } catch (e) {} }
 
 const thread = { topic: "Friendships", chapter: "people", steps: [
   { date: "Feb 2026", quote: "I want to make new friends." },
@@ -404,6 +472,38 @@ function noteGroups(c) {
   return order.filter(k => groups[k].length).map(k => ({ label: k, rows: groups[k] }));
 }
 
+function topicsHTML(c, layout) {
+  const label = `aria-label="Topics in ${esc(c.title)}"`;
+  const rows = c.parts.map(([name, desc, entry]) => ({ name, desc, entry, when: entry ? when[`${c.id}/${name}`] || "" : "", color: visuals[`${c.id}/${name}`] }));
+  // Empty cells that close off the last row: one set for the 3-column grid, one for the 2-column grid
+  const blanks = (n, cls) => [[3, "fill3"], [2, "fill2"]].map(([cols, fill]) =>
+    Array.from({ length: (cols - n % cols) % cols }, () => `<div class="${cls} blank ${fill}" aria-hidden="true"></div>`).join("")).join("");
+  if (layout === "cards") {
+    const ordered = [...rows.filter(r => r.entry), ...rows.filter(r => !r.entry)];
+    return `<section class="cards" ${label}>${ordered.map(r => r.entry
+      ? `<a class="cardx" href="#${c.id}"><div class="body">${r.color ? `<div class="sw" style="background:${r.color}"></div>` : ""}<p class="quote">${esc(r.entry)}</p></div>
+         <p class="cap"><b>${esc(r.name)}</b>${r.when ? ` · ${esc(r.when)}` : ""}</p></a>`
+      : `<a class="cardx empty" href="#${c.id}"><div class="body">+ Add</div><p class="cap"><b>${esc(r.name)}</b></p></a>`).join("")}</section>`;
+  }
+  if (layout === "grid") {
+    return `<section class="gridx" ${label}>${rows.map(r => `<a class="cell ${r.entry ? "" : "empty"}" href="#${c.id}">
+      <h3>${esc(r.name)}</h3>${r.entry ? `<p>${esc(r.entry)}</p>` : ""}</a>`).join("")}${blanks(rows.length, "cell")}</section>`;
+  }
+  if (layout === "tiles") {
+    return `<section class="gridx" ${label}>${rows.map(r => `<a class="tile" href="#${c.id}">${esc(r.name)}</a>`).join("")}${blanks(rows.length, "tile")}</section>`;
+  }
+  return `<section class="notes" ${label}>
+      ${noteGroups(c).map(g => `<div class="ngroup"><h2>${g.label}</h2><div class="ncard">
+        ${g.rows.map(r => `<a class="note" href="#${c.id}">
+          <div class="txt">
+            <h3>${esc(r.name)}</h3>
+            <p class="l2">${esc(r.entry || r.desc || "Tap to write the first entry.")}</p>
+          </div>
+        </a>`).join("")}
+      </div></div>`).join("")}
+    </section>`;
+}
+
 function chapterHTML(c) {
   const filled = c.parts.filter(p => p[2]).length;
   return `<div class="home chapter-page">
@@ -413,16 +513,7 @@ function chapterHTML(c) {
       <p class="sub"><b>${c.entries} entries</b> · ${c.parts.length} parts · ${filled} with recent entries</p>
     </header>
 
-    <section class="notes" aria-label="Topics in ${esc(c.title)}">
-      ${noteGroups(c).map(g => `<div class="ngroup"><h2>${g.label}</h2><div class="ncard">
-        ${g.rows.map(r => `<a class="note" href="#${c.id}">
-          <div class="txt">
-            <h3>${esc(r.name)}</h3>
-            <p class="l2">${esc(r.entry || r.desc || "Tap to write the first entry.")}</p>
-          </div>
-        </a>`).join("")}
-      </div></div>`).join("")}
-    </section>
+    ${topicsHTML(c, getLayout(c.id))}
 
   </div>`;
 }
@@ -450,6 +541,7 @@ function render() {
   const isHome = route === "home";
   $("#menuBtn").hidden = !isHome;
   $("#backBtn").hidden = isHome;
+  $("#layoutBtn").hidden = !chapter;
   $("#app").classList.toggle("inner", !isHome);           /* no What changed panel off the home screen */
   document.documentElement.classList.toggle("fit", !chapter);   /* home and Right Now fit one screen; sections scroll */
   window.scrollTo(0, 0);
@@ -457,7 +549,30 @@ function render() {
 }
 
 /* ── Drawer, search, scroll state ──────────────────────── */
-function closeAll() { ["#drawer", "#sheet", "#scrim"].forEach(s => $(s).classList.remove("open")); }
+function closeAll() { ["#drawer", "#sheet", "#scrim"].forEach(s => $(s).classList.remove("open")); closeLayoutMenu(); }
+
+/* Layout menu */
+function currentChapter() { return chapters.find(c => c.id === location.hash.slice(1)); }
+function closeLayoutMenu() { $("#layoutMenu").hidden = true; $("#layoutBtn").setAttribute("aria-expanded", "false"); }
+function openLayoutMenu() {
+  const c = currentChapter(); if (!c) return;
+  const now = getLayout(c.id);
+  $("#layoutMenu").innerHTML = `<p class="mhead">Show ${esc(c.title)} as</p>` + layouts.map(l =>
+    `<button type="button" role="menuitemradio" aria-checked="${l.id === now}" data-layout="${l.id}">
+      <span class="n">${l.name}</span><span class="d">${l.desc}</span><span class="ck" aria-hidden="true">✓</span></button>`).join("");
+  $("#layoutMenu").hidden = false;
+  $("#layoutBtn").setAttribute("aria-expanded", "true");
+  $("#layoutMenu").querySelector('[aria-checked="true"]').focus();
+}
+$("#layoutBtn").onclick = e => { e.stopPropagation(); $("#layoutMenu").hidden ? openLayoutMenu() : closeLayoutMenu(); };
+$("#layoutMenu").onclick = e => {
+  const btn = e.target.closest("[data-layout]"); const c = currentChapter();
+  if (!btn || !c) return;
+  setLayout(c.id, btn.dataset.layout);
+  closeLayoutMenu();
+  render();
+};
+document.addEventListener("click", e => { if (!$("#layoutMenu").hidden && !e.target.closest("#layoutMenu")) closeLayoutMenu(); });
 $("#menuBtn").onclick = () => { $("#drawer").classList.add("open"); $("#scrim").classList.add("open"); };
 $("#drawerClose").onclick = closeAll;
 $("#scrim").onclick = closeAll;
