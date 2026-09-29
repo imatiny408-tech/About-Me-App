@@ -109,19 +109,11 @@ Trash is a utility, not a category: a small bin in the bottom-right corner of th
 - Deleting an entry moves it to Trash. It stays for **7 days**, then it is permanently deleted.
 - Each item shows where it came from (My Taste › Colors), the entry, and the time left ("7 days left", "12 hours left", "5 minutes left"), with **Restore**.
 
-## 3i. Looks (colour experiments)
+## 3i. Studio look and colours
 
-The menu on the homepage ends with **Look**: White (v1, the default), Paper, Sage, Blush, Night and Ocean. A look swaps only the colour tokens (background, ink, greys, hairlines, accent), so layout and type stay identical. The choice is remembered on the device. The v1 design is saved on the `saved-v1-white` branch.
+**Studio** is the app's one look. The page is white, and the big titles ("About Me.", each section's title) are filled with a three-stop colour gradient. Section tiles, grid cells and cards are soft grey (`#F3F4F6`) rounded buttons (24pt corners, 12pt gaps) instead of one ruled box. Lists sit in rounded white cards with a soft shadow, and buttons are pills. The layout is the original one everywhere.
 
-## 3j. Natural look (3D, pages outside the homepage)
-
-Inspired by the "Natural" phone setup reference: soft pearly spheres and a glossy ring floating slowly in a lavender-to-peach studio, frosted-glass surfaces. Type and accents use the homepage colors (near-black ink, grey secondary text, gold accent) so the whole app reads as one.
-
-- The scene is **live 3D (three.js)**, not a video: it's drawn every frame at the device's full pixel resolution (2x or 3x), so it's sharper than a fixed 4K file on any iPad and adds no download beyond the library. It pauses when the app is in the background, and holds still when Reduce Motion is on.
-- Tiles, cells, list cards and Cards become separate frosted-glass panels (22pt corners, 26pt blur) with gaps instead of hairlines; menus and sheets are frosted too.
-- The homepage keeps the White look; Natural applies only once you open a page.
-- **Background** (layout button on any section page, or Look in the menu): **White** (the default, the same plain white as the homepage; the glass sections get a soft edge and shadow), Pearls, Clay orbs (matte pastel peach, lilac, mint, butter), Silk (draped lilac fabric rippling), Dunes (peach sand drifting into haze) and Aurora (slow pastel light). All are live 3D or shader scenes at full device resolution.
-- **Frost**: Soft (default: 14px blur plus a light white veil), Strong (36px blur, heavier veil) or Clear (crisp 3D). The frosted-glass sections stay the same on every background.
+**Color** at the end of the menu picks the gradient and accent: Blue (default), Violet, Ocean, Emerald, Rose, Sunset or Graphite. Only the colour changes; the choice is remembered on the device. The earlier looks (White, Paper, Sage, Blush, Night, Ocean, Natural 3D, Midnight, Glow) were removed. The v1 White design is saved on the `saved-v1-white` branch.
 
 ## 4. Typography
 
@@ -152,13 +144,16 @@ One family: **SF Pro** on iPad (Inter Tight as the web fallback). Hierarchy come
 
 ## 7. Colour
 
-| Token | Light | Dark | Use |
-|---|---|---|---|
-| bg | `#FFFFFF` | `#000000` | everything |
-| ink | `#0B0B0C` | `#F5F5F7` | headlines, what you wrote |
-| muted | `#6E6E73` | `#A1A1A6` | secondary text |
-| faint | `#A1A1A6` | `#6E6E73` | earlier versions, meta |
-| gold | `#B3A06B` / text `#8A7640` | `#CDB98A` | the one accent: hairline, "changed" |
+The app is light only (Studio). Tokens:
+
+| Token | Value | Use |
+|---|---|---|
+| bg | `#FFFFFF` | everything |
+| ink | `#0B0B0F` | headlines, what you wrote |
+| muted | `#6B6F7B` | secondary text |
+| faint | `#A3A7B2` | earlier versions, meta |
+| rule | `#ECEDF0` | hairlines |
+| g1 / g2 / g3 | per colour (Blue: `#1638C9` / `#2F62E6` / `#7FA9F3`) | title gradient; g2 is the accent, g1 the accent as text |
 
 Landscape uses hairline dividers instead of a raised page, so all three columns stay pure white.
 
@@ -167,13 +162,3 @@ History is shown by fading, not deleting. Earlier versions turn graphite, and re
 ## Next
 
 The chapter page in the prototype is a first pass (parts, latest entry, "This chapter has evolved N times → View history"). Next steps: design the **Myself** chapter properly, then **Decision History** (thought → decided → did → changed), then the entry and edit interaction that keeps old versions.
-
-## 3k. Midnight, Studio and Glow looks
-
-Three more whole-app looks in the menu's Look list, drawn from fintech and assistant app references. They change colour and material only: every page keeps the original layout (left-aligned title, the plain one-word contents list and What changed on the homepage; the same arrangement on section pages). White stays the default.
-
-- **Midnight.** The whole app on deep navy with a blue glow from the top, white type, and "Me." at half strength like the cents in a balance. Section tiles and cards are frosted-glass bubbles, each tile with a thin ring arc in its corner.
-- **Studio.** White, with the big titles in a blue gradient. Section tiles and cards are soft grey rounded buttons; lists sit in rounded white cards.
-- **Glow.** A pale iridescent haze (yellow, pink and blue light) behind everything, light 400-weight type, and frosted white glass tiles and cards.
-
-In all three, tiles and grid cells are separate rounded surfaces instead of one ruled box. `npm run check` checks the one-screen rule in White, Midnight, Studio and Glow.
