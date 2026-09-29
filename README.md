@@ -18,7 +18,7 @@ About Me is a personal archive. You record who you are, what you care about, how
 Open `index.html` in Safari on an iPad and rotate it, or resize a desktop browser window.
 
 - **Portrait** is the book: one column, a centered statement, and chapters as a grid of type.
-- **Landscape** is the archive: sidebar, page, and a "What changed" panel.
+- **Landscape** is the archive: the page, plus a "What changed" panel on the right.
 - **No page scrolls** on anything iPad-sized, from iPad mini to 13" iPad Pro, including split view.
 
 ## Checking the one-screen rule
