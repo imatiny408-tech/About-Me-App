@@ -120,7 +120,7 @@ Inspired by the "Natural" phone setup reference: soft pearly spheres and a gloss
 - The scene is **live 3D (three.js)**, not a video: it's drawn every frame at the device's full pixel resolution (2x or 3x), so it's sharper than a fixed 4K file on any iPad and adds no download beyond the library. It pauses when the app is in the background, and holds still when Reduce Motion is on.
 - Tiles, cells, list cards and Cards become separate frosted-glass panels (22pt corners, 26pt blur) with gaps instead of hairlines; menus and sheets are frosted too.
 - The homepage keeps the White look; Natural applies only once you open a page.
-- **Background** (layout button on any section page, or Look in the menu): Pearls, Clay orbs (matte pastel peach, lilac, mint, butter), Silk (draped lilac fabric rippling), Dunes (peach sand drifting into haze) and Aurora (slow pastel light). All are live 3D or shader scenes at full device resolution.
+- **Background** (layout button on any section page, or Look in the menu): **White** (the default, the same plain white as the homepage; the glass sections get a soft edge and shadow), Pearls, Clay orbs (matte pastel peach, lilac, mint, butter), Silk (draped lilac fabric rippling), Dunes (peach sand drifting into haze) and Aurora (slow pastel light). All are live 3D or shader scenes at full device resolution.
 - **Frost**: Soft (default: 14px blur plus a light white veil), Strong (36px blur, heavier veil) or Clear (crisp 3D). The frosted-glass sections stay the same on every background.
 
 ## 4. Typography

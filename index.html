@@ -74,6 +74,12 @@ html[data-frost="clear"] #frostVeil { display: none !important; }
 html[data-look="natural"].inner[data-scene="silk"] body { background: linear-gradient(170deg, #F3EFF5 0%, #E4DEEA 55%, #EEE2DD 100%) fixed; }
 html[data-look="natural"].inner[data-scene="dunes"] body { background: linear-gradient(180deg, #F4ECEA 0%, #EFDCD2 55%, #E9D2C4 100%) fixed; }
 html[data-look="natural"].inner[data-scene="aurora"] body { background: #F6F4F9; }
+/* White: the homepage's plain white behind the same glass sections */
+html[data-look="natural"].inner[data-scene="white"] body { background: #FFFFFF; }
+html[data-look="natural"].inner[data-scene="white"] :is(#bg3d, #frostVeil) { display: none !important; }
+html[data-look="natural"].inner[data-scene="white"] :is(.tile, .cell, .ncard, .cardx .body) {
+  background: rgba(255,255,255,.9); border-color: #ECEAF1; box-shadow: 0 16px 40px -24px rgba(78, 70, 120, .38), 0 1px 2px rgba(78, 70, 120, .06);
+}
 .scene-ctl { padding: 4px 6px 6px; }
 .scene-ctl .mhead { padding: 10px 6px 6px; }
 .chips { display: flex; flex-wrap: wrap; gap: 6px; }
@@ -1051,7 +1057,7 @@ const LOOKS = [
 /* Natural: a live three.js scene drawn at the screen's full resolution every frame,
    so it stays sharp on any iPad (no video file to stretch or download). */
 let bg3d = null, bgLoading = null;
-const wantBg = () => document.documentElement.dataset.look === "natural" && document.documentElement.classList.contains("inner");
+const wantBg = () => document.documentElement.dataset.look === "natural" && document.documentElement.classList.contains("inner") && currentScene() !== "white";
 function loadThree() {
   if (window.THREE) return Promise.resolve(window.THREE);
   return bgLoading || (bgLoading = new Promise((ok, fail) => {
@@ -1066,16 +1072,17 @@ async function updateBg() {
   if (wantBg()) bg3d.start();
 }
 const SCENES = [
-  { id: "pearls", name: "Pearls" }, { id: "orbs", name: "Clay orbs" }, { id: "silk", name: "Silk" },
+  { id: "white", name: "White" }, { id: "pearls", name: "Pearls" }, { id: "orbs", name: "Clay orbs" }, { id: "silk", name: "Silk" },
   { id: "dunes", name: "Dunes" }, { id: "aurora", name: "Aurora" },
 ];
 const FROSTS = [{ id: "soft", name: "Soft" }, { id: "strong", name: "Strong" }, { id: "clear", name: "Clear" }];
-const currentScene = () => { const v = store("about-me-scene", "pearls"); return SCENES.some(x => x.id === v) ? v : "pearls"; };
+const currentScene = () => { const v = store("about-me-scene2", "white"); return SCENES.some(x => x.id === v) ? v : "white"; };
 const currentFrost = () => { const v = store("about-me-frost", "soft"); return FROSTS.some(x => x.id === v) ? v : "soft"; };
 function applyScene() {
   document.documentElement.dataset.scene = currentScene();
   document.documentElement.dataset.frost = currentFrost();
-  if (bg3d) bg3d.setScene(currentScene());
+  if (bg3d && currentScene() !== "white") bg3d.setScene(currentScene());
+  updateBg();
 }
 
 function makeScene(THREE) {
@@ -1192,11 +1199,11 @@ function makeScene(THREE) {
   function frame(now) { draw(now); if (running && !still) requestAnimationFrame(frame); }
   document.addEventListener("visibilitychange", () => { if (document.hidden) running = false; else if (wantBg()) api.start(); });
   const api = {
-    setScene(id) { active = built[id] || (built[id] = builders[id]()); if (!running) requestAnimationFrame(draw); },
+    setScene(id) { if (!builders[id]) return; active = built[id] || (built[id] = builders[id]()); if (!running) requestAnimationFrame(draw); },
     start() { if (running) return; running = true; requestAnimationFrame(frame); },
     stop() { running = false; },
   };
-  api.setScene(currentScene());
+  api.setScene(currentScene() === "white" ? "pearls" : currentScene());
   return api;
 }
 
@@ -1210,12 +1217,12 @@ function applyLook(id) {
 function sceneControlsHTML() {
   const sc = currentScene(), fr = currentFrost();
   return `<p class="mhead">Background</p><div class="chips">${SCENES.map(x => `<button type="button" class="chip-opt" data-scene="${x.id}" aria-pressed="${x.id === sc}">${x.name}</button>`).join("")}</div>
-    <p class="mhead">Frost</p><div class="chips">${FROSTS.map(x => `<button type="button" class="chip-opt" data-frost="${x.id}" aria-pressed="${x.id === fr}">${x.name}</button>`).join("")}</div>`;
+    ${sc === "white" ? "" : `<p class="mhead">Frost</p>`}<div class="chips">${FROSTS.map(x => `<button type="button" class="chip-opt" data-frost="${x.id}" aria-pressed="${x.id === fr}">${x.name}</button>`).join("")}</div>`.replace(sc === "white" ? /<div class="chips">(?![\s\S]*<div class="chips">)[\s\S]*$/ : /$^/, "");
 }
 function handleSceneClick(e) {
   const s1 = e.target.closest("[data-scene]"), f1 = e.target.closest("[data-frost]");
   if (!s1 && !f1) return false;
-  if (s1) keep("about-me-scene", s1.dataset.scene); else keep("about-me-frost", f1.dataset.frost);
+  if (s1) keep("about-me-scene2", s1.dataset.scene); else keep("about-me-frost", f1.dataset.frost);
   applyScene(); return true;
 }
 function renderLooks() {
