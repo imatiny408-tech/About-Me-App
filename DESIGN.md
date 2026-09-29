@@ -109,6 +109,10 @@ Trash is a utility, not a category: a small bin in the bottom-right corner of th
 - Deleting an entry moves it to Trash. It stays for **7 days**, then it is permanently deleted.
 - Each item shows where it came from (My Taste › Colors), the entry, and the time left ("7 days left", "12 hours left", "5 minutes left"), with **Restore**.
 
+## 3i. Looks (colour experiments)
+
+The menu on the homepage ends with **Look**: White (v1, the default), Paper, Sage, Blush, Night and Ocean. A look swaps only the colour tokens (background, ink, greys, hairlines, accent), so layout and type stay identical. The choice is remembered on the device. The v1 design is saved on the `saved-v1-white` branch.
+
 ## 4. Typography
 
 One family: **SF Pro** on iPad (Inter Tight as the web fallback). Hierarchy comes from weight and size, not from mixing faces.

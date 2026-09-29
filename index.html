@@ -41,6 +41,21 @@
   --gold: #B3A06B; --gold-ink: #CDB98A; --hover: #141416; color-scheme: dark;
 }
 
+/* ── Looks: whole-app colour themes chosen from the menu (White is the default, v1) ── */
+:root[data-look="paper"] { --bg: #F4F1EA; --ink: #1F1D1A; --muted: #6F6A62; --faint: #A39D92; --rule: #E2DCD0; --gold: #B08A4E; --gold-ink: #8A6630; --hover: #ECE7DC; color-scheme: light; }
+:root[data-look="sage"] { --bg: #EEF1EB; --ink: #1B2418; --muted: #5E6A59; --faint: #98A393; --rule: #D8DFD3; --gold: #6E8B5E; --gold-ink: #4F6B41; --hover: #E3E9DF; color-scheme: light; }
+:root[data-look="blush"] { --bg: #FBF1EF; --ink: #2A1A1D; --muted: #7A5D61; --faint: #B39A9D; --rule: #EFD8D5; --gold: #C06E78; --gold-ink: #9C4B56; --hover: #F5E3E0; color-scheme: light; }
+:root[data-look="night"] { --bg: #0E0F12; --ink: #F2F1EE; --muted: #9C9DA3; --faint: #63656B; --rule: #24262C; --gold: #C9A96A; --gold-ink: #D6B77A; --hover: #17191E; color-scheme: dark; }
+:root[data-look="ocean"] { --bg: #0E1A2B; --ink: #EAF0F8; --muted: #9FB0C8; --faint: #62738C; --rule: #1F2F47; --gold: #7FB2FF; --gold-ink: #9CC4FF; --hover: #15243A; color-scheme: dark; }
+.looks { margin-top: 24px; padding: 16px 12px 0; border-top: 1px solid var(--rule); display: grid; gap: 4px; }
+.looks .label { margin-bottom: 6px; }
+.look-opt { display: flex; align-items: center; gap: 12px; padding: 8px 6px; border-radius: 10px; font: 500 16px/1.2 var(--sans); text-align: left; }
+@media (hover: hover) { .look-opt:hover { background: var(--hover); } }
+.look-opt .chip { width: 26px; height: 26px; border-radius: 50%; flex: none; box-shadow: inset 0 0 0 1px rgba(0,0,0,.12); position: relative; overflow: hidden; }
+.look-opt .chip::after { content: ""; position: absolute; right: 0; bottom: 0; width: 50%; height: 50%; background: var(--c2); }
+.look-opt .ck { margin-left: auto; font-weight: 700; visibility: hidden; }
+.look-opt[aria-checked="true"] .ck { visibility: visible; }
+
 /* ── Base ───────────────────────────────────────────────── */
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
@@ -511,6 +526,7 @@ html.fit .tiles-page .tile { min-height: 0; }
     <button class="icon-btn" id="drawerClose" aria-label="Close contents"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
   </div>
   <nav class="nav" id="drawerNav"></nav>
+  <div class="looks" role="radiogroup" aria-label="Look" id="looks"></div>
   <p class="meta app-version" id="appVersion" hidden></p>
 </aside>
 <div class="sheet" id="sheet" role="dialog" aria-label="Search">
@@ -815,6 +831,7 @@ function render() {
   const route = chapter ? raw : raw === "now" ? "now" : "home";
   $("#main").innerHTML = chapter ? chapterHTML(chapter) : route === "now" ? nowHTML() : homeHTML();
   $("#drawerNav").innerHTML = navHTML(route);
+  renderLooks();
   $("#context").innerHTML = contextHTML(route);
   const isHome = route === "home";
   $("#menuBtn").hidden = !isHome;
@@ -975,6 +992,28 @@ function openTrash() {
   };
 }
 $("#trashBtn").onclick = openTrash;
+
+const LOOKS = [
+  { id: "white", name: "White (v1)", c1: "#FFFFFF", c2: "#0B0B0C" },
+  { id: "paper", name: "Paper", c1: "#F4F1EA", c2: "#B08A4E" },
+  { id: "sage", name: "Sage", c1: "#EEF1EB", c2: "#6E8B5E" },
+  { id: "blush", name: "Blush", c1: "#FBF1EF", c2: "#C06E78" },
+  { id: "night", name: "Night", c1: "#0E0F12", c2: "#C9A96A" },
+  { id: "ocean", name: "Ocean", c1: "#0E1A2B", c2: "#7FB2FF" },
+];
+function currentLook() { const l = store("about-me-look", "white"); return LOOKS.some(x => x.id === l) ? l : "white"; }
+function applyLook(id) {
+  if (id === "white") document.documentElement.removeAttribute("data-look"); else document.documentElement.dataset.look = id;
+  const bg = getComputedStyle(document.documentElement).getPropertyValue("--bg").trim();
+  document.querySelectorAll('meta[name="theme-color"]').forEach(m => m.setAttribute("content", bg || "#ffffff"));
+}
+function renderLooks() {
+  const now = currentLook();
+  $("#looks").innerHTML = `<span class="label">Look</span>` + LOOKS.map(l => `<button type="button" class="look-opt" role="radio" aria-checked="${l.id === now}" data-look="${l.id}">
+    <span class="chip" style="background:${l.c1};--c2:${l.c2}"></span>${l.name}<span class="ck" aria-hidden="true">✓</span></button>`).join("");
+}
+$("#looks").onclick = e => { const b = e.target.closest("[data-look]"); if (!b) return; keep("about-me-look", b.dataset.look); applyLook(b.dataset.look); renderLooks(); };
+applyLook(currentLook());
 
 /* ── Annotate ─────────────────────────────────────────────
    Draw over the current screen, explain the change, save it.
