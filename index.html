@@ -408,14 +408,14 @@ const layouts = [
   { id: "grid",  name: "Grid",  desc: "Each topic with your latest words" },
   { id: "tiles", name: "Tiles", desc: "Just the topics, easy to scan" },
 ];
-const defaultLayout = { taste: "cards", appearance: "cards", myself: "grid", mind: "grid", people: "grid", little: "grid", life: "tiles", routines: "tiles", history: "tiles" };
+const defaultLayout = { taste: "cards", appearance: "cards", myself: "tiles", mind: "tiles", people: "tiles", little: "tiles", life: "tiles", routines: "tiles", history: "tiles" };
 const visuals = { "taste/Colors": "#1F3A6B", "taste/Design": "#0B0B0C", "appearance/Style": "#3A3A3F" };
 function getLayout(id) {
   let saved = null;
-  try { saved = localStorage.getItem("about-me-layout:" + id); } catch (e) {}
+  try { saved = localStorage.getItem("about-me-layout-v2:" + id); } catch (e) {}
   return layouts.some(l => l.id === saved) ? saved : defaultLayout[id] || "list";
 }
-function setLayout(id, layout) { try { localStorage.setItem("about-me-layout:" + id, layout); } catch (e) {} }
+function setLayout(id, layout) { try { localStorage.setItem("about-me-layout-v2:" + id, layout); } catch (e) {} }
 
 const thread = { topic: "Friendships", chapter: "people", steps: [
   { date: "Feb 2026", quote: "I want to make new friends." },
