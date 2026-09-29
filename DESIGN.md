@@ -18,8 +18,8 @@ We design on 1200 × 1600 (portrait) and 1600 × 1200 (landscape) canvases, but 
 |---|---|---|
 | iPhone, Slide Over, narrow split view | < 700 | Book (single column), 20pt margins |
 | iPad portrait (mini → 13"), half split | 700 – 1032 | Book (single column) |
-| Landscape, ⅔ split or small iPad | 900 – 1099 | Sidebar + page |
-| Landscape full screen (11", 13", mini) | ≥ 1100 | Sidebar + page + context panel |
+| Landscape, ⅔ split or small iPad | 900 – 1099 | Wider page, single column |
+| Landscape full screen (11", 13", mini) | ≥ 1100 | Page + What changed panel |
 
 Rule: *landscape-shaped **and** ≥ 900pt wide* switches to the archive layout. Anything else gets the book. In SwiftUI this maps to `horizontalSizeClass == .regular` plus a `GeometryReader` width check. A regular size class alone isn't enough, because iPad portrait is also `.regular`.
 
@@ -34,11 +34,10 @@ Note: a 1200pt canvas is wider than any real iPad (13" iPad Pro is 1032 × 1376p
 
 ## 3. Landscape home: "the archive" (one screen)
 
-- **Top bar** across the full width: About Me (left) · Search · ⋯ (right)
-- **Left, 232pt, sidebar**: About Me, Right Now, and the six chapters with counts. This replaces the chapter grid.
+- **Top bar** across the full width: Menu · About Me · Search · ⋯. There's no sidebar: the home contents list and the Menu drawer are how you move around, the same as in portrait.
 - **Centre**: the statement on one line (**About Me.**) and the same contents list, vertically centred.
 - **Right, 300pt, What changed**: the full Friendships thread (three dated versions, the newest marked *now*) and the Career before → after with the *why*. On a chapter page this panel shows that chapter's changes.
-- So the three columns read: where to go · who I am now · how I got here. The earlier "Currently" panel was cut because it repeated Right now. word for word, which the no-scroll screen has no room for.
+- So the two columns read: who I am now · how I got here. The earlier "Currently" panel was cut because it repeated Right now. word for word, which the no-scroll screen has no room for.
 - Between 900 and 1100pt wide (split view) there's no right panel, so the two-line What changed. strip returns to the centre.
 
 Content and features are the same as portrait. Only the arrangement changes.
@@ -79,7 +78,7 @@ One family: **SF Pro** on iPad (Inter Tight as the web fallback). Hierarchy come
 ## 6. Navigation
 
 - **Portrait:** the content is the navigation. Tapping a chapter opens it. The menu opens a left drawer with the same contents list. Search opens a sheet that searches chapters, parts, Right Now, and old versions.
-- **Landscape:** a persistent sidebar, with the current page highlighted as a raised tab.
+- **Landscape:** no sidebar. Same as portrait: the contents list on home, plus the Menu drawer.
 - No bottom tab bar. It isn't needed, and it would make the app feel like a utility.
 - Deep links: `#home`, `#now`, `#myself`, `#life`, `#taste`, `#people`, `#mind`, `#history`.
 
