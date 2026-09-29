@@ -233,14 +233,27 @@ html:not(.fit) .main { padding-inline: max(20px, env(safe-area-inset-left, 0px))
 .tile { background: var(--bg); padding: 24px; min-height: 150px; display: flex; align-items: center; font: 500 20px/1.3 var(--sans); letter-spacing: -.015em; }
 .tile:hover { background: var(--hover); }
 
+/* Grid layout: two rows, swiped sideways; part of the next column peeks in */
+.gridx.swipe {
+  grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: calc((100% - 2px) / 3.15);
+  grid-template-rows: repeat(2, clamp(170px, calc((100dvh - var(--bar-h) - 400px) / 2), 340px));
+  gap: 0; background: var(--bg);
+  overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch;
+}
+.gridx.swipe::-webkit-scrollbar { display: none; }
+.gridx.swipe > * { scroll-snap-align: start; min-height: 0; overflow: hidden; border-right: 1px solid var(--rule); }
+.gridx.swipe > :nth-child(odd) { border-bottom: 1px solid var(--rule); }   /* odd cells are the top row */
+
 @media (orientation: portrait), (max-width: 899px) {
   .cards { columns: 2; }
+  .gridx.swipe { grid-auto-columns: calc((100% - 1px) / 2.15); }
   .gridx { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .gridx .fill3 { display: none; }
   .gridx .fill2 { display: flex; }
 }
 @media (max-width: 520px) {
   .cards { columns: 1; }
+  .gridx.swipe { grid-auto-columns: calc(100% / 1.15); }
   .gridx { grid-template-columns: 1fr; }
   .gridx .fill2, .gridx .fill3 { display: none; }
 }
@@ -487,8 +500,10 @@ function topicsHTML(c, layout) {
       : `<a class="cardx empty" href="#${c.id}"><div class="body">+ Add</div><p class="cap"><b>${esc(r.name)}</b></p></a>`).join("")}</section>`;
   }
   if (layout === "grid") {
-    return `<section class="gridx" ${label}>${rows.map(r => `<a class="cell ${r.entry ? "" : "empty"}" href="#${c.id}">
-      <h3>${esc(r.name)}</h3>${r.entry ? `<p>${esc(r.entry)}</p>` : ""}</a>`).join("")}${blanks(rows.length, "cell")}</section>`;
+    // Two rows that you swipe through left to right; an odd count gets one empty cell to close the last column
+    const pad = rows.length % 2 ? `<div class="cell blank" aria-hidden="true"></div>` : "";
+    return `<section class="gridx swipe" ${label}>${rows.map(r => `<a class="cell ${r.entry ? "" : "empty"}" href="#${c.id}">
+      <h3>${esc(r.name)}</h3>${r.entry ? `<p>${esc(r.entry)}</p>` : ""}</a>`).join("")}${pad}</section>`;
   }
   if (layout === "tiles") {
     return `<section class="gridx" ${label}>${rows.map(r => `<a class="tile" href="#${c.id}">${esc(r.name)}</a>`).join("")}${blanks(rows.length, "tile")}</section>`;

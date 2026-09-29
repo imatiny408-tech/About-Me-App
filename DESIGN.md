@@ -64,10 +64,10 @@ A **layout button** (sliders icon) in the top-right corner of every section page
 |---|---|---|---|
 | **List** | iPhone Notes: grouped rows, bold title plus one grey line | Reading in order of when you wrote | (available everywhere) |
 | **Cards** | mymind: a masonry board of cards; picture or colour on top, your words in bold, the topic and date as a caption underneath; empty topics as dashed "+ Add" cards | Visual sections | My Taste, My Appearance |
-| **Grid** | Grid Diary: equal cells with hairline dividers; topic in bold, your latest words under it; empty topics in light grey | Sections you write in a lot | Myself, My Mind, My People, My Little Things |
+| **Grid** | Grid Diary: equal cells with hairline dividers; topic in bold, your latest words under it; empty topics in light grey. **Two rows that you swipe left to right**, with part of the next column peeking in (about 3 columns on screen in landscape, 2 in portrait) | Sections you write in a lot | Myself, My Mind, My People, My Little Things |
 | **Tiles** | Grid Diary's "Personalize Template": equal tiles with only the topic name | A serious tone, or quick scanning | My Life, My Routines, My History |
 
-Grid and Tiles use 3 columns in landscape, 2 in portrait and 1 on a phone. Cards use 3, 2 and 1 columns in the same way. Empty cells close off the last row.
+Tiles use 3 columns in landscape, 2 in portrait and 1 on a phone. Cards use 3, 2 and 1 columns in the same way. Empty cells close off the last row.
 
 ## 4. Typography
 
