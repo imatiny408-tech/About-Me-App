@@ -280,6 +280,18 @@ html.fit .home.history-page { align-content: stretch !important; grid-template-r
 @media (hover: hover) { .blank:hover { background: var(--bg); } }
 .gridx .fill2 { display: none; }
 .tile { background: var(--bg); padding: clamp(20px, 2.6vw, 36px); min-height: 150px; display: flex; align-items: center; font: 500 clamp(20px, 2.5vh, 30px)/1.25 var(--sans); letter-spacing: -.015em; }
+/* Tiles sit on a 6-column grid so a short last row can stretch instead of showing empty boxes */
+.gridx.tiles6 { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+.tiles6 .tile { grid-column: span 2; }
+.tiles6 .last3-1 { grid-column: span 6; }
+.tiles6 .last3-2 { grid-column: span 3; }
+@media (orientation: portrait), (max-width: 899px) {
+  .tiles6 .tile, .tiles6 .last3-1, .tiles6 .last3-2 { grid-column: span 3; }
+  .tiles6 .last2-1 { grid-column: span 6; }
+}
+@media (max-width: 520px) {
+  .tiles6 .tile, .tiles6 .last3-1, .tiles6 .last3-2, .tiles6 .last2-1 { grid-column: span 6; }
+}
 /* Tiles pages fit one screen: the grid takes the space under the title and the tiles share it evenly */
 html.fit .home.tiles-page { align-content: stretch !important; grid-template-rows: auto minmax(0, 1fr); padding-bottom: clamp(16px, 3vh, 32px); }
 html.fit .tiles-page .gridx { height: 100%; grid-auto-rows: minmax(0, 1fr); }
@@ -661,7 +673,10 @@ function topicsHTML(c, layout) {
       <h3>${esc(r.name)}</h3>${r.entry ? `<p>${esc(r.entry)}</p>` : ""}</a>`).join("")}${pad}</section>`;
   }
   if (layout === "tiles") {
-    return `<section class="gridx" ${label}>${rows.map(r => `<a class="tile" href="#${c.id}">${esc(r.name)}</a>`).join("")}${blanks(rows.length, "tile")}</section>`;
+    // No empty filler boxes: the last row's tiles stretch to fill it (3 across in landscape, 2 in portrait)
+    const n = rows.length;
+    const fit = i => [n % 3 === 1 && i === n - 1 ? "last3-1" : "", n % 3 === 2 && i >= n - 2 ? "last3-2" : "", n % 2 === 1 && i === n - 1 ? "last2-1" : ""].join(" ");
+    return `<section class="gridx tiles6" ${label}>${rows.map((r, i) => `<a class="tile ${fit(i)}" href="#${c.id}">${esc(r.name)}</a>`).join("")}</section>`;
   }
   return `<section class="notes" ${label}>
       ${noteGroups(c).map(g => `<div class="ngroup"><h2>${g.label}</h2><div class="ncard">

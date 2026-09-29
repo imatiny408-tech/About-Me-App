@@ -67,7 +67,7 @@ A **layout button** (sliders icon) in the top-right corner of every section page
 | **Grid** | Grid Diary: equal cells with hairline dividers; topic in bold, your latest words under it; empty topics in light grey. **Two rows that you swipe left to right**, with part of the next column peeking in (about 3 columns on screen in landscape, 2 in portrait) | Sections you write in a lot | (available everywhere) |
 | **Tiles** | Grid Diary's "Personalize Template": equal tiles with only the topic name | A serious tone, or quick scanning | Myself, My Life, My People, My Mind, My Little Things, My Routines, My History |
 
-Tiles use 3 columns in landscape, 2 in portrait and 1 on a phone. **Tiles pages fit one screen**: the tiles share the space under the title evenly, so a section with fewer topics gets bigger tiles. Cards use 3, 2 and 1 columns in the same way. Empty cells close off the last row.
+Tiles use 3 columns in landscape, 2 in portrait and 1 on a phone, and never show empty filler boxes: a short last row stretches its tiles to fill the width. **Tiles pages fit one screen**: the tiles share the space under the title evenly, so a section with fewer topics gets bigger tiles. Cards use 3, 2 and 1 columns in the same way. Empty cells close off the last row.
 
 ## 3d. My History (one screen, its own design)
 
