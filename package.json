@@ -1,0 +1,14 @@
+{
+  "name": "about-me-app",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "About Me: an iPad personal archive. Prototype and design spec.",
+  "scripts": {
+    "check": "node scripts/check-fit.mjs",
+    "screens": "node scripts/check-fit.mjs --screens"
+  },
+  "devDependencies": {
+    "playwright": "1.56.1"
+  }
+}
