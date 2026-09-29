@@ -131,6 +131,10 @@ Every section in every category has its own page (`#life/career`, `#taste/things
 
 Tiles, Grid, List and Cards always show each section's latest entry, including ones you wrote.
 
+## 3k. App icon
+
+A periwinkle folder of pages (the archive): a navy tab at the back, a lilac and a white page peeking out, and a bright blue front page with a soft sheen. On it sits a frosted white person, an orbit that tapers to points like a brush stroke (your life moving around you), and a four-point spark. Drawn as `icons/icon.svg`; `npm run icons` renders the PNGs (180, 192, 512, 1024) full-bleed, since iOS and iPadOS round the corners. `node scripts/make-icons.mjs --preview` also writes `screens/icon-preview.png`.
+
 ## 4. Typography
 
 One family: **SF Pro** on iPad (Inter Tight as the web fallback). Hierarchy comes from weight and size, not from mixing faces.
