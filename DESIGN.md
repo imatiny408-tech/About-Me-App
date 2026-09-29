@@ -29,7 +29,7 @@ Note: a 1200pt canvas is wider than any real iPad (13" iPad Pro is 1032 × 1376p
 
 1. **Top bar** (56pt): Menu · About Me · Search
 2. **Statement**: **About / Me.** on two lines, centered, 800 weight, then **London** · An ongoing record of me., then a short gold hairline.
-3. **Contents list**: a plain list, like a minimal phone launcher. One lowercase word per line, 500 weight, ~34–64pt, left-aligned in a centred block, with no icons, boxes or counts: right now · myself · my life · my taste · my people · my mind · my history. Each word opens its page.
+3. **Contents list**: a plain list, like a minimal phone launcher. One lowercase word per line, 500 weight, ~34–64pt, left-aligned on the left edge of the page under the left-aligned statement, with no icons, boxes or counts: right now · myself · my life · my taste · my people · my mind · my history. Each word opens its page.
 4. **What changed.**: two lines. Friendships: first version → latest version (3 versions). Career: ~~Web design~~ → Web + app development.
 
 ## 3. Landscape home: "the archive" (one screen)

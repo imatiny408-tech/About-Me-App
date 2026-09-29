@@ -129,6 +129,10 @@ p { margin: 0; }
 
 /* Home contents: a plain launcher list, one word per line */
 .launcher { justify-self: center; align-self: center; }
+
+/* Home statement and list sit on the left, like a phone launcher; What changed stays as it is */
+.home-page .statement { justify-items: start; text-align: left; }
+.home-page .launcher { justify-self: start; }
 .launcher ul { margin: 0; padding: 0; list-style: none; display: grid; gap: clamp(2px, .5vh, 8px); }
 .launcher a {
   display: inline-block; font: 500 clamp(34px, 4.6vh, 64px)/1.12 var(--sans); letter-spacing: -.03em;
@@ -313,7 +317,7 @@ function navHTML(current) {
 
 function homeHTML() {
   const last = thread.steps.length - 1;
-  return `<div class="home">
+  return `<div class="home home-page">
     <header class="statement">
       <h1><span>About</span> <span>Me.</span></h1>
       <p class="sub"><b>${esc(person.name)}</b> · ${esc(person.line)}</p>
