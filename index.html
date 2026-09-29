@@ -103,6 +103,165 @@ html[data-look="natural"].inner .statement h1 { font-weight: 500; letter-spacing
 html[data-look="natural"].inner .tile { font-weight: 400; }
 html[data-look="natural"].inner .hf-said { font-weight: 600; }
 
+/* ── Launcher rows: extra parts only the Midnight and Studio looks show ── */
+.launcher .li-ic, .launcher .li-t small, .launcher .li-n, .statement .hello { display: none; }
+.statement .hello { font: 500 clamp(14px, 1.5vh, 17px)/1.2 var(--sans); color: var(--muted); letter-spacing: -.005em; }
+.launcher .li-ic svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Shared by Midnight and Studio: a hero panel on top, launcher as two columns of rows */
+:root:is([data-look="midnight"], [data-look="studio"], [data-look="glow"]) .home-page .statement {
+  position: relative; overflow: hidden; justify-self: stretch; border-radius: 32px; color: #fff;
+  padding: clamp(20px, 3.4vh, 44px) clamp(24px, 4vw, 52px);
+}
+:root:is([data-look="midnight"], [data-look="studio"], [data-look="glow"]) .home-page .statement::after { display: none; }
+:root:is([data-look="midnight"], [data-look="studio"], [data-look="glow"]) .home-page .statement h1 { font-size: clamp(48px, 8.4vh, 112px); }
+:root:is([data-look="midnight"], [data-look="studio"], [data-look="glow"]) .launcher { justify-self: stretch; align-self: stretch; }
+:root:is([data-look="midnight"], [data-look="studio"], [data-look="glow"]) .launcher ul { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(6px, 1vh, 12px) 12px; }
+:root:is([data-look="midnight"], [data-look="studio"], [data-look="glow"]) .launcher a {
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 14px;
+  font: 600 clamp(15px, 1.7vh, 19px)/1.2 var(--sans); letter-spacing: -.015em; text-transform: none;
+}
+:root:is([data-look="midnight"], [data-look="studio"], [data-look="glow"]) .launcher .li-ic { display: grid; place-items: center; }
+:root:is([data-look="midnight"], [data-look="studio"], [data-look="glow"]) .launcher .li-t { display: grid; gap: 2px; min-width: 0; }
+:root:is([data-look="midnight"], [data-look="studio"], [data-look="glow"]) .launcher .li-t > * { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+:root:is([data-look="midnight"], [data-look="studio"], [data-look="glow"]) .launcher small { display: block; font: 400 clamp(12px, 1.3vh, 14px)/1.25 var(--sans); letter-spacing: 0; color: var(--muted); }
+:root:is([data-look="midnight"], [data-look="studio"], [data-look="glow"]) .launcher .li-n { display: grid; justify-items: end; gap: 2px; font: 600 clamp(14px, 1.5vh, 16px)/1.2 var(--sans); }
+:root:is([data-look="midnight"], [data-look="studio"], [data-look="glow"]) .launcher .li-n small { color: var(--faint); }
+:root:is([data-look="midnight"], [data-look="studio"], [data-look="glow"]) .latest { border-radius: 24px; padding: clamp(14px, 2vh, 22px) 22px; }
+:root:is([data-look="midnight"], [data-look="studio"], [data-look="glow"]) .block-head { border-bottom: 0; padding-bottom: 4px; }
+:root:is([data-look="midnight"], [data-look="studio"], [data-look="glow"]) .pill { border-radius: 999px; }
+:root:is([data-look="midnight"], [data-look="studio"], [data-look="glow"]) :is(.layout-menu, .sheet, .annot-sheet) { border-radius: 24px; }
+:root:is([data-look="midnight"], [data-look="studio"], [data-look="glow"]).inner .gridx:not(.swipe) { background: none; border: 0; border-radius: 0; overflow: visible; gap: 12px; }
+:root:is([data-look="midnight"], [data-look="studio"], [data-look="glow"]).inner .gridx.swipe { gap: 12px; background: none; border: 0; grid-auto-columns: calc((100% - 24px) / 3.15); }
+:root:is([data-look="midnight"], [data-look="studio"], [data-look="glow"]).inner .gridx.swipe > * { border: 0; }
+@media (orientation: portrait), (max-width: 899px) {
+  :root:is([data-look="midnight"], [data-look="studio"], [data-look="glow"]).inner .gridx.swipe { grid-auto-columns: calc((100% - 12px) / 2.15); }
+}
+@media (max-width: 520px) {
+  :root:is([data-look="midnight"], [data-look="studio"], [data-look="glow"]) .launcher ul { grid-template-columns: 1fr; }
+}
+
+/* ── Midnight: deep navy hero with a glowing horizon, white rows, glass bubbles on the pages ── */
+:root[data-look="midnight"] { --bg: #F3F4F8; --ink: #0E1233; --muted: #5E6482; --faint: #9CA1B9; --rule: #E2E4EE; --gold: #4A67E8; --gold-ink: #2E4BC9; --hover: #E9EBF3; color-scheme: light; }
+:root[data-look="midnight"] .home-page .statement {
+  background: radial-gradient(120% 95% at 50% 118%, #4F74F0 0%, #2A40B4 34%, #131C66 64%, #0A0F3C 100%);
+  justify-items: center; text-align: center; box-shadow: 0 18px 36px -24px rgba(16, 26, 110, .6);
+}
+:root[data-look="midnight"] .home-page .statement h1 > span:last-child { opacity: .5; }
+:root[data-look="midnight"] .home-page .statement .sub {
+  color: rgba(255,255,255,.82); padding: 6px 14px; border-radius: 999px;
+  background: rgba(255,255,255,.12); box-shadow: inset 0 0 0 1px rgba(255,255,255,.2);
+}
+:root[data-look="midnight"] .home-page .statement .sub b { color: #fff; }
+:root[data-look="midnight"] .launcher a {
+  padding: clamp(6px, .9vh, 10px) 18px clamp(6px, .9vh, 10px) clamp(6px, .9vh, 10px); border-radius: 999px; background: #fff;
+  box-shadow: 0 1px 2px rgba(14,18,51,.05), 0 12px 26px -20px rgba(14,18,51,.35);
+}
+:root[data-look="midnight"] .launcher .li-ic { width: clamp(36px, 4.4vh, 46px); height: clamp(36px, 4.4vh, 46px); border-radius: 50%; background: #EEF0F7; color: #1B2A78; }
+@media (hover: hover) { :root[data-look="midnight"] .launcher a:hover { color: var(--ink); transform: translateY(-1px); } }
+:root[data-look="midnight"] .latest { background: #fff; box-shadow: 0 12px 30px -24px rgba(14,18,51,.4); }
+:root[data-look="midnight"] .context { background: #fff; border-left-color: var(--rule); }
+
+/* Pages outside the homepage: the navy screen, with frosted bubbles for sections */
+:root[data-look="midnight"].inner {
+  --bg: #111A52; --ink: #FFFFFF; --muted: #B9C1E8; --faint: #8A93C6; --rule: rgba(255,255,255,.16);
+  --gold: #8EA6FF; --gold-ink: #B3C4FF; --hover: rgba(255,255,255,.1); color-scheme: dark;
+}
+:root[data-look="midnight"].inner body { background: radial-gradient(130% 80% at 50% -10%, #3453D0 0%, #1A2779 38%, #0C1244 72%, #080C30 100%) fixed; }
+:root[data-look="midnight"].inner .topbar { background: rgba(12, 18, 68, .35); }
+:root[data-look="midnight"].inner :is(.tile, .cell, .ncard, .cardx .body) {
+  background: radial-gradient(120% 120% at 25% 10%, rgba(255,255,255,.18), rgba(255,255,255,.05) 55%, rgba(255,255,255,.03));
+  border: 1px solid rgba(255,255,255,.2); border-radius: 28px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.22), 0 24px 44px -26px rgba(0,0,0,.7);
+  -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+}
+:root[data-look="midnight"].inner .ncard { border-radius: 24px; }
+/* a thin arc on each tile, like the rings round the bubbles */
+:root[data-look="midnight"].inner .tile { position: relative; overflow: hidden; font-weight: 500; }
+:root[data-look="midnight"].inner .tile::after {
+  content: ""; position: absolute; right: -64px; top: -64px; width: 170px; height: 170px; border-radius: 50%;
+  border: 2px solid rgba(255,255,255,.42); border-top-color: transparent; border-right-color: transparent; transform: rotate(-12deg);
+}
+@media (hover: hover) { :root[data-look="midnight"].inner :is(.tile, .cell):hover { background: rgba(255,255,255,.16); } }
+:root[data-look="midnight"].inner .statement::after { background: #8EA6FF; }
+:root[data-look="midnight"].inner :is(.layout-menu, .sheet, .annot-sheet, .drawer) { background: #141D58; }
+
+/* ── Studio: white, a blue gradient card, soft grey buttons and icon rows ── */
+:root[data-look="studio"] { --bg: #FFFFFF; --ink: #0B0B0F; --muted: #6B6F7B; --faint: #A3A7B2; --rule: #ECEDF0; --gold: #2F6FEB; --gold-ink: #1F57C9; --hover: #F3F4F6; color-scheme: light; }
+:root[data-look="studio"] .home-page .statement {
+  background: radial-gradient(90% 140% at 100% 0%, rgba(255,255,255,.45), transparent 55%),
+              linear-gradient(120deg, #1638C9 0%, #2F62E6 45%, #86B0F4 100%);
+  box-shadow: 0 18px 36px -24px rgba(31, 87, 201, .6), inset 0 0 0 1px rgba(255,255,255,.18);
+}
+:root[data-look="studio"] .home-page .statement h1 { font-weight: 600; letter-spacing: -.04em; }
+:root[data-look="studio"] .home-page .statement .sub { color: rgba(255,255,255,.8); }
+:root[data-look="studio"] .home-page .statement .sub b { color: #fff; }
+:root[data-look="studio"] .launcher a { padding: clamp(4px, .6vh, 8px) 10px clamp(4px, .6vh, 8px) 4px; border-radius: 18px; }
+@media (hover: hover) { :root[data-look="studio"] .launcher a:hover { color: var(--ink); background: var(--hover); transform: none; } }
+:root[data-look="studio"] .launcher .li-ic {
+  width: clamp(38px, 4.8vh, 52px); height: clamp(38px, 4.8vh, 52px); border-radius: 14px; color: #fff;
+  background: linear-gradient(140deg, var(--c1, #2F62E6), var(--c2, #86B0F4)); box-shadow: inset 0 0 0 1px rgba(255,255,255,.2);
+}
+:root[data-look="studio"] .li-now { --c1: #0B0B0F; --c2: #4B4E5A; }
+:root[data-look="studio"] .li-myself { --c1: #1638C9; --c2: #6F9BF2; }
+:root[data-look="studio"] .li-life { --c1: #0E7C66; --c2: #5BC8A6; }
+:root[data-look="studio"] .li-taste { --c1: #C2376E; --c2: #F08BB0; }
+:root[data-look="studio"] .li-people { --c1: #D9731F; --c2: #F6B56B; }
+:root[data-look="studio"] .li-mind { --c1: #6A3FD6; --c2: #A98BF4; }
+:root[data-look="studio"] .li-appearance { --c1: #1F7FB8; --c2: #7CC6EE; }
+:root[data-look="studio"] .li-routines { --c1: #C99A12; --c2: #F2D168; }
+:root[data-look="studio"] .li-little { --c1: #D0453B; --c2: #F59A8E; }
+:root[data-look="studio"] .li-history { --c1: #3A3F4D; --c2: #8C93A5; }
+:root[data-look="studio"] .launcher .li-n small { color: #18A058; }
+:root[data-look="studio"] .latest { background: #F5F6F8; }
+:root[data-look="studio"] .context { background: #FAFAFB; }
+:root[data-look="studio"] .statement::after { background: var(--gold); }
+:root[data-look="studio"] .statement h1 { font-weight: 700; }
+/* Section pages: rounded grey buttons with an arrow, like Send and Receive */
+:root[data-look="studio"].inner :is(.tile, .cell, .cardx .body) { background: #F3F4F6; border: 0; border-radius: 24px; }
+:root[data-look="studio"].inner .ncard { border-color: var(--rule); border-radius: 22px; box-shadow: 0 16px 36px -28px rgba(11,11,15,.35); }
+:root[data-look="studio"].inner .tile { flex-direction: column; justify-content: space-between; align-items: flex-start; gap: 12px; font-weight: 500; }
+:root[data-look="studio"].inner .tile::before { content: "↗"; font: 400 clamp(20px, 2.4vh, 26px)/1 var(--sans); color: var(--ink); }
+@media (hover: hover) { :root[data-look="studio"].inner :is(.tile, .cell):hover { background: #EAEBEE; } }
+:root[data-look="studio"] .as-actions .primary, :root[data-look="studio"] .annot-bar .primary { border-radius: 999px; }
+
+
+/* ── Glow: a pale iridescent haze, frosted white glass and light, airy type ── */
+:root[data-look="glow"] { --bg: #F1F2F5; --ink: #15161B; --muted: #6C6F78; --faint: #A4A7AF; --rule: rgba(255,255,255,.85); --gold: #5B6CF0; --gold-ink: #3F50D6; --hover: rgba(255,255,255,.6); color-scheme: light; }
+:root[data-look="glow"] body {
+  background:
+    radial-gradient(38% 32% at 86% 24%, rgba(255, 214, 120, .55), transparent 70%),
+    radial-gradient(40% 36% at 74% 46%, rgba(255, 150, 190, .45), transparent 70%),
+    radial-gradient(46% 40% at 18% 62%, rgba(140, 170, 255, .5), transparent 72%),
+    radial-gradient(40% 34% at 60% 92%, rgba(170, 220, 255, .45), transparent 70%),
+    linear-gradient(180deg, #F4F5F8, #EBEDF1) fixed;
+  background-attachment: fixed;
+}
+:root[data-look="glow"] .topbar { background: rgba(244,245,248,.35); }
+:root[data-look="glow"] .home-page .statement { color: var(--ink); padding: 0 6px; overflow: visible; }
+:root[data-look="glow"] .home-page .statement .hello { display: block; }
+:root[data-look="glow"] .statement h1 { font-weight: 400; letter-spacing: -.04em; }
+:root[data-look="glow"] .statement::after { display: none; }
+:root[data-look="glow"] :is(.launcher a, .latest, .tile, .cell, .ncard, .cardx .body, .context) {
+  background: linear-gradient(160deg, rgba(255,255,255,.78), rgba(255,255,255,.46));
+  border: 1px solid rgba(255,255,255,.9);
+  box-shadow: 0 18px 40px -26px rgba(60, 70, 110, .35), inset 0 1px 0 #fff;
+  -webkit-backdrop-filter: blur(22px) saturate(160%); backdrop-filter: blur(22px) saturate(160%);
+}
+:root[data-look="glow"] .launcher a { padding: clamp(6px, .9vh, 10px) 18px clamp(6px, .9vh, 10px) clamp(6px, .9vh, 10px); border-radius: 30px; font-weight: 500; }
+:root[data-look="glow"] .launcher .li-ic {
+  width: clamp(36px, 4.4vh, 46px); height: clamp(36px, 4.4vh, 46px); border-radius: 50%; color: var(--ink);
+  background: #fff; box-shadow: 0 4px 12px -6px rgba(60,70,110,.35);
+}
+:root[data-look="glow"] .li-now .li-ic { background: radial-gradient(circle at 35% 30%, #8E7BFF, #1B1D3A 70%); color: #fff; }
+@media (hover: hover) { :root[data-look="glow"] :is(.launcher a, .tile, .cell):hover { color: var(--ink); background: rgba(255,255,255,.9); transform: none; } }
+:root[data-look="glow"] .context { border-left: 0; margin: 12px 12px 12px 0; border-radius: 30px; height: calc(100dvh - var(--bar-h) - env(safe-area-inset-top, 0px) - 24px); }
+:root[data-look="glow"] :is(.tile, .cell, .cardx .body) { border-radius: 30px; }
+:root[data-look="glow"] .ncard { border-radius: 26px; }
+:root[data-look="glow"] .tile { font-weight: 400; }
+:root[data-look="glow"] :is(.layout-menu, .sheet, .annot-sheet, .drawer) { background: rgba(250,250,252,.92); -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px); }
+:root[data-look="glow"] .hist-dot { background: #fff; }
+
 /* ── Base ───────────────────────────────────────────────── */
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
@@ -699,18 +858,38 @@ function navHTML(current) {
     chapters.map(c => item(c.id, c.title, c.entries)).join("");
 }
 
+/* Launcher rows: the White look shows only the name; Midnight and Studio also show an icon, the tagline and counts */
+const chIcons = {
+  now: '<circle cx="12" cy="12" r="8"/><path d="M12 7.5V12l3 2"/>',
+  myself: '<circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c.8-3.6 3.6-5.5 7-5.5s6.2 1.9 7 5.5"/>',
+  life: '<circle cx="12" cy="12" r="8"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/>',
+  taste: '<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/>',
+  people: '<circle cx="9" cy="9" r="3"/><circle cx="16.5" cy="10" r="2.5"/><path d="M3.5 19c.6-3 2.8-4.5 5.5-4.5s4.9 1.5 5.5 4.5M15 14.6c2.6-.3 4.8 1.1 5.4 4.4"/>',
+  mind: '<path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.5.4.5 1 .5 1.6V16h6v-.5c0-.6 0-1.2.5-1.6A6 6 0 0 0 12 3z"/>',
+  appearance: '<path d="M8 4l-4 3 2 4 2-1v10h8V10l2 1 2-4-4-3c-.5 1.5-2 2.5-4 2.5S8.5 5.5 8 4z"/>',
+  routines: '<circle cx="12" cy="12" r="3.5"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6 7 7M17 17l1.4 1.4M5.6 18.4 7 17M17 7l1.4-1.4"/>',
+  little: '<path d="M12 4l2.3 4.8 5.2.7-3.8 3.6.9 5.2L12 15.8l-4.6 2.5.9-5.2-3.8-3.6 5.2-.7z"/>',
+  history: '<path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4h4"/><path d="M12 8v4l3 2"/>',
+};
+const launchItem = (id, title, tag, n, note) => `<li><a href="#${id}" class="li-${id}">
+  <span class="li-ic" aria-hidden="true"><svg viewBox="0 0 24 24">${chIcons[id]}</svg></span>
+  <span class="li-t"><span class="li-name">${esc(title)}</span><small>${esc(tag)}</small></span>
+  <span class="li-n">${n}<small>${esc(note)}</small></span></a></li>`;
+
+const greeting = () => { const h = new Date().getHours(); return h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening"; };
 function homeHTML() {
   const last = thread.steps.length - 1;
   return `<div class="home home-page">
     <header class="statement">
+      <p class="hello">${new Date().toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })} · ${greeting()}</p>
       <h1><span>About</span> <span>Me.</span></h1>
       <p class="sub"><b>${esc(person.name)}</b> · ${esc(person.line)}</p>
     </header>
 
     <nav class="launcher" aria-label="Contents">
       <ul>
-        <li><a href="#now">Right now</a></li>
-        ${chapters.map(c => `<li><a href="#${c.id}">${esc(c.title)}</a></li>`).join("")}
+        ${launchItem("now", "Right now", `${rightNow.length} things on my mind`, rightNow.length, "updated")}
+        ${chapters.map(c => launchItem(c.id, c.title, c.tagline, c.entries, c.changes ? `+${c.changes} changed` : "no changes")).join("")}
       </ul>
     </nav>
 
@@ -1048,6 +1227,9 @@ $("#trashBtn").onclick = openTrash;
 const LOOKS = [
   { id: "white", name: "White (v1)", c1: "#FFFFFF", c2: "#0B0B0C" },
   { id: "natural", name: "Natural (3D, sections only)", c1: "#E4E0EA", c2: "#E0679A" },
+  { id: "midnight", name: "Midnight", c1: "#131C66", c2: "#4F74F0" },
+  { id: "studio", name: "Studio", c1: "#FFFFFF", c2: "#2F62E6" },
+  { id: "glow", name: "Glow", c1: "#F1F2F5", c2: "#FF9BC0" },
   { id: "paper", name: "Paper", c1: "#F4F1EA", c2: "#B08A4E" },
   { id: "sage", name: "Sage", c1: "#EEF1EB", c2: "#6E8B5E" },
   { id: "blush", name: "Blush", c1: "#FBF1EF", c2: "#C06E78" },

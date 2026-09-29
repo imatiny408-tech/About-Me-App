@@ -167,3 +167,13 @@ History is shown by fading, not deleting. Earlier versions turn graphite, and re
 ## Next
 
 The chapter page in the prototype is a first pass (parts, latest entry, "This chapter has evolved N times → View history"). Next steps: design the **Myself** chapter properly, then **Decision History** (thought → decided → did → changed), then the entry and edit interaction that keeps old versions.
+
+## 3k. Midnight, Studio and Glow looks
+
+Three more whole-app looks in the menu's Look list, drawn from fintech and assistant app references. White stays the default; switching never changes content or layout choices.
+
+- **Midnight.** Homepage: a deep navy hero with a glowing blue horizon, "Me." at half strength, the line under it in a glass pill. The contents list becomes two columns of white pill rows, each with a round icon, the tagline, the entry count and what changed. Section pages sit on a full navy screen with frosted-glass bubbles for sections, each with a thin ring arc in its corner.
+- **Studio.** White, with the homepage title on a blue gradient card. Contents rows get a coloured square icon per section (like app thumbnails) and green change counts. Section tiles are soft grey rounded buttons with an ↗ arrow, like Send and Receive.
+- **Glow.** A pale iridescent haze (yellow, pink and blue light) behind everything, frosted white glass rows, cards and What changed panel, and light 400-weight type. The homepage adds the date and a greeting ("Good morning") above the title.
+
+`npm run check` checks the one-screen rule in White, Midnight, Studio and Glow.

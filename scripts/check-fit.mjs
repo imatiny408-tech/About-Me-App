@@ -22,10 +22,12 @@ const sizes = [
 const routes = ['home', 'now', 'myself', 'life', 'taste', 'people', 'mind', 'appearance', 'routines', 'little', 'history'];
 const fixed = new Set(['home', 'now', 'history', 'myself', 'life', 'people', 'mind', 'little', 'routines']);   // Tiles pages fit too
 
+const looks = ['white', 'midnight', 'studio', 'glow'];   // looks that change the home layout
 const browser = await chromium.launch();
 const failures = [];
-for (const [name, width, height] of sizes) {
+for (const look of looks) for (const [name, width, height] of sizes) {
   const page = await browser.newPage({ viewport: { width, height } });
+  await page.addInitScript(l => { try { localStorage.setItem('about-me-look', JSON.stringify(l)); } catch (e) {} }, look);
   await page.goto(url);
   await page.waitForTimeout(600);
   for (const route of routes) {
@@ -40,8 +42,8 @@ for (const [name, width, height] of sizes) {
         panel: ctx.scrollHeight - ctx.clientHeight,
       };
     });
-    if (fixed.has(route) && (o.page > 0 || o.content > 0 || o.panel > 0)) failures.push(`${name} #${route} overflows ${JSON.stringify(o)}`);
-    if (saveScreens && (route === 'home' || route === 'taste')) {
+    if (fixed.has(route) && (o.page > 0 || o.content > 0 || o.panel > 0)) failures.push(`${look} ${name} #${route} overflows ${JSON.stringify(o)}`);
+    if (saveScreens && look === 'white' && (route === 'home' || route === 'taste')) {
       await page.screenshot({ fullPage: route !== 'home', path: join(root, 'screens', `${route === 'home' ? '' : 'chapter-'}${name}.png`) });
     }
   }
@@ -50,4 +52,4 @@ for (const [name, width, height] of sizes) {
 await browser.close();
 
 if (failures.length) { console.error(failures.join('\n')); process.exit(1); }
-console.log(`Home, Right Now, My History and the Tiles pages fit at ${sizes.length} window sizes; ${routes.length - fixed.size} Cards pages scroll.`);
+console.log(`${looks.length} looks: Home, Right Now, My History and the Tiles pages fit at ${sizes.length} window sizes; ${routes.length - fixed.size} Cards pages scroll.`);
