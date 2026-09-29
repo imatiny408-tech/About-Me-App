@@ -67,7 +67,7 @@ A **layout button** (sliders icon) in the top-right corner of every section page
 | **Grid** | Grid Diary: equal cells with hairline dividers; topic in bold, your latest words under it; empty topics in light grey. **Two rows that you swipe left to right**, with part of the next column peeking in (about 3 columns on screen in landscape, 2 in portrait) | Sections you write in a lot | (available everywhere) |
 | **Tiles** | Grid Diary's "Personalize Template": equal tiles with only the topic name | A serious tone, or quick scanning | Myself, My Life, My People, My Mind, My Little Things, My Routines, My History |
 
-Tiles use 3 columns in landscape, 2 in portrait and 1 on a phone; when there are more tiles than fit, the page scrolls down normally and nothing is cut off. Cards use 3, 2 and 1 columns in the same way. Empty cells close off the last row.
+Tiles use 3 columns in landscape, 2 in portrait and 1 on a phone. **Tiles pages fit one screen**: the tiles share the space under the title evenly, so a section with fewer topics gets bigger tiles. Cards use 3, 2 and 1 columns in the same way. Empty cells close off the last row.
 
 ## 3d. My History (one screen, its own design)
 
@@ -76,6 +76,7 @@ My History doesn't use the layout switcher. It is a **focus card driven by a tim
 - **Right: the timeline.** Every moment you recorded, oldest at the top, with a dot on a thin line, a topic icon, the date and what you said. It scrolls and snaps; the moment in the middle is selected (filled dot, icon a little larger, date in black). Moments fade the further they are from the middle, so only 3–5 are readable at once. It never lists empty months. It opens on the newest moment, so scrolling up is going back in time.
 - **Left: the moment you’re on**, set straight on the page with no box around it. The topic (icon plus name, in small caps), the date, what you said in large bold type, and a line under a hairline about where it led. It changes as you scroll the timeline.
 - **Topics are meaningful, not decorative:** ✦ Career, ♡ Relationships, ⌂ Home, ✎ Learning, ◌ Identity, $ Money, → Goals, ◎ Perspective.
+- The title sits top-left, a little smaller than other section titles.
 - Portrait puts the card on top and the timeline under it. The page never scrolls; only the timeline does. Tapping a moment or pressing ↑/↓ also moves through it.
 
 ## 3e. Annotate (feedback while designing)
@@ -84,6 +85,10 @@ The pencil button in the top bar (every page) turns the screen into a drawing la
 
 - In the Claude preview, comments go to the artifact's private database (collection `annotations`, owner-only), where Claude reads them directly.
 - In the Home Screen app they're kept on the iPad (last 40). **Saved** lists them, with **Share** to send one to Claude and **Delete**.
+
+## 3f. Touch
+
+Hover effects (grey backgrounds, nudges) only apply on devices with a real pointer. On iPad a tap never leaves a tile grey. There is no line under the top bar.
 
 ## 4. Typography
 

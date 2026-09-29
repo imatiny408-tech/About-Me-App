@@ -20,7 +20,7 @@ const sizes = [
   ['landscape-split-1000x744', 1000, 744],
 ];
 const routes = ['home', 'now', 'myself', 'life', 'taste', 'people', 'mind', 'appearance', 'routines', 'little', 'history'];
-const fixed = new Set(['home', 'now', 'history']);
+const fixed = new Set(['home', 'now', 'history', 'myself', 'life', 'people', 'mind', 'little', 'routines']);   // Tiles pages fit too
 
 const browser = await chromium.launch();
 const failures = [];
@@ -50,4 +50,4 @@ for (const [name, width, height] of sizes) {
 await browser.close();
 
 if (failures.length) { console.error(failures.join('\n')); process.exit(1); }
-console.log(`Home, Right Now and My History fit at ${sizes.length} window sizes; ${routes.length - fixed.size} section pages scroll.`);
+console.log(`Home, Right Now, My History and the Tiles pages fit at ${sizes.length} window sizes; ${routes.length - fixed.size} Cards pages scroll.`);
