@@ -170,10 +170,10 @@ The chapter page in the prototype is a first pass (parts, latest entry, "This ch
 
 ## 3k. Midnight, Studio and Glow looks
 
-Three more whole-app looks in the menu's Look list, drawn from fintech and assistant app references. White stays the default; switching never changes content or layout choices.
+Three more whole-app looks in the menu's Look list, drawn from fintech and assistant app references. They change colour and material only: every page keeps the original layout (left-aligned title, the plain one-word contents list and What changed on the homepage; the same arrangement on section pages). White stays the default.
 
-- **Midnight.** Homepage: a deep navy hero with a glowing blue horizon, "Me." at half strength, the line under it in a glass pill. The contents list becomes two columns of white pill rows, each with a round icon, the tagline, the entry count and what changed. Section pages sit on a full navy screen with frosted-glass bubbles for sections, each with a thin ring arc in its corner.
-- **Studio.** White, with the homepage title on a blue gradient card. Contents rows get a coloured square icon per section (like app thumbnails) and green change counts. Section tiles are soft grey rounded buttons with an ↗ arrow, like Send and Receive.
-- **Glow.** A pale iridescent haze (yellow, pink and blue light) behind everything, frosted white glass rows, cards and What changed panel, and light 400-weight type. The homepage adds the date and a greeting ("Good morning") above the title.
+- **Midnight.** The whole app on deep navy with a blue glow from the top, white type, and "Me." at half strength like the cents in a balance. Section tiles and cards are frosted-glass bubbles, each tile with a thin ring arc in its corner.
+- **Studio.** White, with the big titles in a blue gradient. Section tiles and cards are soft grey rounded buttons; lists sit in rounded white cards.
+- **Glow.** A pale iridescent haze (yellow, pink and blue light) behind everything, light 400-weight type, and frosted white glass tiles and cards.
 
-`npm run check` checks the one-screen rule in White, Midnight, Studio and Glow.
+In all three, tiles and grid cells are separate rounded surfaces instead of one ruled box. `npm run check` checks the one-screen rule in White, Midnight, Studio and Glow.
