@@ -113,7 +113,9 @@ Trash is a utility, not a category: a small bin in the bottom-right corner of th
 
 **Studio** is the app's one look. The page is white, and the big titles ("About Me.", each section's title) are filled with a three-stop colour gradient. Section tiles, grid cells and cards are soft grey (`#F3F4F6`) rounded buttons (24pt corners, 12pt gaps) instead of one ruled box. Lists sit in rounded white cards with a soft shadow, and buttons are pills. The layout is the original one everywhere.
 
-**Color** at the end of the menu picks the gradient and accent: Blue (default), Violet, Ocean, Emerald, Rose, Sunset or Graphite. Only the colour changes; the choice is remembered on the device. The earlier looks (White, Paper, Sage, Blush, Night, Ocean, Natural 3D, Midnight, Glow) were removed. The v1 White design is saved on the `saved-v1-white` branch.
+**Settings** (the gear in the top bar, on every page) holds **Color**: Graphite (default), Blue, Violet, Ocean, Emerald, Rose or Sunset, shown as round swatches with a live "About Me." preview. Only the colour changes; the choice is remembered on the device. The earlier looks (White, Paper, Sage, Blush, Night, Ocean, Natural 3D, Midnight, Glow) were removed. The v1 White design is saved on the `saved-v1-white` branch.
+
+**Context under each section.** Every section has a one-line description (Career: "What I do and want to do.", Education: "What I've studied and what I'm learning."). Tiles show it in grey under the name (up to two lines); Grid shows it under the title, above your latest words; List shows it when there's no entry yet.
 
 ## 4. Typography
 
@@ -153,7 +155,7 @@ The app is light only (Studio). Tokens:
 | muted | `#6B6F7B` | secondary text |
 | faint | `#A3A7B2` | earlier versions, meta |
 | rule | `#ECEDF0` | hairlines |
-| g1 / g2 / g3 | per colour (Blue: `#1638C9` / `#2F62E6` / `#7FA9F3`) | title gradient; g2 is the accent, g1 the accent as text |
+| g1 / g2 / g3 | per colour (Graphite: `#0B0B0F` / `#3A3D48` / `#9CA1AE`) | title gradient; g2 is the accent, g1 the accent as text |
 
 Landscape uses hairline dividers instead of a raised page, so all three columns stay pure white.
 
