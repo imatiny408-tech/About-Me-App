@@ -113,6 +113,14 @@ Trash is a utility, not a category: a small bin in the bottom-right corner of th
 
 The menu on the homepage ends with **Look**: White (v1, the default), Paper, Sage, Blush, Night and Ocean. A look swaps only the colour tokens (background, ink, greys, hairlines, accent), so layout and type stay identical. The choice is remembered on the device. The v1 design is saved on the `saved-v1-white` branch.
 
+## 3j. Natural look (3D, pages outside the homepage)
+
+Inspired by the "Natural" phone setup reference: soft pearly spheres and a glossy ring floating slowly in a lavender-to-peach studio, frosted-glass surfaces, lavender-grey type and small pink accents.
+
+- The scene is **live 3D (three.js)**, not a video: it's drawn every frame at the device's full pixel resolution (2x or 3x), so it's sharper than a fixed 4K file on any iPad and adds no download beyond the library. It pauses when the app is in the background, and holds still when Reduce Motion is on.
+- Tiles, cells, list cards and Cards become separate frosted-glass panels (22pt corners, 26pt blur) with gaps instead of hairlines; menus and sheets are frosted too.
+- The homepage keeps the White look; Natural applies only once you open a page.
+
 ## 4. Typography
 
 One family: **SF Pro** on iPad (Inter Tight as the web fallback). Hierarchy comes from weight and size, not from mixing faces.

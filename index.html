@@ -56,6 +56,31 @@
 .look-opt .ck { margin-left: auto; font-weight: 700; visibility: hidden; }
 .look-opt[aria-checked="true"] .ck { visibility: visible; }
 
+/* ── Natural look: pages outside the homepage sit on a live 3D scene of pearly
+   spheres, with frosted-glass surfaces and soft lavender type ── */
+html[data-look="natural"].inner {
+  --bg: rgba(255,255,255,.5); --ink: #4E4A66; --muted: #7A7592; --faint: #A7A2BA; --rule: rgba(255,255,255,.82);
+  --gold: #E0679A; --gold-ink: #C34A7E; --hover: rgba(255,255,255,.74); color-scheme: light;
+}
+html[data-look="natural"].inner body { background: linear-gradient(165deg, #EEEBF2 0%, #DCD8E4 48%, #EBDCD6 100%) fixed; }
+#bg3d { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; display: none; }
+html[data-look="natural"].inner #bg3d { display: block; }
+.app { position: relative; z-index: 1; }
+html[data-look="natural"].inner .gridx { background: none; border: 0; border-radius: 0; overflow: visible; gap: 14px; }
+html[data-look="natural"].inner :is(.tile, .cell, .ncard, .cardx .body) {
+  background: var(--bg); border: 1px solid rgba(255,255,255,.85); border-radius: 22px;
+  -webkit-backdrop-filter: blur(26px) saturate(1.4); backdrop-filter: blur(26px) saturate(1.4);
+  box-shadow: 0 14px 36px -22px rgba(78, 70, 120, .45);
+}
+html[data-look="natural"].inner .gridx.swipe > * { border: 1px solid rgba(255,255,255,.85); }
+html[data-look="natural"].inner .cardx.empty .body { border-style: dashed; }
+html[data-look="natural"].inner :is(.annot-sheet, .layout-menu, .sheet) {
+  background: rgba(255,255,255,.74); -webkit-backdrop-filter: blur(30px) saturate(1.4); backdrop-filter: blur(30px) saturate(1.4);
+}
+html[data-look="natural"].inner .statement h1 { font-weight: 500; letter-spacing: -.035em; }
+html[data-look="natural"].inner .tile { font-weight: 400; }
+html[data-look="natural"].inner .hf-said { font-weight: 600; }
+
 /* ── Base ───────────────────────────────────────────────── */
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
@@ -451,6 +476,7 @@ html.fit .tiles-page .tile { min-height: 0; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
 
+<canvas id="bg3d" aria-hidden="true"></canvas>
 <div class="app" id="app">
   <header class="topbar" id="topbar">
     <div class="start">
@@ -839,7 +865,9 @@ function render() {
   $("#layoutBtn").hidden = !chapter || chapter.id === "history";
   $("#moreBtn").hidden = !chapter || chapter.id === "history";
   $("#trashBtn").hidden = !isHome; trashBadge();
-  $("#app").classList.toggle("inner", !isHome);           /* no What changed panel off the home screen */
+  $("#app").classList.toggle("inner", !isHome);
+  document.documentElement.classList.toggle("inner", !isHome);
+  updateBg();           /* no What changed panel off the home screen */
   document.documentElement.classList.toggle("fit", !chapter || chapter.id === "history" || getLayout(chapter.id) === "tiles");   /* home, Right Now, History and Tiles pages fit one screen; other layouts scroll */
   window.scrollTo(0, 0);
   closeAll();
@@ -995,15 +1023,92 @@ $("#trashBtn").onclick = openTrash;
 
 const LOOKS = [
   { id: "white", name: "White (v1)", c1: "#FFFFFF", c2: "#0B0B0C" },
+  { id: "natural", name: "Natural (3D, sections only)", c1: "#E4E0EA", c2: "#E0679A" },
   { id: "paper", name: "Paper", c1: "#F4F1EA", c2: "#B08A4E" },
   { id: "sage", name: "Sage", c1: "#EEF1EB", c2: "#6E8B5E" },
   { id: "blush", name: "Blush", c1: "#FBF1EF", c2: "#C06E78" },
   { id: "night", name: "Night", c1: "#0E0F12", c2: "#C9A96A" },
   { id: "ocean", name: "Ocean", c1: "#0E1A2B", c2: "#7FB2FF" },
 ];
+/* Natural: a live three.js scene drawn at the screen's full resolution every frame,
+   so it stays sharp on any iPad (no video file to stretch or download). */
+let bg3d = null, bgLoading = null;
+const wantBg = () => document.documentElement.dataset.look === "natural" && document.documentElement.classList.contains("inner");
+function loadThree() {
+  if (window.THREE) return Promise.resolve(window.THREE);
+  return bgLoading || (bgLoading = new Promise((ok, fail) => {
+    const s = document.createElement("script");
+    s.src = "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js";
+    s.onload = () => ok(window.THREE); s.onerror = fail; document.head.appendChild(s);
+  }));
+}
+async function updateBg() {
+  if (!wantBg()) { if (bg3d) bg3d.stop(); return; }
+  if (!bg3d) { try { bg3d = makeScene(await loadThree()); } catch (e) { return; } }
+  if (wantBg()) bg3d.start();
+}
+function makeScene(THREE) {
+  const canvas = $("#bg3d");
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 3));
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(35, 1, .1, 100);
+
+  // A soft lavender-to-peach studio for the pearly reflections
+  const g = document.createElement("canvas"); g.width = 512; g.height = 256;
+  const gx = g.getContext("2d"), grad = gx.createLinearGradient(0, 0, 0, 256);
+  grad.addColorStop(0, "#F7F4FB"); grad.addColorStop(.5, "#D9D4E6"); grad.addColorStop(1, "#F0D9CF");
+  gx.fillStyle = grad; gx.fillRect(0, 0, 512, 256);
+  const glow = gx.createRadialGradient(150, 70, 0, 150, 70, 90); glow.addColorStop(0, "rgba(255,255,255,1)"); glow.addColorStop(1, "rgba(255,255,255,0)");
+  gx.fillStyle = glow; gx.fillRect(0, 0, 512, 256);
+  const envTex = new THREE.CanvasTexture(g); envTex.mapping = THREE.EquirectangularReflectionMapping; envTex.colorSpace = THREE.SRGBColorSpace;
+  const pm = new THREE.PMREMGenerator(renderer); scene.environment = pm.fromEquirectangular(envTex).texture;
+
+  scene.add(new THREE.HemisphereLight(0xf3eefa, 0xd9c8c4, .55));
+  const key = new THREE.DirectionalLight(0xfff1e8, 2.6); key.position.set(-5, 6, 8); scene.add(key);
+  const rim = new THREE.DirectionalLight(0xd6d0ff, 1.0); rim.position.set(6, -2, -4); scene.add(rim);
+
+  const pearl = new THREE.MeshPhysicalMaterial({
+    color: 0xe9e5ee, roughness: .38, metalness: 0, clearcoat: 1, clearcoatRoughness: .22,
+    sheen: 1, sheenRoughness: .55, sheenColor: new THREE.Color(0xffd3e4), iridescence: .35, iridescenceIOR: 1.3, envMapIntensity: .75,
+  });
+  const ball = new THREE.SphereGeometry(1, 128, 96);
+  const bodies = [
+    [-4.4, 1.4, -2, 2.7], [4.8, 2.6, -4, 1.7], [2.3, -2.4, .5, .95], [1.2, -6.2, -3, 3.6],
+    [-2.0, 3.9, 1, .55], [7.0, -1.6, -6, 2.3], [-6.8, -3.8, -5, 2.0],
+  ].map(([x, y, z, r], i) => { const m = new THREE.Mesh(ball, pearl); m.position.set(x, y, z); m.scale.setScalar(r); m.userData = { y, ph: i * 1.7, sp: .18 + (i % 3) * .05 }; scene.add(m); return m; });
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(.75, .11, 64, 160), pearl);
+  ring.position.set(-3.6, -3.4, 2); ring.rotation.set(.5, -.6, 0); scene.add(ring);
+
+  function size() {
+    const w = innerWidth, h = innerHeight; renderer.setSize(w, h, false);
+    camera.aspect = w / h; camera.position.z = w < h ? 20 : 14; camera.updateProjectionMatrix();
+  }
+  size(); addEventListener("resize", size);
+  const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let running = false, t0 = performance.now();
+  function frame(now) {
+    const t = (now - t0) / 1000;
+    bodies.forEach(b => { b.position.y = b.userData.y + Math.sin(t * b.userData.sp + b.userData.ph) * .35; b.rotation.y = t * .05; });
+    ring.rotation.z = t * .12; ring.position.y = -3.4 + Math.sin(t * .3) * .25;
+    camera.position.x = Math.sin(t * .05) * .6; camera.lookAt(0, 0, 0);
+    renderer.render(scene, camera);
+    if (running && !still) requestAnimationFrame(frame);
+  }
+  document.addEventListener("visibilitychange", () => { if (document.hidden) running = false; else if (wantBg()) api.start(); });
+  const api = {
+    start() { if (running) return; running = true; requestAnimationFrame(frame); },
+    stop() { running = false; },
+  };
+  return api;
+}
+
 function currentLook() { const l = store("about-me-look", "white"); return LOOKS.some(x => x.id === l) ? l : "white"; }
 function applyLook(id) {
   if (id === "white") document.documentElement.removeAttribute("data-look"); else document.documentElement.dataset.look = id;
+  updateBg();
   const bg = getComputedStyle(document.documentElement).getPropertyValue("--bg").trim();
   document.querySelectorAll('meta[name="theme-color"]').forEach(m => m.setAttribute("content", bg || "#ffffff"));
 }
