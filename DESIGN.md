@@ -29,20 +29,23 @@ Note: a 1200pt canvas is wider than any real iPad (13" iPad Pro is 1032 × 1376p
 
 1. **Top bar** (56pt): Menu · About Me · Search
 2. **Statement**: **About / Me.** on two lines, centered, 800 weight, then **London** · An ongoing record of me., then a short gold hairline.
-3. **Right now.**: a 2 × 2 grid. Each cell has a grey lead-in with date ("I'm into · since Aug 2026") and a bold sentence. Then **+ Add to right now**.
-4. **Chapters**: a 3 × 2 grid of type only, with no boxes: tagline, big title (Myself), the first three parts plus a count, and "41 entries · changed 4×". Each block is a tap target.
-5. **What changed.**: two lines. Friendships: first version → latest version (3 versions). Career: ~~Web design~~ → Web + app development.
+3. **Contents list**: a plain list, like a minimal phone launcher. One lowercase word per line, 500 weight, ~34–64pt, left-aligned in a centred block, with no icons, boxes or counts: right now · myself · my life · my taste · my people · my mind · my history. Each word opens its page.
+4. **What changed.**: two lines. Friendships: first version → latest version (3 versions). Career: ~~Web design~~ → Web + app development.
 
 ## 3. Landscape home: "the archive" (one screen)
 
 - **Top bar** across the full width: About Me (left) · Search · ⋯ (right)
 - **Left, 232pt, sidebar**: About Me, Right Now, and the six chapters with counts. This replaces the chapter grid.
-- **Centre**: the statement on one line (**About Me.**) and the Right now. grid, vertically centered.
+- **Centre**: the statement on one line (**About Me.**) and the same contents list, vertically centred.
 - **Right, 300pt, What changed**: the full Friendships thread (three dated versions, the newest marked *now*) and the Career before → after with the *why*. On a chapter page this panel shows that chapter's changes.
 - So the three columns read: where to go · who I am now · how I got here. The earlier "Currently" panel was cut because it repeated Right now. word for word, which the no-scroll screen has no room for.
 - Between 900 and 1100pt wide (split view) there's no right panel, so the two-line What changed. strip returns to the centre.
 
 Content and features are the same as portrait. Only the arrangement changes.
+
+## 3a. Right now page (one screen)
+
+Right Now has its own page (`#now`): the statement **Right now.**, then the four sentences in a 2 × 2 grid (a grey lead-in with the date, and a bold sentence), then **+ Add to right now**.
 
 ## 3b. Chapter pages (one screen)
 
