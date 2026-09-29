@@ -6,7 +6,9 @@
   "description": "About Me: an iPad personal archive. Prototype and design spec.",
   "scripts": {
     "check": "node scripts/check-fit.mjs",
-    "screens": "node scripts/check-fit.mjs --screens"
+    "screens": "node scripts/check-fit.mjs --screens",
+    "build": "node scripts/build-site.mjs",
+    "icons": "node scripts/make-icons.mjs"
   },
   "devDependencies": {
     "playwright": "1.56.1"

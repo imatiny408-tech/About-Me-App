@@ -21,6 +21,16 @@ Open `index.html` in Safari on an iPad and rotate it, or resize a desktop browse
 - **Landscape** is the archive: the page, plus a "What changed" panel on the right.
 - **No page scrolls** on anything iPad-sized, from iPad mini to 13" iPad Pro, including split view.
 
+## Install it on your iPad
+
+The app is published with GitHub Pages at **https://imatiny408-tech.github.io/About-Me-App/**. Every push to `main` republishes it.
+
+1. Open that address in Safari on the iPad.
+2. Tap Share, then **Add to Home Screen**.
+3. Open About Me from the Home Screen. It runs full screen, like an app.
+
+`npm run build` makes the Pages version (`dist/`) locally; `scripts/make-icons.mjs` redraws the Home Screen icon.
+
 ## Checking the one-screen rule
 
 ```sh
