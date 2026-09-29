@@ -1,58 +1,53 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
-  <!-- About Me app icon: a folder of pages (your archive) with a person, an orbit and a spark.
+  <!-- About Me app icon: an Apple-style folder on white, with a person and a spark
+       stamped into the front, the way macOS shows symbols on folders.
        Full-bleed square: iOS and iPadOS round the corners themselves. -->
   <defs>
-    <linearGradient id="back" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#5366F4"/><stop offset="1" stop-color="#6574F7"/>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#EDF0F5"/>
     </linearGradient>
-    <linearGradient id="tab" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#2A3591"/><stop offset="1" stop-color="#3342B8"/>
+    <linearGradient id="back" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5DA8F2"/><stop offset="1" stop-color="#3E8DE8"/>
     </linearGradient>
-    <linearGradient id="page1" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#A9B5FF"/><stop offset="1" stop-color="#7F90FA"/>
+    <linearGradient id="paper" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#E9EEF5"/>
     </linearGradient>
-    <linearGradient id="page2" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#FFFFFF"/><stop offset=".5" stop-color="#E4E9FF"/>
+    <linearGradient id="front" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8CCBFF"/><stop offset=".55" stop-color="#6DB6FA"/><stop offset="1" stop-color="#58A6F4"/>
     </linearGradient>
-    <linearGradient id="front" x1=".75" y1="0" x2=".3" y2="1">
-      <stop offset="0" stop-color="#7DB6FF"/><stop offset=".45" stop-color="#4F76F3"/><stop offset="1" stop-color="#6A78FA"/>
+    <linearGradient id="stamp" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3F8FE3"/><stop offset="1" stop-color="#3A86DA"/>
     </linearGradient>
-    <radialGradient id="sheen" cx=".78" cy=".25" r=".6">
-      <stop offset="0" stop-color="#9CD0FF" stop-opacity=".55"/><stop offset="1" stop-color="#9CD0FF" stop-opacity="0"/>
-    </radialGradient>
-    <linearGradient id="glyph" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#FFFFFF"/><stop offset=".55" stop-color="#DCE2FF"/><stop offset="1" stop-color="#AEB8FF"/>
-    </linearGradient>
-    <linearGradient id="ring" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="#F2F4FF"/><stop offset=".5" stop-color="#C9D0FF"/><stop offset="1" stop-color="#E9ECFF"/>
-    </linearGradient>
-    <filter id="lift" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="-10" stdDeviation="16" flood-color="#1E2A8C" flood-opacity=".28"/>
+    <filter id="drop" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="18" stdDeviation="22" flood-color="#1B3F73" flood-opacity=".22"/>
     </filter>
-    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#2433A8" flood-opacity=".35"/>
+    <filter id="flap" x="-10%" y="-20%" width="120%" height="140%">
+      <feDropShadow dx="0" dy="-4" stdDeviation="6" flood-color="#1E5FB0" flood-opacity=".25"/>
     </filter>
+    <!-- the symbol: a person and a spark -->
+    <g id="glyph">
+      <circle cx="512" cy="540" r="74"/>
+      <path d="M512 640 C604 640 668 690 680 760 C684 784 670 800 646 800 H378 C354 800 340 784 344 760 C356 690 420 640 512 640 Z"/>
+      <path d="M676 478 C680 506 688 514 716 518 C688 522 680 530 676 558 C672 530 664 522 636 518 C664 514 672 506 676 478 Z"/>
+    </g>
   </defs>
 
-  <rect width="1024" height="1024" fill="url(#back)"/>
-  <!-- the back of the folder, with its tab -->
-  <path d="M0 0 H1024 V200 H760 C660 200 610 150 560 108 C520 74 480 60 420 60 H0 Z" fill="url(#back)"/>
-  <path d="M430 0 H1024 V206 H770 C664 206 612 150 562 104 C520 66 486 40 430 30 Z" fill="url(#tab)"/>
+  <rect width="1024" height="1024" fill="url(#bg)"/>
 
-  <!-- pages -->
-  <rect x="96" y="218" width="832" height="900" rx="150" fill="url(#page1)" opacity=".9" filter="url(#lift)"/>
-  <rect x="70" y="262" width="884" height="900" rx="160" fill="url(#page2)" filter="url(#lift)"/>
-  <rect x="44" y="312" width="936" height="900" rx="170" fill="url(#front)" filter="url(#lift)"/>
-  <rect x="44" y="312" width="936" height="900" rx="170" fill="url(#sheen)"/>
+  <g filter="url(#drop)">
+    <!-- back of the folder, tab on the top left -->
+    <path d="M168 232 H382 C410 232 426 242 442 262 L462 288 C472 300 482 304 500 304 H824 C862 304 892 334 892 372 V788 C892 826 862 856 824 856 H200 C162 856 132 826 132 788 V268 C132 248 148 232 168 232 Z" fill="url(#back)"/>
+    <!-- a sheet of paper peeking out -->
+    <rect x="176" y="318" width="672" height="420" rx="26" fill="url(#paper)"/>
+    <!-- front flap -->
+    <path d="M132 404 C132 380 150 362 174 362 H850 C874 362 892 380 892 404 V788 C892 826 862 856 824 856 H200 C162 856 132 826 132 788 Z" fill="url(#front)" filter="url(#flap)"/>
+    <!-- a hairline of light along the flap's top edge -->
+    <path d="M174 364 H850 C872 364 889 380 890 402" fill="none" stroke="#FFFFFF" stroke-opacity=".55" stroke-width="3"/>
+  </g>
 
-  <!-- person -->
-  <g filter="url(#soft)">
-    <circle cx="512" cy="540" r="104" fill="url(#glyph)"/>
-    <path d="M362 806 C366 712 432 668 512 668 C592 668 658 712 662 806 C662 820 652 828 636 828 H388 C372 828 362 820 362 806 Z" fill="url(#glyph)"/>
-    <!-- orbit: a lens between two arcs, so it tapers to points at both ends like a brush stroke -->
-    <path fill="url(#ring)" transform="rotate(-13 520 760)"
-      d="M262 690 A300 132 0 1 0 778 690 A300 92 0 1 1 262 690 Z"/>
-    <!-- spark -->
-    <path d="M820 470 C826 512 836 522 878 528 C836 534 826 544 820 586 C814 544 804 534 762 528 C804 522 814 512 820 470 Z" fill="#F4F6FF"/>
+  <!-- stamped symbol: a light edge below, the darker fill on top -->
+  <g transform="translate(512 614) scale(.84) translate(-512 -638)">
+    <use href="#glyph" fill="#FFFFFF" fill-opacity=".45" transform="translate(0 5)"/>
+    <use href="#glyph" fill="url(#stamp)"/>
   </g>
 </svg>

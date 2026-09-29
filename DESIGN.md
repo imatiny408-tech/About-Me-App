@@ -133,7 +133,7 @@ Tiles, Grid, List and Cards always show each section's latest entry, including o
 
 ## 3k. App icon
 
-A periwinkle folder of pages (the archive): a navy tab at the back, a lilac and a white page peeking out, and a bright blue front page with a soft sheen. On it sits a frosted white person, an orbit that tapers to points like a brush stroke (your life moving around you), and a four-point spark. Drawn as `icons/icon.svg`; `npm run icons` renders the PNGs (180, 192, 512, 1024) full-bleed, since iOS and iPadOS round the corners. `node scripts/make-icons.mjs --preview` also writes `screens/icon-preview.png`.
+An Apple-style folder (like Files and macOS folders) on a soft white icon: a sky-blue folder with its tab on the top left, a white sheet peeking out, and a lighter front flap with a hairline of light on its edge. A person and a small four-point spark are stamped into the front the way macOS shows symbols on folders: a slightly darker blue with a light edge underneath. Drawn as `icons/icon.svg`; `npm run icons` renders the PNGs (180, 192, 512, 1024) full-bleed, since iOS and iPadOS round the corners. `node scripts/make-icons.mjs --preview` also writes `screens/icon-preview.png`.
 
 ## 4. Typography
 
