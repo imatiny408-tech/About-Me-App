@@ -63,7 +63,23 @@ html[data-look="natural"].inner {
   --gold: #E0679A; --gold-ink: #C34A7E; --hover: rgba(255,255,255,.74); color-scheme: light;
 }
 html[data-look="natural"].inner body { background: linear-gradient(165deg, #EEEBF2 0%, #DCD8E4 48%, #EBDCD6 100%) fixed; }
-#bg3d { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; display: none; }
+#bg3d { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; display: none; transform: scale(1.08); transition: filter .4s; }
+/* Frost: blur the scene and wash it with a veil of white (Clear shows it crisp) */
+html[data-frost="soft"] #bg3d { filter: blur(14px) saturate(1.08); }
+html[data-frost="strong"] #bg3d { filter: blur(36px) saturate(1.15); }
+#frostVeil { position: fixed; inset: 0; z-index: 0; pointer-events: none; display: none; background: rgba(255,255,255,.14); }
+html[data-look="natural"].inner #frostVeil { display: block; }
+html[data-frost="strong"] #frostVeil { background: rgba(255,255,255,.3); }
+html[data-frost="clear"] #frostVeil { display: none !important; }
+html[data-look="natural"].inner[data-scene="silk"] body { background: linear-gradient(170deg, #F3EFF5 0%, #E4DEEA 55%, #EEE2DD 100%) fixed; }
+html[data-look="natural"].inner[data-scene="dunes"] body { background: linear-gradient(180deg, #F4ECEA 0%, #EFDCD2 55%, #E9D2C4 100%) fixed; }
+html[data-look="natural"].inner[data-scene="aurora"] body { background: #F6F4F9; }
+.scene-ctl { padding: 4px 6px 6px; }
+.scene-ctl .mhead { padding: 10px 6px 6px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.layout-menu .chip-opt { width: auto; display: inline-flex; align-items: center; }
+.chip-opt { height: 32px; padding: 0 12px; border-radius: 16px; border: 1px solid var(--rule); font: 600 14px/1 var(--sans); color: var(--ink); background: transparent; }
+.chip-opt[aria-pressed="true"] { background: var(--ink); color: #fff; border-color: var(--ink); }
 html[data-look="natural"].inner #bg3d { display: block; }
 .app { position: relative; z-index: 1; }
 html[data-look="natural"].inner .gridx { background: none; border: 0; border-radius: 0; overflow: visible; gap: 14px; }
@@ -476,7 +492,7 @@ html.fit .tiles-page .tile { min-height: 0; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
 
-<canvas id="bg3d" aria-hidden="true"></canvas>
+<canvas id="bg3d" aria-hidden="true"></canvas><div id="frostVeil" aria-hidden="true"></div>
 <div class="app" id="app">
   <header class="topbar" id="topbar">
     <div class="start">
@@ -885,13 +901,15 @@ function openLayoutMenu() {
   const now = getLayout(c.id);
   $("#layoutMenu").innerHTML = `<p class="mhead">Show ${esc(c.title)} as</p>` + layouts.map(l =>
     `<button type="button" role="menuitemradio" aria-checked="${l.id === now}" data-layout="${l.id}">
-      <span class="n">${l.name}</span><span class="d">${l.desc}</span><span class="ck" aria-hidden="true">✓</span></button>`).join("");
+      <span class="n">${l.name}</span><span class="d">${l.desc}</span><span class="ck" aria-hidden="true">✓</span></button>`).join("")
+    + (currentLook() === "natural" ? `<div class="scene-ctl">${sceneControlsHTML()}</div>` : "");
   $("#layoutMenu").hidden = false;
   $("#layoutBtn").setAttribute("aria-expanded", "true");
   $("#layoutMenu").querySelector('[aria-checked="true"]').focus();
 }
 $("#layoutBtn").onclick = e => { e.stopPropagation(); $("#layoutMenu").hidden ? openLayoutMenu() : closeLayoutMenu(); };
 $("#layoutMenu").onclick = e => {
+  if (handleSceneClick(e)) { e.stopPropagation(); return openLayoutMenu(); }
   const btn = e.target.closest("[data-layout]"); const c = currentChapter();
   if (!btn || !c) return;
   setLayout(c.id, btn.dataset.layout);
@@ -1047,16 +1065,28 @@ async function updateBg() {
   if (!bg3d) { try { bg3d = makeScene(await loadThree()); } catch (e) { return; } }
   if (wantBg()) bg3d.start();
 }
+const SCENES = [
+  { id: "pearls", name: "Pearls" }, { id: "orbs", name: "Clay orbs" }, { id: "silk", name: "Silk" },
+  { id: "dunes", name: "Dunes" }, { id: "aurora", name: "Aurora" },
+];
+const FROSTS = [{ id: "soft", name: "Soft" }, { id: "strong", name: "Strong" }, { id: "clear", name: "Clear" }];
+const currentScene = () => { const v = store("about-me-scene", "pearls"); return SCENES.some(x => x.id === v) ? v : "pearls"; };
+const currentFrost = () => { const v = store("about-me-frost", "soft"); return FROSTS.some(x => x.id === v) ? v : "soft"; };
+function applyScene() {
+  document.documentElement.dataset.scene = currentScene();
+  document.documentElement.dataset.frost = currentFrost();
+  if (bg3d) bg3d.setScene(currentScene());
+}
+
 function makeScene(THREE) {
   const canvas = $("#bg3d");
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 3));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(35, 1, .1, 100);
+  const camera = new THREE.PerspectiveCamera(35, 1, .1, 200);
 
-  // A soft lavender-to-peach studio for the pearly reflections
+  // A soft lavender-to-peach studio for reflections, shared by every scene
   const g = document.createElement("canvas"); g.width = 512; g.height = 256;
   const gx = g.getContext("2d"), grad = gx.createLinearGradient(0, 0, 0, 256);
   grad.addColorStop(0, "#F7F4FB"); grad.addColorStop(.5, "#D9D4E6"); grad.addColorStop(1, "#F0D9CF");
@@ -1064,60 +1094,137 @@ function makeScene(THREE) {
   const glow = gx.createRadialGradient(150, 70, 0, 150, 70, 90); glow.addColorStop(0, "rgba(255,255,255,1)"); glow.addColorStop(1, "rgba(255,255,255,0)");
   gx.fillStyle = glow; gx.fillRect(0, 0, 512, 256);
   const envTex = new THREE.CanvasTexture(g); envTex.mapping = THREE.EquirectangularReflectionMapping; envTex.colorSpace = THREE.SRGBColorSpace;
-  const pm = new THREE.PMREMGenerator(renderer); scene.environment = pm.fromEquirectangular(envTex).texture;
-
-  scene.add(new THREE.HemisphereLight(0xf3eefa, 0xd9c8c4, .55));
-  const key = new THREE.DirectionalLight(0xfff1e8, 2.6); key.position.set(-5, 6, 8); scene.add(key);
-  const rim = new THREE.DirectionalLight(0xd6d0ff, 1.0); rim.position.set(6, -2, -4); scene.add(rim);
-
-  const pearl = new THREE.MeshPhysicalMaterial({
-    color: 0xe9e5ee, roughness: .38, metalness: 0, clearcoat: 1, clearcoatRoughness: .22,
-    sheen: 1, sheenRoughness: .55, sheenColor: new THREE.Color(0xffd3e4), iridescence: .35, iridescenceIOR: 1.3, envMapIntensity: .75,
-  });
+  const env = new THREE.PMREMGenerator(renderer).fromEquirectangular(envTex).texture;
+  function lit(scene) {
+    scene.environment = env;
+    scene.add(new THREE.HemisphereLight(0xf3eefa, 0xd9c8c4, .55));
+    const key = new THREE.DirectionalLight(0xfff1e8, 2.6); key.position.set(-5, 6, 8); scene.add(key);
+    const rim = new THREE.DirectionalLight(0xd6d0ff, 1.0); rim.position.set(6, -2, -4); scene.add(rim);
+    return scene;
+  }
   const ball = new THREE.SphereGeometry(1, 128, 96);
-  const bodies = [
-    [-4.4, 1.4, -2, 2.7], [4.8, 2.6, -4, 1.7], [2.3, -2.4, .5, .95], [1.2, -6.2, -3, 3.6],
-    [-2.0, 3.9, 1, .55], [7.0, -1.6, -6, 2.3], [-6.8, -3.8, -5, 2.0],
-  ].map(([x, y, z, r], i) => { const m = new THREE.Mesh(ball, pearl); m.position.set(x, y, z); m.scale.setScalar(r); m.userData = { y, ph: i * 1.7, sp: .18 + (i % 3) * .05 }; scene.add(m); return m; });
-  const ring = new THREE.Mesh(new THREE.TorusGeometry(.75, .11, 64, 160), pearl);
-  ring.position.set(-3.6, -3.4, 2); ring.rotation.set(.5, -.6, 0); scene.add(ring);
+  const floaters = (scene, list, mat) => list.map(([x, y, z, r, color], i) => {
+    const m = new THREE.Mesh(ball, color ? mat(color) : mat); m.position.set(x, y, z); m.scale.setScalar(r);
+    m.userData = { y, ph: i * 1.7, sp: .18 + (i % 3) * .05 }; scene.add(m); return m;
+  });
+  const bob = (list, t) => list.forEach(b => { b.position.y = b.userData.y + Math.sin(t * b.userData.sp + b.userData.ph) * .35; b.rotation.y = t * .05; });
+  const orbitCam = (t, z) => { camera.position.set(Math.sin(t * .05) * .6, 0, z); camera.lookAt(0, 0, 0); };
+  const tall = () => innerWidth < innerHeight;
 
+  // Each scene: build once, then update(t) every frame
+  const builders = {
+    pearls() {
+      const scene = lit(new THREE.Scene());
+      const pearl = new THREE.MeshPhysicalMaterial({ color: 0xe9e5ee, roughness: .38, clearcoat: 1, clearcoatRoughness: .22, sheen: 1, sheenRoughness: .55,
+        sheenColor: new THREE.Color(0xffd3e4), iridescence: .35, iridescenceIOR: 1.3, envMapIntensity: .75 });
+      const bodies = floaters(scene, [[-4.4, 1.4, -2, 2.7], [4.8, 2.6, -4, 1.7], [2.3, -2.4, .5, .95], [1.2, -6.2, -3, 3.6], [-2.0, 3.9, 1, .55], [7.0, -1.6, -6, 2.3], [-6.8, -3.8, -5, 2.0]], pearl);
+      const ring = new THREE.Mesh(new THREE.TorusGeometry(.75, .11, 64, 160), pearl); ring.position.set(-3.6, -3.4, 2); ring.rotation.set(.5, -.6, 0); scene.add(ring);
+      return { scene, update(t) { bob(bodies, t); ring.rotation.z = t * .12; ring.position.y = -3.4 + Math.sin(t * .3) * .25; orbitCam(t, tall() ? 20 : 14); } };
+    },
+    orbs() {
+      const scene = lit(new THREE.Scene());
+      const clay = c => new THREE.MeshPhysicalMaterial({ color: c, roughness: .62, sheen: .8, sheenRoughness: .7, sheenColor: new THREE.Color(0xffffff), envMapIntensity: .6 });
+      const bodies = floaters(scene, [[-4.6, 2.0, -2, 2.4, 0xf6c9b8], [4.4, 2.8, -3, 1.6, 0xd8cff2], [2.6, -2.2, .5, 1.1, 0xcde8dc], [0.4, -6.0, -3, 3.4, 0xf3d9e6],
+        [-2.2, 4.2, 1, .6, 0xfbe7c6], [7.2, -1.4, -6, 2.2, 0xcde8dc], [-6.6, -3.6, -5, 2.1, 0xd8cff2], [-1.2, -1.2, -8, 1.8, 0xfbe7c6]], clay);
+      return { scene, update(t) { bob(bodies, t); orbitCam(t, tall() ? 20 : 14); } };
+    },
+    silk() {
+      const scene = lit(new THREE.Scene());
+      const geo = new THREE.PlaneGeometry(44, 28, 220, 140), pos = geo.attributes.position, base = Float32Array.from(pos.array);
+      const cloth = new THREE.Mesh(geo, new THREE.MeshPhysicalMaterial({ color: 0xdcd2e4, roughness: .4, sheen: 1, sheenRoughness: .35,
+        sheenColor: new THREE.Color(0xffd3e2), clearcoat: .5, side: THREE.DoubleSide, envMapIntensity: .35 }));
+      cloth.rotation.set(-.55, .15, .1); cloth.position.set(0, -1, -4); scene.add(cloth);
+      const graze = new THREE.DirectionalLight(0xfff0f4, 2.2); graze.position.set(-12, 3, 2); scene.add(graze);   // low side light shows the folds
+      return { scene, update(t) {
+        for (let i = 0; i < pos.count; i++) {
+          const x = base[i * 3], y = base[i * 3 + 1];
+          pos.array[i * 3 + 2] = Math.sin(x * .32 + t * .35) * 2.2 + Math.sin(y * .45 - t * .28) * 1.4 + Math.sin((x + y) * .18 + t * .2) * 1.6;
+        }
+        pos.needsUpdate = true; geo.computeVertexNormals();
+        camera.position.set(Math.sin(t * .04) * .8, 1.5, tall() ? 24 : 18); camera.lookAt(0, -1, -4);
+      } };
+    },
+    dunes() {
+      const scene = lit(new THREE.Scene()); scene.fog = new THREE.Fog(0xefdcd2, 20, 70);
+      const geo = new THREE.PlaneGeometry(120, 120, 180, 180), pos = geo.attributes.position, base = Float32Array.from(pos.array);
+      const sand = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ color: 0xf1d6c6, roughness: .95, envMapIntensity: .5 }));
+      sand.rotation.x = -Math.PI / 2; scene.add(sand);
+      return { scene, update(t) {
+        const drift = t * .15;
+        for (let i = 0; i < pos.count; i++) {
+          const x = base[i * 3], y = base[i * 3 + 1] + drift;
+          pos.array[i * 3 + 2] = Math.sin(x * .09 + y * .05) * 2.2 + Math.sin(x * .21 - y * .13) * .9 + Math.sin(y * .07) * 1.4;
+        }
+        pos.needsUpdate = true; geo.computeVertexNormals();
+        camera.position.set(Math.sin(t * .03) * 2, 6, tall() ? 26 : 20); camera.lookAt(0, 0, -20);
+      } };
+    },
+    aurora() {
+      const scene = new THREE.Scene();
+      const mat = new THREE.ShaderMaterial({ uniforms: { t: { value: 0 }, aspect: { value: 1 } }, depthTest: false, depthWrite: false,
+        vertexShader: "varying vec2 v; void main(){ v = uv; gl_Position = vec4(position.xy, 0., 1.); }",
+        fragmentShader: `precision highp float; varying vec2 v; uniform float t; uniform float aspect;
+          vec3 blob(vec2 p, vec2 c, float r, vec3 col){ float d = length((p - c) * vec2(aspect, 1.)); return col * exp(-d * d / (r * r)); }
+          void main(){
+            vec2 p = v; vec3 col = vec3(.965, .955, .975);
+            col = mix(col, vec3(.86, .82, .96), clamp(blob(p, vec2(.25 + .12 * sin(t * .11), .7 + .1 * cos(t * .09)), .38, vec3(1.)).r, 0., 1.) * .8);
+            col = mix(col, vec3(.99, .84, .80), clamp(blob(p, vec2(.78 + .1 * cos(t * .07), .3 + .12 * sin(t * .1)), .42, vec3(1.)).r, 0., 1.) * .75);
+            col = mix(col, vec3(.80, .92, .88), clamp(blob(p, vec2(.6 + .15 * sin(t * .05), .85 + .08 * sin(t * .13)), .3, vec3(1.)).r, 0., 1.) * .6);
+            col = mix(col, vec3(.98, .80, .90), clamp(blob(p, vec2(.35 + .1 * cos(t * .08), .2 + .1 * cos(t * .06)), .34, vec3(1.)).r, 0., 1.) * .65);
+            gl_FragColor = vec4(col, 1.); }` });
+      const quad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), mat); quad.frustumCulled = false; scene.add(quad);
+      return { scene, update(t) { mat.uniforms.t.value = t; mat.uniforms.aspect.value = innerWidth / innerHeight; } };
+    },
+  };
+  const built = {};
+  let active = null;
   function size() {
     const w = innerWidth, h = innerHeight; renderer.setSize(w, h, false);
-    camera.aspect = w / h; camera.position.z = w < h ? 20 : 14; camera.updateProjectionMatrix();
+    camera.aspect = w / h; camera.updateProjectionMatrix();
   }
   size(); addEventListener("resize", size);
   const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
   let running = false, t0 = performance.now();
-  function frame(now) {
+  function draw(now) {
     const t = (now - t0) / 1000;
-    bodies.forEach(b => { b.position.y = b.userData.y + Math.sin(t * b.userData.sp + b.userData.ph) * .35; b.rotation.y = t * .05; });
-    ring.rotation.z = t * .12; ring.position.y = -3.4 + Math.sin(t * .3) * .25;
-    camera.position.x = Math.sin(t * .05) * .6; camera.lookAt(0, 0, 0);
-    renderer.render(scene, camera);
-    if (running && !still) requestAnimationFrame(frame);
+    active.update(t); renderer.render(active.scene, camera);
   }
+  function frame(now) { draw(now); if (running && !still) requestAnimationFrame(frame); }
   document.addEventListener("visibilitychange", () => { if (document.hidden) running = false; else if (wantBg()) api.start(); });
   const api = {
+    setScene(id) { active = built[id] || (built[id] = builders[id]()); if (!running) requestAnimationFrame(draw); },
     start() { if (running) return; running = true; requestAnimationFrame(frame); },
     stop() { running = false; },
   };
+  api.setScene(currentScene());
   return api;
 }
 
 function currentLook() { const l = store("about-me-look", "white"); return LOOKS.some(x => x.id === l) ? l : "white"; }
 function applyLook(id) {
   if (id === "white") document.documentElement.removeAttribute("data-look"); else document.documentElement.dataset.look = id;
-  updateBg();
+  applyScene(); updateBg();
   const bg = getComputedStyle(document.documentElement).getPropertyValue("--bg").trim();
   document.querySelectorAll('meta[name="theme-color"]').forEach(m => m.setAttribute("content", bg || "#ffffff"));
+}
+function sceneControlsHTML() {
+  const sc = currentScene(), fr = currentFrost();
+  return `<p class="mhead">Background</p><div class="chips">${SCENES.map(x => `<button type="button" class="chip-opt" data-scene="${x.id}" aria-pressed="${x.id === sc}">${x.name}</button>`).join("")}</div>
+    <p class="mhead">Frost</p><div class="chips">${FROSTS.map(x => `<button type="button" class="chip-opt" data-frost="${x.id}" aria-pressed="${x.id === fr}">${x.name}</button>`).join("")}</div>`;
+}
+function handleSceneClick(e) {
+  const s1 = e.target.closest("[data-scene]"), f1 = e.target.closest("[data-frost]");
+  if (!s1 && !f1) return false;
+  if (s1) keep("about-me-scene", s1.dataset.scene); else keep("about-me-frost", f1.dataset.frost);
+  applyScene(); return true;
 }
 function renderLooks() {
   const now = currentLook();
   $("#looks").innerHTML = `<span class="label">Look</span>` + LOOKS.map(l => `<button type="button" class="look-opt" role="radio" aria-checked="${l.id === now}" data-look="${l.id}">
-    <span class="chip" style="background:${l.c1};--c2:${l.c2}"></span>${l.name}<span class="ck" aria-hidden="true">✓</span></button>`).join("");
+    <span class="chip" style="background:${l.c1};--c2:${l.c2}"></span>${l.name}<span class="ck" aria-hidden="true">✓</span></button>`).join("")
+    + (now === "natural" ? `<div class="scene-ctl">${sceneControlsHTML()}</div>` : "");
 }
-$("#looks").onclick = e => { const b = e.target.closest("[data-look]"); if (!b) return; keep("about-me-look", b.dataset.look); applyLook(b.dataset.look); renderLooks(); };
+$("#looks").onclick = e => { if (handleSceneClick(e)) return renderLooks(); const b = e.target.closest("[data-look]"); if (!b) return; keep("about-me-look", b.dataset.look); applyLook(b.dataset.look); renderLooks(); };
 applyLook(currentLook());
 
 /* ── Annotate ─────────────────────────────────────────────
