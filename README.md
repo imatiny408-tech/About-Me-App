@@ -31,4 +31,4 @@ npm run screens   # same check, and refreshes screens/
 
 ## Structure
 
-Home · Right Now · Myself · My Life · My Taste · My People · My Mind · My History, plus Decision History, What Changed and Timeline (next up).
+Home · Right Now · Myself · My Life · My Taste · My People · My Mind · My Appearance · My Routines · My Little Things · My History, plus Decision History, What Changed and Timeline (next up).

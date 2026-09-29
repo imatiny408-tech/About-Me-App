@@ -29,7 +29,7 @@ Note: a 1200pt canvas is wider than any real iPad (13" iPad Pro is 1032 × 1376p
 
 1. **Top bar** (56pt): Menu · About Me · Search
 2. **Statement**: **About / Me.** on two lines, centered, 800 weight, then **London** · An ongoing record of me., then a short gold hairline.
-3. **Contents list**: a plain list, like a minimal phone launcher. One lowercase word per line, 500 weight, ~34–64pt, left-aligned on the left edge of the page under the left-aligned statement, with no icons, boxes or counts: right now · myself · my life · my taste · my people · my mind · my history. Each word opens its page.
+3. **Contents list**: a plain list, like a minimal phone launcher. One lowercase word per line, 500 weight, ~28–56pt, left-aligned on the left edge of the page under the left-aligned statement, with no icons, boxes or counts: right now · myself · my life · my taste · my people · my mind · my appearance · my routines · my little things · my history. Each word opens its page.
 4. **What changed.**: two lines. Friendships: first version → latest version (3 versions). Career: ~~Web design~~ → Web + app development.
 
 ## 3. Landscape home: "the archive" (one screen)
@@ -54,7 +54,7 @@ They use the same composition as home, so every page feels like the same book:
 2. **Parts**: a 2-column grid (up to 10 parts, 5 rows). Each part has its name in bold and one line under it: the latest entry in black, or its description in grey, or "Nothing yet. Tap to write the first entry." in light grey. Clamped to 2 lines.
 3. **What changed.**: the chapter's evolution lines (e.g. Career: ~~Web design~~ → Web + app development) and "This chapter has evolved N times", with **View history →**. In wide landscape this moves to the right panel with the chapter's stats.
 
-Verified with no overflow on all 6 chapters and home at 1200×1600, 1600×1200, iPad mini, 11" and 13" in both orientations, and a 1000×744 split-view window.
+Verified with no overflow on all 9 chapters, Right Now and home at 1200×1600, 1600×1200, iPad mini, 11" and 13" in both orientations, and a 1000×744 split-view window.
 
 ## 4. Typography
 

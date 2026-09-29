@@ -18,7 +18,7 @@ const sizes = [
   ['landscape-ipad13-1376x1032', 1376, 1032],
   ['landscape-split-1000x744', 1000, 744],
 ];
-const routes = ['home', 'now', 'myself', 'life', 'taste', 'people', 'mind', 'history'];
+const routes = ['home', 'now', 'myself', 'life', 'taste', 'people', 'mind', 'appearance', 'routines', 'little', 'history'];
 
 const browser = await chromium.launch();
 const failures = [];
