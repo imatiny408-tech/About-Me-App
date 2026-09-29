@@ -1,10 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
-  <!-- About Me app icon: an Apple-style folder on white, with a person and a spark
+  <!-- About Me app icon: an Apple-style folder filling the whole square, with a person and a spark
        stamped into the front, the way macOS shows symbols on folders.
        Full-bleed square: iOS and iPadOS round the corners themselves. -->
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#EDF0F5"/>
+      <stop offset="0" stop-color="#2E6FC9"/><stop offset="1" stop-color="#3A82DD"/>
     </linearGradient>
     <linearGradient id="back" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stop-color="#5DA8F2"/><stop offset="1" stop-color="#3E8DE8"/>
@@ -32,21 +32,21 @@
     </g>
   </defs>
 
+  <!-- the folder fills the whole square: deeper blue behind the tab, the folder in front -->
   <rect width="1024" height="1024" fill="url(#bg)"/>
-
   <g filter="url(#drop)">
     <!-- back of the folder, tab on the top left -->
-    <path d="M168 232 H382 C410 232 426 242 442 262 L462 288 C472 300 482 304 500 304 H824 C862 304 892 334 892 372 V788 C892 826 862 856 824 856 H200 C162 856 132 826 132 788 V268 C132 248 148 232 168 232 Z" fill="url(#back)"/>
+    <path d="M0 160 H60 V112 C60 86 80 66 106 66 H404 C434 66 450 76 466 98 L494 138 C504 152 516 160 540 160 H1024 V1024 H0 Z" fill="url(#back)"/>
     <!-- a sheet of paper peeking out -->
-    <rect x="176" y="318" width="672" height="420" rx="26" fill="url(#paper)"/>
-    <!-- front flap -->
-    <path d="M132 404 C132 380 150 362 174 362 H850 C874 362 892 380 892 404 V788 C892 826 862 856 824 856 H200 C162 856 132 826 132 788 Z" fill="url(#front)" filter="url(#flap)"/>
+    <rect x="64" y="196" width="896" height="600" rx="32" fill="url(#paper)"/>
+    <!-- front flap, running off the sides and bottom -->
+    <path d="M24 318 C24 282 52 254 88 254 H936 C972 254 1000 282 1000 318 V1060 H24 Z" fill="url(#front)" filter="url(#flap)"/>
     <!-- a hairline of light along the flap's top edge -->
-    <path d="M174 364 H850 C872 364 889 380 890 402" fill="none" stroke="#FFFFFF" stroke-opacity=".55" stroke-width="3"/>
+    <path d="M88 256 H936 C968 256 996 280 998 314" fill="none" stroke="#FFFFFF" stroke-opacity=".55" stroke-width="3"/>
   </g>
 
   <!-- stamped symbol: a light edge below, the darker fill on top -->
-  <g transform="translate(512 614) scale(.84) translate(-512 -638)">
+  <g transform="translate(512 648) scale(1.02) translate(-512 -638)">
     <use href="#glyph" fill="#FFFFFF" fill-opacity=".45" transform="translate(0 5)"/>
     <use href="#glyph" fill="url(#stamp)"/>
   </g>
