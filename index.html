@@ -221,6 +221,7 @@ html:not(.fit) .main { padding-inline: max(20px, env(safe-area-inset-left, 0px))
   box-shadow: 1px 0 0 var(--rule);
 }
 .drawer.open { transform: none; }
+.app-version { padding: 24px 12px 0; }
 .drawer-head { display: flex; justify-content: space-between; align-items: center; padding: 0 0 16px 12px; }
 .sheet {
   position: fixed; z-index: 50; left: 50%; top: calc(env(safe-area-inset-top, 0px) + 72px); width: min(640px, calc(100vw - 32px));
@@ -274,6 +275,7 @@ html:not(.fit) .main { padding-inline: max(20px, env(safe-area-inset-left, 0px))
     <button class="icon-btn" id="drawerClose" aria-label="Close contents"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
   </div>
   <nav class="nav" id="drawerNav"></nav>
+  <p class="meta app-version" id="appVersion" hidden></p>
 </aside>
 <div class="sheet" id="sheet" role="dialog" aria-label="Search">
   <input id="q" type="search" placeholder="Search everything you’ve written…" autocomplete="off">

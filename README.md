@@ -29,6 +29,8 @@ The app is published with GitHub Pages at **https://imatiny408-tech.github.io/Ab
 2. Tap Share, then **Add to Home Screen**.
 3. Open About Me from the Home Screen. It runs full screen, like an app.
 
+The installed app checks for a new version every time you open or switch back to it, and reloads itself when one is published. The version number is at the bottom of the menu.
+
 `npm run build` makes the Pages version (`dist/`) locally; `scripts/make-icons.mjs` redraws the Home Screen icon.
 
 ## Checking the one-screen rule
