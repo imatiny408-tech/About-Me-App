@@ -1,5 +1,6 @@
 // Builds dist/ for GitHub Pages: wraps index.html in a full document with the
-// Home Screen (web app) tags, and copies the manifest and icons alongside it.
+// Home Screen (web app) tags, adds the offline service worker, and copies the
+// manifest and icons alongside it.
 import { readFileSync, writeFileSync, mkdirSync, cpSync, rmSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
@@ -43,6 +44,37 @@ const updater = `<script>
   addEventListener("focus", check);
 })();
 </script>`;
+// A service worker so the Home Screen app opens without a connection. The page always comes
+// from the network when there is one (so updates arrive exactly as before), and the last copy
+// is kept for when there isn't. version.json is never cached, so the update check stays honest.
+const sw = `const CACHE = ${JSON.stringify('about-me-' + version)};
+const SHELL = ["./", "manifest.webmanifest", "icons/icon-180.png", "icons/icon-192.png", "icons/icon-512.png"];
+self.addEventListener("install", e => {
+  e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL.map(u => new Request(u, { cache: "reload" })))).then(() => self.skipWaiting()));
+});
+self.addEventListener("activate", e => {
+  e.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k.startsWith("about-me-") && k !== CACHE).map(k => caches.delete(k))))
+    .then(() => self.clients.claim()));
+});
+self.addEventListener("fetch", e => {
+  const req = e.request, url = new URL(req.url);
+  if (req.method !== "GET" || !url.protocol.startsWith("http") || url.pathname.endsWith("/version.json")) return;
+  if (req.mode === "navigate") {
+    e.respondWith(fetch(req.url, { cache: "no-cache", credentials: "same-origin" }).then(res => {
+      if (res.ok) { const copy = res.clone(); caches.open(CACHE).then(c => c.put("./", copy)); }
+      return res;
+    }).catch(() => caches.match("./")));
+    return;
+  }
+  e.respondWith(caches.match(req).then(hit => hit || fetch(req).then(res => {
+    if (res.ok || res.type === "opaque") { const copy = res.clone(); caches.open(CACHE).then(c => c.put(req, copy)); }
+    return res;
+  })));
+});
+`;
+writeFileSync(join(dist, 'sw.js'), sw);
+const register = `<script>if ("serviceWorker" in navigator) addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));</script>`;
+
 const html = `<!doctype html>
 <html lang="en">
 <head>
@@ -62,6 +94,7 @@ const html = `<!doctype html>
 <body>
 ${page}
 ${updater}
+${register}
 </body>
 </html>
 `;
