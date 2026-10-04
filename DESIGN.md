@@ -30,13 +30,13 @@ Note: a 1200pt canvas is wider than any real iPad (13" iPad Pro is 1032 × 1376p
 1. **Top bar** (56pt): Menu · About Me · Search
 2. **Statement**: **About / Me.** on two lines, centered, 800 weight, then **London** · An ongoing record of me., then a short gold hairline.
 3. **Contents list**: a plain list, like a minimal phone launcher. One lowercase word per line, 500 weight, ~28–56pt, left-aligned on the left edge of the page under the left-aligned statement, with no icons, boxes or counts: right now · myself · my life · my taste · my people · my mind · my appearance · my routines · my little things · my history. Each word opens its page.
-4. **What changed.**: two lines. Friendships: first version → latest version (3 versions). Career: ~~Web design~~ → Web + app development.
+4. **What changed.**: two lines, worked out from what you've written: the two most recently changed sections, each as ~~first version~~ → latest, with the number of versions (or the date when there are only two). Each line opens its section; **All changes →** opens My History › What Changed. Long entries are shortened to one line so the screen never grows. With nothing changed yet, one grey sentence explains how it fills in.
 
 ## 3. Landscape home: "the archive" (one screen)
 
 - **Top bar** across the full width: Menu · About Me · Search · ⋯. There's no sidebar: the home contents list and the Menu drawer are how you move around, the same as in portrait.
 - **Centre**: the statement on one line (**About Me.**) and the same contents list, vertically centred.
-- **Right, 300pt, What changed**: the full Friendships thread (three dated versions, the newest marked *now*) and the Career before → after with the *why*. The panel appears only on home; every other page is full width.
+- **Right, 300pt, What changed**, worked out from your versions: one recently changed section as its thread (up to three dated versions, the newest marked *now*), and the most recent change that has a *why* as before → after with the why. Then **All changes →** and **Full timeline →**. The panel appears only on home; every other page is full width.
 - So the two columns read: who I am now · how I got here. The earlier "Currently" panel was cut because it repeated Right now. word for word, which the no-scroll screen has no room for.
 - Between 900 and 1100pt wide (split view) there's no right panel, so the two-line What changed. strip returns to the centre.
 
@@ -44,13 +44,18 @@ Content and features are the same as portrait. Only the arrangement changes.
 
 ## 3a. Right now page (one screen)
 
-Right Now has its own page (`#now`): the statement **Right now.**, then the four sentences in a 2 × 2 grid (a grey lead-in with the date, and a bold sentence), then **+ Add to right now**.
+Right Now has its own page (`#now`): "Updated today" (or when it last changed), the statement **Right now.**, then the sentences in a two-column grid (a grey lead-in with the month it's been true since, and a bold sentence, up to three lines), then **+ Add to right now**.
+
+- There are six lead-ins, always in this order: I'm into, I'm thinking about, I'm learning, I'm working toward, I'm reading, I'm feeling. Only the ones you've filled in show.
+- Tapping a sentence opens a sheet with the lead-ins as chips, a box to finish the sentence, and what's there now plus its earlier versions. Saving makes the new sentence current; the old one is kept as an earlier version. Any version can be deleted (to Trash, with Undo).
+- **+ Add to right now** opens the same sheet on the first empty lead-in. When all six are filled it reads **Update right now**.
+- Six sentences still fit one screen at every iPad size.
 
 ## 3b. Chapter pages (one screen)
 
 They use the same composition as home, so every page feels like the same book:
 
-1. **Opening (kept small so the list leads)**: the tagline in small grey ("What I’m drawn to"), the chapter title at ~34–56pt (**My Taste.**), then "49 entries · 10 parts · 2 with recent entries" and the gold hairline.
+1. **Opening (kept small so the list leads)**: the tagline in small grey ("What I’m drawn to"), the chapter title at ~34–56pt (**My Taste.**), then the real counts, "2 entries · 10 sections · 1 hidden · 2 with entries", and the gold hairline. The menu drawer shows the same entry count next to each chapter.
 2. **Topics, as one straight Notes-style list that scrolls**: grouped by when you last wrote in them (**Today**, **Yesterday**, **Earlier**, **Nothing yet**), each group a rounded card with hairline separators. Every row is two lines: the topic in bold, then one grey line (the latest entry, the topic's description, or "Tap to write the first entry."). No times, folder labels or tiles. The list spans the full width of the screen, with a 20pt margin (or the safe-area inset) on each side.
 3. **No What changed.** It appears only on the home screen. Section pages show just their title and parts, full width, in both orientations.
 
@@ -73,8 +78,11 @@ Tiles use 3 columns in landscape, 2 in portrait and 1 on a phone, and never show
 
 My History doesn't use the layout switcher. It is a **focus card driven by a timeline**:
 
+- **What's on it:** the example story (when example entries are on) plus **everything you write**, anywhere in the app: every section entry, decision, memory and Right Now sentence lands on the timeline as a moment, with its section as the topic. Hidden sections stay off it, the same as search.
+- **Under the title:** "16 moments · Jan 2026 to Oct 2026", then chips for My History's parts (Decisions, What Changed, Old Thoughts, Memories, Past Versions of Me; the timeline itself is this page). **⋯ → Sections** hides or shows them, like any chapter.
+- With nothing on it yet, the page says every entry you write becomes a moment here, with a way to start.
 - **Right: the timeline.** Every moment you recorded, oldest at the top, with a dot on a thin line, a topic icon, the date and what you said. It scrolls and snaps; the moment in the middle is selected (filled dot, icon a little larger, date in black). Moments fade the further they are from the middle, so only 3–5 are readable at once. It never lists empty months. It opens on the newest moment, so scrolling up is going back in time.
-- **Left: the moment you’re on**, set straight on the page with no box around it. The topic (icon plus name, in small caps), the date, what you said in large bold type, and a line under a hairline about where it led. It changes as you scroll the timeline.
+- **Left: the moment you’re on**, set straight on the page with no box around it. The topic (icon plus name, in small caps), the date, what you said in large bold type, and a line under a hairline about where it led (for your own entries: the why, or what a decision changed). For your own entries the topic line ("CAREER · MY LIFE ›") opens that section. It changes as you scroll the timeline.
 - **Topics are meaningful, not decorative:** ✦ Career, ♡ Relationships, ⌂ Home, ✎ Learning, ◌ Identity, $ Money, → Goals, ◎ Perspective.
 - The title sits top-left, a little smaller than other section titles.
 - Portrait puts the card on top and the timeline under it. The page never scrolls; only the timeline does. Tapping a moment or pressing ↑/↓ also moves through it.
@@ -106,14 +114,20 @@ People **cannot**: reorder, rename, create or delete sections.
 
 Trash is a utility, not a category: a small bin in the bottom-right corner of the homepage, with a count when it holds anything.
 
-- Deleting an entry moves it to Trash. It stays for **7 days**, then it is permanently deleted.
+- Deleting an entry moves it to Trash. It stays for **7 days**, then it is permanently deleted: your own entries are erased from the device (and from future backups), and example entries stay gone.
 - Each item shows where it came from (My Taste › Colors), the entry, and the time left ("7 days left", "12 hours left", "5 minutes left"), with **Restore**.
 
 ## 3i. Studio look and colours
 
 **Studio** is the app's one look. The page is white, and the big titles ("About Me.", each section's title) are filled with a three-stop colour gradient. Section tiles, grid cells and cards are soft grey (`#F3F4F6`) rounded buttons (24pt corners, 12pt gaps) instead of one ruled box. Lists sit in rounded white cards with a soft shadow, and buttons are pills. The layout is the original one everywhere.
 
-**Settings** (the gear in the top bar, on every page) holds **Color**: Graphite (default), Blue, Violet, Ocean, Emerald, Rose or Sunset, shown as round swatches with a live "About Me." preview. Only the colour changes; the choice is remembered on the device. The earlier looks (White, Paper, Sage, Blush, Night, Ocean, Natural 3D, Midnight, Glow) were removed. The v1 White design is saved on the `saved-v1-white` branch.
+**Settings** (the gear in the top bar, on every page) holds:
+
+- **Color**: Graphite (default), Blue, Violet, Ocean, Emerald, Rose or Sunset, shown as round swatches with a live "About Me." preview. Only the colour changes; the choice is remembered on the device.
+- **You**: your name and the line under About Me ("London · An ongoing record of me."). Home updates as you type.
+- **Your archive**: the entry count; **Example entries** (on/off; see 3l); a reminder that everything lives only on this device; **Export backup** (one JSON file, through the share sheet so it can go to Files or iCloud Drive) and **Import a backup**, which adds whatever this device doesn't have, never replaces or removes an entry, and brings back the colour, name, hidden sections and layouts.
+
+The earlier looks (White, Paper, Sage, Blush, Night, Ocean, Natural 3D, Midnight, Glow) were removed. The v1 White design is saved on the `saved-v1-white` branch.
 
 **Context under each section.** Every section has a one-line description (Career: "What I do and want to do.", Education: "What I've studied and what I'm learning."). Tiles show it in grey under the name (up to two lines); Grid shows it under the title, above your latest words; List shows it when there's no entry yet.
 
@@ -122,14 +136,30 @@ Trash is a utility, not a category: a small bin in the bottom-right corner of th
 Every section in every category has its own page (`#life/career`, `#taste/things-i-dislike`), opened by tapping it in any layout or from search. Back returns to the category.
 
 - **Header:** the category (a link back), the section name in the gradient title, its context line, and "N entries · last written …".
-- **Write:** a soft grey box ("What's true now?") with a pill **Add entry** button (⌘↩ on a keyboard). Entries are saved on the device. A new entry becomes the latest, and the one before it moves down to Earlier versions, so nothing is overwritten.
-- **Latest:** the newest entry, large, in a white card with its date.
+- **Write:** a soft grey box ("What's true now?") with a pill **Add entry** button (⌘↩ on a keyboard). Entries are saved on the device. A new entry becomes the latest, and the one before it moves down to Earlier versions, so nothing is overwritten. If the device won't save (storage full), it says so and your words stay in the box.
+- **Why it changed:** once a section has an entry, starting a new one reveals a second line, "Why did it change? (optional)". The why is shown under that version, and in What changed on home, the side panel and My History.
+- **Latest:** the newest entry, large, in a white card with its date (and its why).
 - **Earlier versions:** older entries in date order under a hairline list, each with its date.
 - **Delete:** the small bin on any entry moves just that one to Trash for 7 days, with **Undo** right there.
 - **Previous / Next:** cards to the neighbouring sections in the category's curated order (hidden ones are skipped).
-- **Hide this section:** hides it and returns to the category; everything is kept.
+- **Hide this section:** hides it and returns to the category; everything is kept. Opened from a link while hidden, the page offers **Show this section** instead.
 
 Tiles, Grid, List and Cards always show each section's latest entry, including ones you wrote.
+
+**My History's parts are records, not versions.** In Old Thoughts, Memories, Past Versions of Me and Timeline each entry stands on its own, so they're listed as equal cards, newest first, with no "Earlier versions" and no why. Two parts have their own pages:
+
+- **Decisions** is Decision History: thought → decided → did → changed. The box has the four lines; only *What I decided* is needed. Each decision is a card with the four steps on a thin line (filled dots for the ones written, the decision itself large). Steps you skipped show as "+ What I did" and can be filled in later, when you know.
+- **What Changed** is worked out, not written: every section (and Right Now line) whose entry has been replaced, newest change first, as ~~before~~ → after with the section, date, number of versions and the why. Each card opens its section.
+
+## 3l. Example entries and dates
+
+The app comes with example entries from the brief (London's archive). They behave like anything you write: they count everywhere, show up in What changed, search and the timeline, and can be deleted one at a time. **Settings → Example entries** hides them all at once; your own entries are never affected. Your own entries always rank above the examples.
+
+Every entry has a real date, so "Today 9:40 AM" becomes "Yesterday" and then "Sep 29" as time passes. Examples whose day isn't known show the month ("Jun 2026").
+
+## 3m. Offline and updates
+
+The published app works without a connection: a service worker keeps the last copy of the page, the icons and the font. When online, the page always comes fresh from the network, so the existing update check (version.json, then a reload) works as before. Everything you write is stored only on the device; Settings has backups.
 
 ## 3k. App icon
 
@@ -157,10 +187,10 @@ One family: **SF Pro** on iPad (Inter Tight as the web fallback). Hierarchy come
 ## 6. Navigation
 
 - **Back button:** every page except home shows **‹ Back** in the top-left corner, where the menu button sits on home. It returns to the home screen.
-- **Portrait:** the content is the navigation. Tapping a chapter opens it. The menu opens a left drawer with the same contents list. Search opens a sheet that searches chapters, parts, Right Now, and old versions.
+- **Portrait:** the content is the navigation. Tapping a chapter opens it. The menu opens a left drawer with the same contents list. Search opens a sheet that searches chapters, sections, every version of every entry (including whys and decision steps), Right Now and the timeline. Return opens the first result; curly and straight apostrophes match each other.
 - **Landscape:** no sidebar. Same as portrait: the contents list on home, plus the Menu drawer.
 - No bottom tab bar. It isn't needed, and it would make the app feel like a utility.
-- Deep links: `#home`, `#now`, `#myself`, `#life`, `#taste`, `#people`, `#mind`, `#history`.
+- Deep links: `#home`, `#now`, every chapter (`#myself`, `#life`, `#taste`, `#people`, `#mind`, `#appearance`, `#routines`, `#little`, `#history`) and every section (`#life/career`, `#history/what-changed`).
 
 ## 7. Colour
 
@@ -181,4 +211,10 @@ History is shown by fading, not deleting. Earlier versions turn graphite, and re
 
 ## Next
 
-The chapter page in the prototype is a first pass (parts, latest entry, "This chapter has evolved N times → View history"). Next steps: design the **Myself** chapter properly, then **Decision History** (thought → decided → did → changed), then the entry and edit interaction that keeps old versions.
+Done: section pages with versions that are never overwritten (plus the why), Decision History (thought → decided → did → changed), What Changed and the timeline, all fed by what you write. `npm test` checks every one of these in a real browser.
+
+Still open:
+
+- **Sync and accounts.** Entries live on one device; backups are the bridge until there's iCloud (or similar) sync.
+- **The App Store.** The app is a web app installed from Safari. Shipping it in the App Store means wrapping it in a native shell (or rebuilding it in SwiftUI, which the layout rules above already map to); `store/` has the screenshots ready.
+- **Photos.** Cards show a colour block where a picture would go; adding your own photos to Taste and Appearance entries is the next design step.
