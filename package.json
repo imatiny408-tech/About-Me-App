@@ -5,6 +5,7 @@
   "type": "module",
   "description": "About Me: an iPad personal archive. Prototype and design spec.",
   "scripts": {
+    "test": "node scripts/check-fit.mjs && node scripts/test.mjs",
     "check": "node scripts/check-fit.mjs",
     "screens": "node scripts/check-fit.mjs --screens",
     "build": "node scripts/build-site.mjs",
