@@ -43,6 +43,27 @@
 .set-preview { padding: 18px 20px; border-radius: 16px; background: #fff; font: 800 clamp(34px, 5vw, 44px)/1.05 var(--sans); letter-spacing: -.045em; }
 .set-preview span { background: linear-gradient(115deg, var(--g1), var(--g2) 50%, var(--g3)); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .set-ver { margin-top: 16px; text-align: center; }
+.set-group + .set-group { margin-top: 14px; }
+.field { display: grid; gap: 6px; }
+.field > span { font: 600 13px/1.2 var(--sans); color: var(--muted); }
+.field input { width: 100%; height: 46px; border: 1px solid var(--rule); border-radius: 12px; padding: 0 14px; background: #fff; color: var(--ink); font: 500 17px/1 var(--sans); letter-spacing: -.01em; }
+.field input:focus { outline: 2px solid var(--ink); outline-offset: 0; }
+.set-group .sw-row { border-top: 0; padding: 0; }
+.sw-row small { display: block; margin-top: 2px; font: 400 13px/1.35 var(--sans); color: var(--muted); }
+.set-btns { display: flex; flex-wrap: wrap; gap: 8px; }
+.set-btns .pill { background: #fff; }
+.set-group .as-status:empty { display: none; }
+/* Right Now sheet */
+.lead-pick { display: flex; flex-wrap: wrap; gap: 8px; margin: 2px 0 14px; }
+.now-compose { margin-bottom: 4px; }
+.now-compose label { font: 600 14px/1.2 var(--sans); color: var(--muted); }
+.now-versions { display: grid; gap: 6px; margin-top: 8px; }
+.now-versions .label { margin-top: 10px; }
+.nv { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; align-items: start; padding: 10px 0 10px 2px; border-top: 1px solid var(--rule); }
+.nv p { font: 600 18px/1.4 var(--sans); letter-spacing: -.01em; white-space: pre-wrap; }
+.nv.old p { font-weight: 500; color: var(--muted); }
+.nv .meta { display: block; margin-top: 2px; }
+#nowSheet .as-status .link, #setStatus .link { margin-left: 6px; }
 
 /* ── Studio: the app's look. White, big titles in a colour gradient, soft grey rounded surfaces.
    The colour is chosen from the menu; everything else stays the same in every colour. ── */
@@ -160,7 +181,11 @@ p { margin: 0; }
 .now-grid ul { margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 40px; }
 .now-grid li { list-style: none; display: grid; align-content: start; gap: 4px; padding-block: clamp(12px, 1.6vh, 22px); border-bottom: 1px solid var(--rule); }
 .now-grid .lead { font: 600 13px/1.2 var(--sans); color: var(--faint); }
-.now-grid .sentence { font: 700 clamp(17px, 1.85vh, 26px)/1.2 var(--sans); letter-spacing: -.025em; }
+.now-grid .sentence { font: 700 clamp(17px, 1.85vh, 26px)/1.2 var(--sans); letter-spacing: -.025em;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.now-item { width: 100%; display: grid; gap: 4px; text-align: left; border-radius: 4px; }
+@media (hover: hover) { .now-item:hover .sentence { color: var(--muted); } }
+.now-empty { font: 500 clamp(17px, 1.85vh, 22px)/1.4 var(--sans); color: var(--muted); padding-block: 12px; }
 .add-line { justify-self: start; display: inline-flex; align-items: center; gap: 8px; font: 600 15px/1 var(--sans); color: var(--ink); padding: 12px 0 0; }
 .add-line::before { content: "+"; font: 400 22px/1 var(--sans); }
 
@@ -183,9 +208,15 @@ p { margin: 0; }
 .latest .row { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 12px; }
 .latest .row > span:last-child { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; }
 .latest .topic { font: 600 13px/1.6 var(--sans); color: var(--faint); letter-spacing: 0; }
-.latest .old { color: var(--faint); }
-.latest .was { color: var(--faint); text-decoration: line-through; text-decoration-thickness: 1.5px; }
+.latest .old { color: var(--faint); text-decoration: line-through; text-decoration-thickness: 1.5px; }
 .latest .to { color: var(--gold-ink); font-weight: 500; }
+/* each change stays on one line, shortening long entries, so the home screen never grows */
+.latest .row > span:last-child { flex-wrap: nowrap; min-width: 0; }
+.latest .row .old, .latest .row .new { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.latest .row .old { flex: 0 3 auto; }
+.latest .row .new { flex: 0 1 auto; }
+.latest .row :is(.to, .meta) { flex: none; }
+.latest .row-empty { font: 500 clamp(15px, 1.6vh, 18px)/1.4 var(--sans); color: var(--muted); }
 
 /* Context-panel history (landscape wide) */
 .thread { margin-top: 4px; position: relative; padding-left: 24px; }
@@ -193,12 +224,16 @@ p { margin: 0; }
 .thread .step { position: relative; padding-block: 6px 12px; display: grid; gap: 2px; }
 .thread .step::before { content: ""; position: absolute; left: -24px; top: 12px; width: 11px; height: 11px; border-radius: 50%; background: var(--bg); border: 1.5px solid var(--faint); }
 .thread .step.now-step::before { background: var(--ink); border-color: var(--ink); }
-.thread .quote { font: 700 17px/1.3 var(--sans); letter-spacing: -.015em; }
+.thread .quote { font: 700 17px/1.3 var(--sans); letter-spacing: -.015em; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 .thread .step:not(.now-step) .quote { color: var(--faint); }
 .change { display: grid; gap: 4px; }
 .change .was { font: 700 17px/1.3 var(--sans); color: var(--faint); text-decoration: line-through; }
 .change .is { font: 700 17px/1.3 var(--sans); }
-.change .why { margin-top: 6px; font: 500 15px/1.45 var(--sans); color: var(--muted); padding-left: 12px; border-left: 2px solid var(--gold); }
+.change :is(.was, .is), .change .why { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.change .why, .why-q { margin-top: 6px; font: 500 15px/1.45 var(--sans); color: var(--muted); padding-left: 12px; border-left: 2px solid var(--gold); }
+.ctx-item.link-row { color: inherit; }
+.ctx-empty { font: 500 15px/1.45 var(--sans); color: var(--muted); }
+.ctx-links { display: flex; flex-wrap: wrap; gap: 10px 18px; }
 .link { font: 600 14px/1 var(--sans); color: var(--ink); white-space: nowrap; }
 @media (hover: hover) { .link:hover { text-decoration: underline; text-underline-offset: 4px; } }
 
@@ -253,8 +288,15 @@ html:not(.fit) .main { padding-inline: max(20px, env(safe-area-inset-left, 0px))
 .hf-kind { display: flex; align-items: center; gap: 8px; font: 600 13px/1 var(--sans); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
 .hf-kind svg { width: 18px; height: 18px; }
 .hf-date { font: 500 16px/1.2 var(--sans); color: var(--faint); }
-.hf-said { font: 800 clamp(28px, 3.6vw, 46px)/1.1 var(--sans); letter-spacing: -.035em; text-wrap: balance; }
+.hf-said { font: 800 clamp(28px, 3.6vw, 46px)/1.1 var(--sans); letter-spacing: -.035em; text-wrap: balance;
+  display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden; }
 .hf-led { font: 500 clamp(17px, 1.6vw, 21px)/1.4 var(--sans); color: var(--muted); padding-top: 6px; border-top: 1px solid var(--rule); }
+@media (hover: hover) { a.hf-kind:hover { color: var(--ink); } }
+.hist-secs { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+.hist-empty { display: grid; gap: 14px; align-content: center; justify-items: start; max-width: 560px; color: var(--muted); font: 500 clamp(17px, 1.8vh, 21px)/1.45 var(--sans); }
+.chip { display: inline-flex; align-items: center; height: 34px; padding: 0 14px; border-radius: 999px; background: #F3F4F6; font: 600 14px/1 var(--sans); letter-spacing: -.005em; color: var(--ink); white-space: nowrap; }
+@media (hover: hover) { .chip:hover { background: #EAEBEE; } }
+.chip[aria-checked="true"] { background: var(--ink); color: #fff; }
 .hist svg { fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 
 .hist-rail {
@@ -275,7 +317,7 @@ html:not(.fit) .main { padding-inline: max(20px, env(safe-area-inset-left, 0px))
 .hist-ic svg { width: 20px; height: 20px; margin-top: 1px; }
 .hist-txt { display: grid; gap: 2px; }
 .hist-date { font: 500 14px/1.2 var(--sans); color: var(--faint); }
-.hist-said { font: 600 clamp(16px, 1.5vw, 19px)/1.3 var(--sans); letter-spacing: -.015em; }
+.hist-said { font: 600 clamp(16px, 1.5vw, 19px)/1.3 var(--sans); letter-spacing: -.015em; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 .hist-item[aria-selected="true"] .hist-dot { background: var(--ink); border-color: var(--ink); }
 .hist-item[aria-selected="true"] .hist-ic { color: var(--ink); transform: scale(1.3); }
 .hist-item[aria-selected="true"] .hist-date { color: var(--ink); }
@@ -477,6 +519,42 @@ html.fit .tiles-page .tile { min-height: 0; }
 .sec-nav a.next { text-align: right; }
 @media (hover: hover) { .sec-nav a:hover { background: #EAEBEE; } }
 .sec-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+/* "Why did it change?" under a new version, and the why shown with it afterwards */
+.why-in { width: 100%; border: 0; border-top: 1px solid #E3E5E9; background: transparent; outline: none; color: var(--ink); font: 400 17px/1.4 var(--sans); letter-spacing: -.01em; padding: 10px 0 2px; }
+.why-in::placeholder { color: var(--faint); }
+.latest-card .why-q { margin-top: 2px; font-size: 16px; white-space: pre-wrap; }
+.earlier li .why-q { margin-top: 6px; font-size: 14px; white-space: pre-wrap; }
+.empty-note { font: 500 17px/1.45 var(--sans); color: var(--muted); padding: 8px 0; }
+/* Records (memories, old thoughts…): each entry is its own, so they're listed side by side, not as versions */
+.records { display: grid; gap: 12px; }
+.record { border: 1px solid var(--rule); border-radius: 20px; padding: 14px 16px 18px 20px; display: grid; gap: 4px; }
+.record p { font: 500 19px/1.4 var(--sans); letter-spacing: -.01em; white-space: pre-wrap; }
+/* Decisions: thought → decided → did → changed */
+.compose .step-field { display: grid; gap: 2px; }
+.compose .step-field + .step-field { padding-top: 10px; border-top: 1px solid #E3E5E9; }
+.step-field > span, .ds-k { font: 600 12px/1.2 var(--sans); letter-spacing: .08em; text-transform: uppercase; color: var(--faint); }
+.compose .step-field textarea { min-height: 30px; font-size: 18px; }
+.decisions { display: grid; gap: 14px; }
+.decision { border: 1px solid var(--rule); border-radius: 24px; padding: 14px 16px 18px 24px; display: grid; gap: 4px; box-shadow: 0 16px 36px -28px rgba(11,11,15,.35); }
+.dsteps { list-style: none; margin: 0; padding: 0 0 0 22px; position: relative; display: grid; }
+.dsteps::before { content: ""; position: absolute; left: 4px; top: 14px; bottom: 14px; width: 1px; background: var(--rule); }
+.dsteps li { position: relative; display: grid; gap: 2px; padding: 7px 0; }
+.dsteps li::before { content: ""; position: absolute; left: -22px; top: 13px; width: 9px; height: 9px; border-radius: 50%; background: var(--bg); border: 1.5px solid var(--faint); }
+.dsteps li.on::before { background: var(--g2, var(--ink)); border-color: var(--g2, var(--ink)); }
+.dsteps p { font: 500 17px/1.4 var(--sans); white-space: pre-wrap; }
+.dsteps li.decided p { font: 700 clamp(20px, 2.4vw, 26px)/1.3 var(--sans); letter-spacing: -.02em; }
+.ds-add { font: 600 15px/1.2 var(--sans); color: var(--muted); padding: 2px 0; justify-self: start; }
+@media (hover: hover) { .ds-add:hover { color: var(--ink); } }
+.ds-form { display: grid; gap: 8px; }
+.ds-form textarea { width: 100%; border: 0; border-radius: 14px; background: #F3F4F6; resize: none; outline: none; color: var(--ink); font: 500 17px/1.45 var(--sans); padding: 10px 12px; }
+.ds-form textarea:focus { box-shadow: 0 0 0 2px var(--g2, var(--ink)); }
+.ds-row { display: flex; justify-content: flex-end; gap: 8px; }
+/* What Changed: every section whose entry has been replaced */
+.changes { display: grid; gap: 12px; }
+.change-card { display: grid; gap: 4px; padding: 16px 20px 18px; border-radius: 22px; background: #F3F4F6; }
+@media (hover: hover) { .change-card:hover { background: #EAEBEE; } }
+.change-card .was { font: 600 17px/1.35 var(--sans); color: var(--faint); text-decoration: line-through; text-decoration-thickness: 1.5px; }
+.change-card .is { font: 700 clamp(19px, 2.2vw, 23px)/1.3 var(--sans); letter-spacing: -.015em; }
 @media (max-width: 520px) { .earlier li { grid-template-columns: minmax(0, 1fr) auto; } .earlier .e-when { grid-column: 1 / -1; line-height: 1.2; } }
 
 /* ── Drawer + search sheet ──────────────────────────────── */
@@ -580,6 +658,7 @@ html.fit .tiles-page .tile { min-height: 0; }
 </button>
 <div class="annot-sheet" id="sectionsSheet" role="dialog" aria-label="Sections" hidden data-html2canvas-ignore></div>
 <div class="annot-sheet settings" id="settingsSheet" role="dialog" aria-label="Settings" hidden data-html2canvas-ignore></div>
+<div class="annot-sheet" id="nowSheet" role="dialog" aria-label="Right now" hidden data-html2canvas-ignore></div>
 <div class="annot-sheet" id="trashSheet" role="dialog" aria-label="Trash" hidden data-html2canvas-ignore></div>
 <div class="layout-menu" id="layoutMenu" role="menu" aria-label="Layout" hidden></div>
 <div class="scrim" id="scrim"></div>
@@ -597,18 +676,28 @@ html.fit .tiles-page .tile { min-height: 0; }
 </div>
 
 <script>
-/* ── Sample archive (placeholder content from the brief) ── */
-const person = { name: "London", line: "An ongoing record of me.", begun: "January 2026", entries: 214 };
+/* ── Example archive ───────────────────────────────────────
+   The entries the app starts with (from the brief). They behave like anything you
+   write: they count everywhere and you can delete them, and Settings → Example
+   entries hides them all at once. Dates are "2026-09-29T09:40" for a moment, or
+   "2026-06" when only the month is known. */
+const person = { name: "London", line: "An ongoing record of me." };   // defaults; Settings → You changes them
 
+/* Right Now has one sentence for each of these, always in this order */
+const nowLeads = [
+  { id: "into", lead: "I’m into" }, { id: "thinking", lead: "I’m thinking about" },
+  { id: "learning", lead: "I’m learning" }, { id: "working", lead: "I’m working toward" },
+  { id: "reading", lead: "I’m reading" }, { id: "feeling", lead: "I’m feeling" },
+];
 const rightNow = [
-  { lead: "I’m into", text: "design, and the way good apps feel in your hand.", since: "Aug 2026" },
-  { lead: "I’m thinking about", text: "moving somewhere with more light and more space.", since: "Sep 2026" },
-  { lead: "I’m learning", text: "web development, one small project at a time.", since: "Apr 2026" },
-  { lead: "I’m working toward", text: "a portfolio I’m proud to send people.", since: "Jul 2026" },
+  { id: "into", text: "design, and the way good apps feel in your hand.", since: "2026-08" },
+  { id: "thinking", text: "moving somewhere with more light and more space.", since: "2026-09" },
+  { id: "learning", text: "web development, one small project at a time.", since: "2026-04" },
+  { id: "working", text: "a portfolio I’m proud to send people.", since: "2026-07" },
 ];
 
 const chapters = [
-  { id: "myself", title: "Myself", tagline: "Who I am", entries: 41, changes: 4,
+  { id: "myself", title: "Myself", tagline: "Who I am",
     parts: [
       ["Personality", "How I naturally behave.", "I recharge alone, but I light up in small groups."],
       ["Values", "What matters to me.", "Honesty over comfort, almost always."],
@@ -617,50 +706,56 @@ const chapters = [
       ["Perspectives", "How I currently see things.", "Most things take longer than they should, and that’s fine."],
       ["Things I care about", "What I give my time and energy to.", null], ["Things I don’t care about", "What I’ve stopped worrying about.", null], ["How I see myself", "The story I tell about who I am.", null],
       ["Strengths and flaws", "What I’m good at, and what I’m working on.", null] ] },
-  { id: "life", title: "My Life", tagline: "The shape of things", entries: 58, changes: 7,
+  { id: "life", title: "My Life", tagline: "The shape of things",
     parts: [["Career", "What I do and want to do.", "Web and app development."], ["Education", "What I’ve studied and what I’m learning.", null], ["Money", "How I earn, spend and save.", null], ["Home", "Where I live and how I want it to feel.", null],
       ["Health", "My body, my energy, my mind.", null], ["Relationships", "Love, partners and what I want.", null], ["Friendships", "The people I choose to keep close.", null], ["Goals", "What I’m working toward.", null], ["Plans", "What’s next, and when.", null]] },
-  { id: "taste", title: "My Taste", tagline: "What I’m drawn to", entries: 49, changes: 3,
+  { id: "taste", title: "My Taste", tagline: "What I’m drawn to",
     parts: [["Colors", "The shades I keep coming back to.", "Deep blues, anything close to ink."], ["Clothing", "What I like to wear.", null], ["Music", "What’s on repeat.", null], ["Movies", "Films that stayed with me.", null], ["Shows", "What I’m watching.", null],
       ["Food", "What I love to eat.", null], ["Design", "What looks and feels right to me.", "Quiet interfaces with one bold idea."], ["Places", "Where I want to be.", null], ["Things I like", "Favorites, big and small.", null], ["Things I dislike", "What I’d rather avoid.", null]] },
-  { id: "people", title: "My People", tagline: "Who’s in my life", entries: 17, changes: 3,
+  { id: "people", title: "My People", tagline: "Who’s in my life",
     parts: [["Family", "The people I come from.", null], ["Friends", "The people I choose.", "Fewer, closer."], ["Acquaintances", "People I know, but not closely.", null], ["People I admire", "Who I look up to, and why.", null],
       ["Past romances", "Exes, crushes and almosts.", null], ["People I’ve lost touch with", "Who drifted, and how.", null]] },
-  { id: "mind", title: "My Mind", tagline: "What I’m working out", entries: 36, changes: 2,
+  { id: "mind", title: "My Mind", tagline: "What I’m working out",
     parts: [["Thoughts", "What’s on my mind.", null], ["Feelings", "How I’ve been feeling.", null], ["Ideas", "Things I might make or do.", "An app that remembers who you used to be."], ["Questions", "What I’m still asking.", null],
       ["Realizations", "What finally clicked.", "I like building the thing more than describing it."], ["Things I’m figuring out", "Still in progress.", null]] },
-  { id: "appearance", title: "My Appearance", tagline: "How I show up", entries: 12, changes: 1,
+  { id: "appearance", title: "My Appearance", tagline: "How I show up",
     parts: [["Style", "How I like to look.", "Simple, dark, a little sharp."], ["Clothes I reach for", "My everyday favorites.", null], ["Colors I wear", "What I feel good in.", null],
       ["Hair", "How I wear it, and how I want to.", null], ["Skin", "My routine and what works.", null], ["How I want to look", "Where my style is heading.", null], ["Past looks", "How I used to look.", null]] },
-  { id: "routines", title: "My Routines", tagline: "How my days go", entries: 9, changes: 1,
+  { id: "routines", title: "My Routines", tagline: "How my days go",
     parts: [["Mornings", "How my days start.", "Coffee first, phone second."], ["Evenings", "How I wind down.", null], ["Weekdays", "What a normal day looks like.", null], ["Weekends", "How I spend my time off.", null],
       ["Work", "How I get things done.", null], ["Exercise", "How I move.", null], ["Sleep", "When and how well I rest.", null], ["Habits I’m building", "What I’m trying to make stick.", null], ["Habits I’m breaking", "What I’m letting go of.", null]] },
-  { id: "little", title: "My Little Things", tagline: "The small stuff that’s me", entries: 14, changes: 0,
+  { id: "little", title: "My Little Things", tagline: "The small stuff that’s me",
     parts: [["Small joys", "What makes an ordinary day better.", "The first quiet hour of the day."], ["Favorite words", "Words I love the sound of.", null], ["Pet peeves", "Tiny things that get to me.", null],
       ["Comfort things", "What I reach for on hard days.", null], ["Quirks", "What makes me, me.", null], ["Things I collect", "What I can’t stop keeping.", null], ["Little rituals", "The small things I always do.", null],
       ["Guilty pleasures", "What I love anyway.", null], ["Tiny wins", "Small things that went right.", null]] },
-  { id: "history", title: "My History", tagline: "How I got here", entries: 13, changes: 0,
-    parts: [["Decisions", "What I decided, and why.", "Start building apps. September 2026."], ["What Changed", "Before and after.", null],
+  { id: "history", title: "My History", tagline: "How I got here",
+    parts: [["Decisions", "What I decided, and why.", "Start building apps."], ["What Changed", "Before and after.", null],
       ["Timeline", "Everything, in order.", null], ["Old Thoughts", "What I used to think.", null], ["Memories", "Moments I want to keep.", null], ["Past Versions of Me", "Who I was, chapter by chapter.", null]] },
 ];
 
-/* When each topic was last written in (sample) */
-const when = {
-  "myself/Personality": "Today 9:40 AM", "myself/Values": "Yesterday 8:15 PM", "myself/Standards": "Sep 24", "myself/Perspectives": "Sep 12",
-  "life/Career": "Today 11:02 AM", "taste/Colors": "Today 9:12 AM", "taste/Design": "Yesterday 4:30 PM", "people/Friends": "Today 8:05 AM",
-  "mind/Ideas": "Yesterday 10:47 PM", "mind/Realizations": "Sep 20", "appearance/Style": "Sep 26", "routines/Mornings": "Today 7:30 AM",
-  "little/Small joys": "Yesterday 7:02 AM", "history/Decisions": "Sep 18",
+/* When each example's latest entry was written */
+const sampleAt = {
+  "myself/Personality": "2026-09-29T09:40", "myself/Values": "2026-09-28T20:15", "myself/Standards": "2026-09-24", "myself/Perspectives": "2026-09-12",
+  "life/Career": "2026-09-29T11:02", "taste/Colors": "2026-09-29T09:12", "taste/Design": "2026-09-28T16:30", "people/Friends": "2026-09-29T08:05",
+  "mind/Ideas": "2026-09-28T22:47", "mind/Realizations": "2026-09-20", "appearance/Style": "2026-09-26", "routines/Mornings": "2026-09-29T07:30",
+  "little/Small joys": "2026-09-28T07:02", "history/Decisions": "2026-09-18",
 };
 
-/* Earlier versions of a few sections (sample) */
+/* Earlier versions of a few examples, oldest first */
 const past = {
-  "life/Career": [{ text: "Web design.", when: "Jun 2026" }],
-  "people/Friends": [{ text: "I want to make new friends.", when: "Feb 2026" }, { text: "I’ve actually started making friends.", when: "May 2026" }],
-  "mind/Ideas": [{ text: "A journal that shows you how you’ve changed.", when: "Aug 2026" }],
-  "routines/Mornings": [{ text: "Phone first, coffee second.", when: "Mar 2026" }],
+  "life/Career": [{ text: "Web design.", date: "2026-06" }],
+  "people/Friends": [{ text: "I want to make new friends.", date: "2026-02" }, { text: "I’ve actually started making friends.", date: "2026-05" }],
+  "mind/Ideas": [{ text: "A journal that shows you how you’ve changed.", date: "2026-08" }],
+  "routines/Mornings": [{ text: "Phone first, coffee second.", date: "2026-03" }],
 };
+/* Why an example changed; it's shown with the version it explains */
+const sampleWhy = { "life/Career": "I realized I enjoy building the actual product, not just designing the website." };
+/* The example decision, as thought → decided → did → changed */
+const sampleSteps = { "history/Decisions": {
+  thought: "I wanted to make money online, doing something I actually enjoy.", decided: "Start building apps.",
+  did: "An hour a day of HTML, CSS and JavaScript, then this app.", changed: "I see myself as someone who builds, not just someone who designs." } };
 
-/* My History: moments in order, each tagged with a meaningful kind (sample content) */
+/* My History: the examples' story, each moment tagged with a meaningful kind. Everything you write joins it. */
 const kinds = {
   career:   { name: "Career",        icon: '<path d="M12 3l2.2 6.8L21 12l-6.8 2.2L12 21l-2.2-6.8L3 12l6.8-2.2z" fill="currentColor" stroke="none"/>' },
   people:   { name: "Relationships", icon: '<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/>' },
@@ -672,19 +767,25 @@ const kinds = {
   view:     { name: "Perspective",   icon: '<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/>' },
 };
 const moments = [
-  { date: "Jan 2026", kind: "money",    said: "I wanted to make money online.",                   led: "Started looking for a skill people pay for." },
-  { date: "Feb 2026", kind: "people",   said: "I want to make new friends.",                        led: "Said yes to more plans." },
-  { date: "Apr 2026", kind: "learning", said: "I started learning web development.",                led: "An hour a day of HTML, CSS and JavaScript." },
-  { date: "May 2026", kind: "people",   said: "I’ve actually started making friends.",              led: "A few people I really like." },
-  { date: "Jun 2026", kind: "career",   said: "I realized I wanted to build actual products.",      led: "Web + app development" },
-  { date: "Jul 2026", kind: "goals",    said: "I want a portfolio I’m proud to send people.",       led: "Three projects, finished properly." },
-  { date: "Aug 2026", kind: "career",   said: "I started building apps.",                           led: "This app." },
-  { date: "Aug 2026", kind: "view",     said: "Most things take longer than they should, and that’s fine.", led: "Less rushing." },
-  { date: "Sep 2026", kind: "people",   said: "I don’t think I need a huge friend group anymore.",  led: "Fewer, closer." },
-  { date: "Sep 2026", kind: "home",     said: "I started thinking seriously about moving.",         led: "Somewhere with more light and more space." },
-  { date: "Sep 2026", kind: "identity", said: "I changed how I see myself.",                        led: "From someone who designs to someone who builds." },
+  { date: "2026-01", kind: "money",    said: "I wanted to make money online.",                   led: "Started looking for a skill people pay for." },
+  { date: "2026-02", kind: "people",   said: "I want to make new friends.",                        led: "Said yes to more plans." },
+  { date: "2026-04", kind: "learning", said: "I started learning web development.",                led: "An hour a day of HTML, CSS and JavaScript." },
+  { date: "2026-05", kind: "people",   said: "I’ve actually started making friends.",              led: "A few people I really like." },
+  { date: "2026-06", kind: "career",   said: "I realized I wanted to build actual products.",      led: "Web + app development" },
+  { date: "2026-07", kind: "goals",    said: "I want a portfolio I’m proud to send people.",       led: "Three projects, finished properly." },
+  { date: "2026-08", kind: "career",   said: "I started building apps.",                           led: "This app." },
+  { date: "2026-08", kind: "view",     said: "Most things take longer than they should, and that’s fine.", led: "Less rushing." },
+  { date: "2026-09", kind: "people",   said: "I don’t think I need a huge friend group anymore.",  led: "Fewer, closer." },
+  { date: "2026-09", kind: "home",     said: "I started thinking seriously about moving.",         led: "Somewhere with more light and more space." },
+  { date: "2026-09", kind: "identity", said: "I changed how I see myself.",                        led: "From someone who designs to someone who builds." },
 ];
 const kindIcon = k => `<svg viewBox="0 0 24 24" aria-hidden="true">${kinds[k].icon}</svg>`;
+/* What you write lands on the timeline as one of those kinds */
+const kindBySection = { "life/Career": "career", "life/Education": "learning", "life/Money": "money", "life/Home": "home", "life/Relationships": "people",
+  "life/Friendships": "people", "life/Goals": "goals", "life/Plans": "goals", "history/Decisions": "goals",
+  "now/learning": "learning", "now/reading": "learning", "now/working": "goals", "now/into": "identity" };
+const kindByChapter = { people: "people", mind: "view", history: "view", routines: "home", now: "view" };
+const kindOf = (cid, name) => kindBySection[`${cid}/${name}`] || kindByChapter[cid] || "identity";
 
 /* Section layouts: each section starts with the one that suits it; the choice is remembered per section */
 const layouts = [
@@ -702,31 +803,157 @@ function getLayout(id) {
 }
 function setLayout(id, layout) { try { localStorage.setItem("about-me-layout-v2:" + id, layout); } catch (e) {} }
 
-const thread = { topic: "Friendships", chapter: "people", steps: [
-  { date: "Feb 2026", quote: "I want to make new friends." },
-  { date: "May 2026", quote: "I’ve actually started making friends." },
-  { date: "Sep 2026", quote: "I don’t think I need a huge friend group anymore." },
-]};
-const change = { topic: "Career", chapter: "life", was: "Web design", is: "Web + app development", date: "Sep 2026",
-  why: "I realized I enjoy building the actual product, not just designing the website." };
-
-/* ── Rendering ─────────────────────────────────────────── */
+/* ── Storage: everything is kept on this device ────────── */
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const slug = name => name.toLowerCase().replace(/[’']/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+const cap = s => s ? s[0].toUpperCase() + s.slice(1) : s;
+const plural = (n, one, many = one + "s") => `${n} ${n === 1 ? one : many}`;
+const cache = new Map();   // parsed values, reused until the stored text changes
+function store(key, fallback) {
+  let raw = null;
+  try { raw = localStorage.getItem(key); } catch (e) {}
+  let hit = cache.get(key);
+  if (!hit || hit.raw !== raw) {
+    let val = null;
+    try { val = JSON.parse(raw); } catch (e) {}
+    cache.set(key, hit = { raw, val });
+  }
+  return hit.val ?? fallback;
+}
+function keep(key, value) {   // false when the device won't save it (storage full, private browsing)
+  try { const raw = JSON.stringify(value); localStorage.setItem(key, raw); cache.set(key, { raw, val: value }); return true; }
+  catch (e) { cache.delete(key); return false; }
+}
 
+/* ── Sections and Trash ────────────────────────────────────
+   Sections are curated: their order, names and definitions are fixed by the app,
+   so no part of someone ranks above another. People can only hide a section and
+   show it again; hiding never touches its entries. Deleting an entry moves it to
+   Trash for 7 days, then it's gone for good. */
+const TRASH_DAYS = 7, DAY = 86400000;
+const hiddenOf = id => store("about-me-hidden", {})[id] || [];
+function setHidden(id, name, hide) {
+  const all = store("about-me-hidden", {}), set = new Set(all[id] || []);
+  hide ? set.add(name) : set.delete(name);
+  all[id] = [...set]; keep("about-me-hidden", all);
+}
+function purgeTrash() {   // anything in Trash for 7 days is deleted for good
+  const now = Date.now(), trash = store("about-me-trash", []), live = trash.filter(t => now - t.deletedAt < TRASH_DAYS * DAY);
+  const gone = [...store("about-me-purged", []), ...trash.filter(t => !live.includes(t)).map(t => t.key)];
+  // Your own entries are erased from the device; example entries can only be remembered as deleted
+  const yours = gone.filter(k => k.includes("#"));
+  if (yours.length) {
+    const all = store("about-me-entries", {});
+    for (const k of yours) { const [key, id] = k.split("#"); if (all[key]) { all[key] = all[key].filter(e => e.id !== id); if (!all[key].length) delete all[key]; } }
+    keep("about-me-entries", all);
+  }
+  if (live.length !== trash.length || yours.length) { keep("about-me-trash", live); keep("about-me-purged", gone.filter(k => !k.includes("#"))); }
+  return live;
+}
+function isGone(key) { return store("about-me-trash", []).some(t => t.key === key) || store("about-me-purged", []).includes(key); }
+
+/* ── Dates ── */
+function dateOf(s) {   // "2026-06" is a month (shown as "Jun 2026"); "2026-09-29T09:40" is a moment
+  const [y, m, d = 15, hh = 12, mm = 0] = s.split(/[-T:]/).map(Number);
+  return { at: new Date(y, m - 1, d, hh, mm).getTime(), month: s.length === 7 };
+}
+const monthYear = ts => new Date(ts).toLocaleDateString("en-US", { month: "short", year: "numeric" });
+const daysAgo = ts => Math.round((new Date(new Date().toDateString()) - new Date(new Date(ts).toDateString())) / DAY);
+function fmtWhen(ts) {
+  const d = new Date(ts), days = daysAgo(ts), time = d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
+  return days === 0 ? `Today ${time}` : days === 1 ? `Yesterday ${time}` : d.toLocaleDateString("en-US", { month: "short", day: "numeric", ...(d.getFullYear() !== new Date().getFullYear() ? { year: "numeric" } : {}) });
+}
+const whenOf = e => e.month ? monthYear(e.at) : fmtWhen(e.at);
+
+/* ── Entries ───────────────────────────────────────────────
+   Every section keeps all its entries; a new one never overwrites the last.
+   Each carries its own Trash key: your entries "chapter/Section#id", an example's
+   latest "chapter/Section", its earlier versions "chapter/Section~n".
+   Right Now is stored the same way, under "now/<lead>". */
+const SAMPLES = (() => {
+  const out = {};
+  for (const c of chapters) for (const [name, , text] of c.parts) {
+    const key = `${c.id}/${name}`, list = (past[key] || []).map((e, i) => ({ tkey: `${key}~${i}`, text: e.text, ...dateOf(e.date) }));
+    if (text) list.push({ tkey: key, text, ...dateOf(sampleAt[key]), why: sampleWhy[key], steps: sampleSteps[key] });
+    if (list.length) out[key] = list;
+  }
+  for (const r of rightNow) out[`now/${r.id}`] = [{ tkey: `now/${r.id}`, text: r.text, ...dateOf(r.since) }];
+  return out;
+})();
+const examplesOn = () => store("about-me-examples", true) !== false;
+function entriesFor(cid, name) {   // newest first: what you wrote, then the examples while they're on
+  const key = `${cid}/${name}`;
+  const mine = (store("about-me-entries", {})[key] || []).map(e => ({ ...e, tkey: `${key}#${e.id}`, mine: true }));
+  return [...mine, ...(examplesOn() && SAMPLES[key] || [])].filter(e => !isGone(e.tkey))
+    .sort((a, b) => (!!b.mine - !!a.mine) || b.at - a.at).map(e => ({ ...e, when: whenOf(e) }));
+}
+function addEntry(cid, name, fields) {
+  const all = store("about-me-entries", {}), key = `${cid}/${name}`;
+  (all[key] = all[key] || []).push({ id: Date.now().toString(36), at: Date.now(), ...fields });
+  return keep("about-me-entries", all);
+}
+function updateEntry(tkey, change) {   // only your own entries; used to finish a decision later
+  const [key, id] = tkey.split("#"), all = store("about-me-entries", {}), e = (all[key] || []).find(x => x.id === id);
+  if (!e) return false;
+  change(e);
+  return keep("about-me-entries", all);
+}
+const placeOf = (cid, name) => cid === "now" ? ["Right Now", nowLeads.find(l => l.id === name).lead] : [chapters.find(c => c.id === cid).title, name];
+function trashEntry(cid, name, tkey) {
+  const e = entriesFor(cid, name).find(x => x.tkey === tkey); if (!e) return false;
+  const [chapterTitle, part] = placeOf(cid, name), trash = purgeTrash();
+  trash.unshift({ key: tkey, chapter: cid, chapterTitle, part, text: e.text, when: e.when, deletedAt: Date.now() });
+  return keep("about-me-trash", trash);
+}
+const restoreEntry = key => keep("about-me-trash", purgeTrash().filter(t => t.key !== key));
+
+/* ── What the archive adds up to ───────────────────────── */
+// Sections where each entry stands on its own (a decision, a memory) instead of replacing the one before
+const records = new Set(["history/Decisions", "history/What Changed", "history/Timeline", "history/Old Thoughts", "history/Memories", "history/Past Versions of Me"]);
+const visibleNames = c => { const hid = new Set(hiddenOf(c.id)); return c.parts.map(p => p[0]).filter(n => !hid.has(n)); };
+function partsFor(c) {   // [name, context, latest entry, when] for each visible section
+  return visibleNames(c).map(n => { const d = c.parts.find(p => p[0] === n)[1], e = entriesFor(c.id, n)[0]; return [n, d, e ? e.text : null, e ? e.when : ""]; });
+}
+function changes() {   // every section whose entry has been replaced at least once, most recent change first
+  const out = [], add = (cid, name, topic, where, href) => {
+    const v = entriesFor(cid, name).reverse();
+    if (v.length > 1) out.push({ topic, where, href, versions: v, first: v[0], prev: v.at(-2), latest: v.at(-1), count: v.length });
+  };
+  for (const c of chapters) for (const name of visibleNames(c)) if (!records.has(`${c.id}/${name}`)) add(c.id, name, name, c.title, `#${c.id}/${slug(name)}`);
+  for (const l of nowLeads) add("now", l.id, l.lead, "Right Now", "#now");
+  return out.sort((a, b) => b.latest.at - a.latest.at);
+}
+function timeline() {   // every moment, oldest first: the examples' story plus everything you've written
+  const list = examplesOn() ? moments.map(m => ({ ...m, ...dateOf(m.date) })) : [];
+  for (const c of chapters) for (const name of visibleNames(c)) {
+    if (`${c.id}/${name}` === "history/What Changed") continue;
+    for (const e of entriesFor(c.id, name)) if (e.mine) list.push({ at: e.at, kind: kindOf(c.id, name), topic: name, where: c.title, said: e.text,
+      led: e.why || e.steps?.changed || e.steps?.did || "", href: `#${c.id}/${slug(name)}` });
+  }
+  for (const l of nowLeads) for (const e of entriesFor("now", l.id)) if (e.mine)
+    list.push({ at: e.at, kind: kindOf("now", l.id), topic: "Right now", said: `${l.lead} ${e.text}`, led: "", href: "#now" });
+  return list.sort((a, b) => a.at - b.at).map(m => ({ ...m, when: whenOf(m) }));
+}
+const chapterCount = c => c.id === "history" ? timeline().length : visibleNames(c).reduce((n, name) => n + entriesFor(c.id, name).length, 0);
+const nowItems = () => nowLeads.map(l => ({ l, e: entriesFor("now", l.id)[0] })).filter(x => x.e);
+const me = () => ({ ...person, ...store("about-me-person", {}) });
+function subLine() { const { name, line } = me(); return [name && `<b>${esc(name)}</b>`, line && esc(line)].filter(Boolean).join(" · "); }
+
+/* ── Rendering ─────────────────────────────────────────── */
 function navHTML(current) {
   const item = (id, label, count) =>
     `<a href="#${id}" ${current === id ? 'aria-current="page"' : ""}><span>${label}</span>${count != null ? `<span class="count">${count}</span>` : ""}</a>`;
   return item("home", "About Me") + item("now", "Right Now") + `<div class="gap"></div>` +
-    chapters.map(c => item(c.id, c.title, c.entries)).join("");
+    chapters.map(c => item(c.id, c.title, chapterCount(c))).join("");
 }
 
 function homeHTML() {
-  const last = thread.steps.length - 1;
+  const recent = changes().slice(0, 2);
   return `<div class="home home-page">
     <header class="statement">
       <h1><span>About</span> <span>Me.</span></h1>
-      <p class="sub"><b>${esc(person.name)}</b> · ${esc(person.line)}</p>
+      <p class="sub" id="homeSub">${subLine()}</p>
     </header>
 
     <nav class="launcher" aria-label="Contents">
@@ -737,25 +964,32 @@ function homeHTML() {
     </nav>
 
     <section class="latest" aria-labelledby="latelyLabel">
-      <div class="block-head"><h2 id="latelyLabel">What changed.</h2><a class="link" href="#history">Timeline →</a></div>
-      <div class="rows">
-        <p class="row"><span class="topic">${thread.topic}</span><span><span class="old">“${esc(thread.steps[0].quote)}”</span><span class="to">→</span><span>“${esc(thread.steps[last].quote)}”</span><span class="meta">${thread.steps.length} versions</span></span></p>
-        <p class="row"><span class="topic">${change.topic}</span><span><span class="was">${esc(change.was)}</span><span class="to">→</span><span>${esc(change.is)}</span><span class="meta">${change.date}</span></span></p>
-      </div>
+      <div class="block-head"><h2 id="latelyLabel">What changed.</h2><a class="link" href="#history/what-changed">All changes →</a></div>
+      <div class="rows">${recent.length ? recent.map(x => `<a class="row" href="${x.href}"><span class="topic">${esc(x.topic)}</span><span><span class="old">${esc(cap(x.first.text))}</span><span class="to">→</span><span class="new">${esc(cap(x.latest.text))}</span><span class="meta">${x.count > 2 ? `${x.count} versions` : esc(x.latest.when)}</span></span></a>`).join("")
+        : `<p class="row-empty">Nothing yet. When you write a new entry in a section, the old one stays, and the change shows up here.</p>`}</div>
     </section>
   </div>`;
 }
 
+function updatedLabel(e) {
+  if (e.month) return `Updated ${monthYear(e.at)}`;
+  const d = daysAgo(e.at);
+  return d <= 0 ? "Updated today" : d === 1 ? "Updated yesterday" : d < 7 ? `Updated ${d} days ago` : `Updated ${e.when}`;
+}
 function nowHTML() {
+  const items = nowItems(), newest = items.reduce((a, x) => !a || x.e.at > a.at ? x.e : a, null);
+  const what = items.map(x => x.l.lead.replace(/^I’m /, "")), list = what.length > 1 ? `${what.slice(0, -1).join(", ")} and ${what.at(-1)}` : what[0];
   return `<div class="home now-page">
     <header class="statement">
-      <span class="eyebrow">Updated 3 days ago</span>
+      ${newest ? `<span class="eyebrow">${updatedLabel(newest)}</span>` : ""}
       <h1>Right now.</h1>
-      <p class="sub"><b>${rightNow.length} things</b> · what I’m into, thinking about, learning and working toward</p>
+      <p class="sub">${items.length ? `<b>${plural(items.length, "thing")}</b> · what I’m ${esc(list)}` : "What’s true for you at the moment"}</p>
     </header>
     <section class="now-grid" aria-label="Right now">
-      <ul>${rightNow.map(r => `<li><span class="lead">${r.lead} · since ${r.since}</span><p class="sentence">${esc(r.text[0].toUpperCase() + r.text.slice(1))}</p></li>`).join("")}</ul>
-      <button class="add-line" type="button">Add to right now</button>
+      ${items.length ? `<ul>${items.map(({ l, e }) => `<li><button type="button" class="now-item" data-lead="${l.id}">
+        <span class="lead">${esc(l.lead)} · since ${monthYear(e.at)}</span><span class="sentence">${esc(cap(e.text))}</span></button></li>`).join("")}</ul>`
+        : `<p class="now-empty">Nothing here yet. What are you into, thinking about, learning or working toward?</p>`}
+      <button class="add-line" type="button" data-now-add>${items.length < nowLeads.length ? "Add to right now" : "Update right now"}</button>
     </section>
   </div>`;
 }
@@ -773,9 +1007,6 @@ function noteGroups(c) {
 function topicsHTML(c, layout) {
   const label = `aria-label="Topics in ${esc(c.title)}"`;
   const rows = partsFor(c).map(([name, desc, entry, w]) => ({ name, desc, entry, when: w, color: visuals[`${c.id}/${name}`], href: `#${c.id}/${slug(name)}` }));
-  // Empty cells that close off the last row: one set for the 3-column grid, one for the 2-column grid
-  const blanks = (n, cls) => [[3, "fill3"], [2, "fill2"]].map(([cols, fill]) =>
-    Array.from({ length: (cols - n % cols) % cols }, () => `<div class="${cls} blank ${fill}" aria-hidden="true"></div>`).join("")).join("");
   if (layout === "cards") {
     const ordered = [...rows.filter(r => r.entry), ...rows.filter(r => !r.entry)];
     return `<section class="cards" ${label}>${ordered.map(r => r.entry
@@ -797,7 +1028,7 @@ function topicsHTML(c, layout) {
   }
   return `<section class="notes" ${label}>
       ${noteGroups(c).map(g => `<div class="ngroup"><h2>${g.label}</h2><div class="ncard">
-        ${g.rows.map(r => `<a class="note" href="${r.href}" data-part="${esc(r.name)}">
+        ${g.rows.map(r => `<a class="note" href="#${c.id}/${slug(r.name)}" data-part="${esc(r.name)}">
           <div class="txt">
             <h3>${esc(r.name)}</h3>
             <p class="l2">${esc(r.entry || r.desc || "Tap to write the first entry.")}</p>
@@ -807,23 +1038,27 @@ function topicsHTML(c, layout) {
     </section>`;
 }
 
+let histMoments = [];
 function historyHTML(c) {
+  const ms = histMoments = timeline(), secs = visibleNames(c).filter(n => n !== "Timeline");
+  const span = ms.length ? [...new Set([monthYear(ms[0].at), monthYear(ms.at(-1).at)])].join(" to ") : "";
   return `<div class="home chapter-page history-page">
     <header class="statement">
       <span class="eyebrow">${esc(c.tagline)}</span>
       <h1>${esc(c.title)}.</h1>
-      <p class="sub"><b>${moments.length} moments</b> · ${moments[0].date} to ${moments.at(-1).date}</p>
+      <p class="sub">${ms.length ? `<b>${plural(ms.length, "moment")}</b> · ${span}` : "<b>No moments yet</b>"}</p>
+      ${secs.length ? `<nav class="hist-secs" aria-label="Parts of ${esc(c.title)}">${secs.map(n => `<a class="chip" href="#${c.id}/${slug(n)}">${esc(n)}</a>`).join("")}</nav>` : ""}
     </header>
-    <div class="hist">
+    ${ms.length ? `<div class="hist">
       <article class="hist-focus" id="histFocus" aria-live="polite"></article>
       <div class="hist-rail" id="histRail" role="listbox" tabindex="0" aria-label="Your history. Scroll to move through time.">
         <div class="hist-pad" aria-hidden="true"></div>
-        ${moments.map((m, i) => `<button type="button" class="hist-item" role="option" data-i="${i}">
+        ${ms.map((m, i) => `<button type="button" class="hist-item" role="option" data-i="${i}">
           <span class="hist-dot" aria-hidden="true"></span><span class="hist-ic">${kindIcon(m.kind)}</span>
-          <span class="hist-txt"><span class="hist-date">${m.date}</span><span class="hist-said">${esc(m.said)}</span></span></button>`).join("")}
+          <span class="hist-txt"><span class="hist-date">${esc(m.when)}</span><span class="hist-said">${esc(m.said)}</span></span></button>`).join("")}
         <div class="hist-pad" aria-hidden="true"></div>
       </div>
-    </div>
+    </div>` : `<div class="hist-empty"><p>Every entry you write becomes a moment here, in the order it happened.</p><a class="chip" href="#now">Start with Right now</a></div>`}
   </div>`;
 }
 
@@ -831,12 +1066,13 @@ let histSel = -1;
 function showMoment(i) {
   if (i === histSel) return;
   histSel = i;
-  const m = moments[i], card = $("#histFocus");
+  const m = histMoments[i], card = $("#histFocus");
+  const kind = `${kindIcon(m.kind)}${esc(m.topic ? m.topic + (m.where ? ` · ${m.where}` : "") : kinds[m.kind].name)}`;
   card.classList.remove("in"); void card.offsetWidth;
-  card.innerHTML = `<p class="hf-kind">${kindIcon(m.kind)}${kinds[m.kind].name}</p>
-    <p class="hf-date">${m.date}</p>
+  card.innerHTML = `${m.href ? `<a class="hf-kind" href="${m.href}">${kind} ›</a>` : `<p class="hf-kind">${kind}</p>`}
+    <p class="hf-date">${esc(m.when)}</p>
     <p class="hf-said">“${esc(m.said)}”</p>
-    <p class="hf-led">${esc(m.led)}</p>`;
+    ${m.led ? `<p class="hf-led">${esc(m.led)}</p>` : ""}`;
   card.classList.add("in");
   $("#histRail").querySelectorAll(".hist-item").forEach((el, j) => el.setAttribute("aria-selected", j === i));
 }
@@ -868,12 +1104,12 @@ function initHistory() {
 
 function chapterHTML(c) {
   if (c.id === "history") return historyHTML(c);
-  const shown = partsFor(c), filled = shown.filter(p => p[2]).length, hiddenCount = c.parts.length - shown.length;
+  const shown = partsFor(c), filled = shown.filter(p => p[2]).length, hiddenCount = c.parts.length - shown.length, n = chapterCount(c);
   return `<div class="home chapter-page ${getLayout(c.id) === "tiles" ? "tiles-page" : ""}">
     <header class="statement">
       <span class="eyebrow">${esc(c.tagline)}</span>
       <h1>${esc(c.title)}.</h1>
-      <p class="sub"><b>${c.entries} entries</b> · ${shown.length} sections${hiddenCount ? ` · ${hiddenCount} hidden` : ""} · ${filled} with recent entries</p>
+      <p class="sub"><b>${plural(n, "entry", "entries")}</b> · ${plural(shown.length, "section")}${hiddenCount ? ` · ${hiddenCount} hidden` : ""} · ${filled} with entries</p>
     </header>
 
     ${shown.length ? topicsHTML(c, getLayout(c.id)) : `<div class="all-hidden"><p>All sections here are hidden. Everything in them is still saved.</p><button type="button" class="pill" data-open-sections>Show sections</button></div>`}
@@ -881,88 +1117,147 @@ function chapterHTML(c) {
   </div>`;
 }
 
+/* ── Section pages ── */
 const trashIcon = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4.5h6V7M6.5 7l1 13h9l1-13"/></svg>`;
+const delBtn = (tkey, label = "Delete this entry") => `<button type="button" class="e-del" data-del="${esc(tkey)}" aria-label="${label}">${trashIcon}</button>`;
+const steps = [   // a decision: [key, prompt, short label, placeholder]
+  ["thought", "What I was thinking", "Thought", "What was on your mind?"], ["decided", "What I decided", "Decided", "The decision, in one sentence."],
+  ["did", "What I did", "Did", "What you actually did about it."], ["changed", "What changed", "Changed", "How things are different now."]];
+const prompts = { "history/Timeline": "Add a moment to your timeline…", "history/Memories": "A moment you want to keep…",
+  "history/Old Thoughts": "Something you used to think…", "history/Past Versions of Me": "Who were you, back then?" };
+
 function sectionHTML(c, name) {
-  const [, desc] = c.parts.find(p => p[0] === name), list = entriesFor(c, name), [latest, ...earlier] = list;
-  const i = c.parts.findIndex(p => p[0] === name), hid = new Set(hiddenOf(c.id));
-  const around = step => { for (let j = i + step; j >= 0 && j < c.parts.length; j += step) if (!hid.has(c.parts[j][0])) return c.parts[j][0]; return null; };
-  const prev = around(-1), next = around(1);
+  if (c.id === "history" && name === "What Changed") return changesHTML(c, name);
+  const key = `${c.id}/${name}`, desc = c.parts.find(p => p[0] === name)[1], list = entriesFor(c.id, name), [latest, ...earlier] = list;
+  const decide = key === "history/Decisions", record = records.has(key), noun = decide ? ["decision", "decisions"] : ["entry", "entries"];
   return `<div class="entry-page" data-chapter="${c.id}" data-name="${esc(name)}">
     <header class="statement">
       <a class="eyebrow" href="#${c.id}">${esc(c.title)}</a>
       <h1>${esc(name)}.</h1>
       ${desc ? `<p class="sub">${esc(desc)}</p>` : ""}
-      <p class="meta">${list.length ? `${list.length} ${list.length === 1 ? "entry" : "entries"} · last written ${esc(latest.when)}` : "Nothing written yet"}</p>
+      <p class="meta">${list.length ? `${plural(list.length, ...noun)} · last written ${esc(latest.when)}` : "Nothing written yet"}</p>
     </header>
 
     <form class="compose" id="compose">
-      <textarea id="composeText" rows="3" placeholder="${list.length ? "What’s true now?" : `Start with one sentence about ${esc(name[0].toLowerCase() + name.slice(1))}…`}" aria-label="Write an entry"></textarea>
-      <div class="compose-row"><span class="meta">${list.length ? "Your last entry becomes an earlier version." : "Only you can see this."}</span>
-        <button type="submit" class="btn-primary" id="composeAdd" disabled>Add entry</button></div>
+      ${decide ? steps.map(([k, label, , ph]) => `<label class="step-field"><span>${label}</span><textarea data-step="${k}" rows="1" placeholder="${ph}"></textarea></label>`).join("")
+        : `<textarea id="composeText" rows="3" placeholder="${prompts[key] || (list.length ? "What’s true now?" : `Start with one sentence about ${esc(name[0].toLowerCase() + name.slice(1))}…`)}" aria-label="Write an entry"></textarea>
+      ${list.length && !record ? `<input id="composeWhy" class="why-in" type="text" placeholder="Why did it change? (optional)" aria-label="Why did it change? (optional)" hidden>` : ""}`}
+      <div class="compose-row"><span class="meta">${decide ? "Only what you decided is needed. Add the rest when you know it." : record ? "Each entry is kept as its own." : list.length ? "Your last entry becomes an earlier version." : "Only you can see this."}</span>
+        <button type="submit" class="btn-primary" id="composeAdd" disabled>${decide ? "Add decision" : "Add entry"}</button></div>
     </form>
     <p class="as-status" id="entryStatus" role="status"></p>
 
-    ${latest ? `<article class="latest-card">
-      <div class="e-top"><span class="e-label">Latest · ${esc(latest.when)}</span>
-        <button type="button" class="e-del" data-del="${esc(latest.tkey)}" aria-label="Delete this entry">${trashIcon}</button></div>
-      <p class="big">${esc(latest.text)}</p>
-    </article>` : ""}
-
-    ${earlier.length ? `<section class="earlier" aria-label="Earlier versions"><h2 class="label">Earlier versions</h2>
-      <ol>${earlier.map(e => `<li><span class="e-when">${esc(e.when)}</span><p>${esc(e.text)}</p>
-        <button type="button" class="e-del" data-del="${esc(e.tkey)}" aria-label="Delete this version">${trashIcon}</button></li>`).join("")}</ol></section>` : ""}
-
-    <nav class="sec-nav" aria-label="Other sections">
-      ${prev ? `<a href="#${c.id}/${slug(prev)}"><span class="meta">‹ Previous</span><b>${esc(prev)}</b></a>` : "<span></span>"}
-      ${next ? `<a class="next" href="#${c.id}/${slug(next)}"><span class="meta">Next ›</span><b>${esc(next)}</b></a>` : "<span></span>"}
-    </nav>
-    <div class="sec-foot"><button type="button" class="pill" data-hide>Hide this section</button>
-      <span class="meta">Hiding keeps everything. Show it again from ⋯ → Sections on ${esc(c.title)}.</span></div>
+    ${decide ? decisionsHTML(list) : record ? recordsHTML(list) : versionsHTML(latest, earlier)}
+    ${secNav(c, name)}
+    ${secFoot(c, name)}
   </div>`;
 }
-function initSection(c, name) {
-  const form = $("#compose"), ta = $("#composeText"), add = $("#composeAdd");
-  const grow = () => { ta.style.height = "auto"; ta.style.height = Math.min(ta.scrollHeight, 320) + "px"; add.disabled = !ta.value.trim(); };
-  ta.addEventListener("input", grow);
-  ta.addEventListener("keydown", e => { if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) form.requestSubmit(); });
-  form.onsubmit = e => { e.preventDefault(); const t = ta.value.trim(); if (!t) return; addEntry(c, name, t); render(); $("#entryStatus").textContent = "Saved."; };
+const versionsHTML = (latest, earlier) => `${latest ? `<article class="latest-card">
+      <div class="e-top"><span class="e-label">Latest · ${esc(latest.when)}</span>${delBtn(latest.tkey)}</div>
+      <p class="big">${esc(latest.text)}</p>${latest.why ? `<p class="why-q">${esc(latest.why)}</p>` : ""}
+    </article>` : ""}
+    ${earlier.length ? `<section class="earlier" aria-label="Earlier versions"><h2 class="label">Earlier versions</h2>
+      <ol>${earlier.map(e => `<li><span class="e-when">${esc(e.when)}</span><div><p>${esc(e.text)}</p>${e.why ? `<p class="why-q">${esc(e.why)}</p>` : ""}</div>
+        ${delBtn(e.tkey, "Delete this version")}</li>`).join("")}</ol></section>` : ""}`;
+const recordsHTML = list => list.length ? `<section class="records" aria-label="Entries">${list.map(e => `<article class="record">
+      <div class="e-top"><span class="e-label">${esc(e.when)}</span>${delBtn(e.tkey)}</div><p>${esc(e.text)}</p></article>`).join("")}</section>` : "";
+const decisionsHTML = list => list.length ? `<section class="decisions" aria-label="Decisions">${list.map(e => {
+    const s = e.steps || { decided: e.text };
+    return `<article class="decision"><div class="e-top"><span class="e-label">${esc(e.when)}</span>${delBtn(e.tkey, "Delete this decision")}</div>
+      <ol class="dsteps">${steps.map(([k, label, short]) => s[k] ? `<li class="on${k === "decided" ? " decided" : ""}"><span class="ds-k">${short}</span><p>${esc(s[k])}</p></li>`
+        : e.mine ? `<li><button type="button" class="ds-add" data-fill="${k}" data-tkey="${esc(e.tkey)}">+ ${label}</button></li>` : "").join("")}</ol></article>`;
+  }).join("")}</section>` : "";
+function changesHTML(c, name) {   // My History › What Changed: worked out from every section's versions
+  const all = changes(), notes = entriesFor(c.id, name);
+  return `<div class="entry-page" data-chapter="${c.id}" data-name="${esc(name)}">
+    <header class="statement">
+      <a class="eyebrow" href="#${c.id}">${esc(c.title)}</a>
+      <h1>${esc(name)}.</h1>
+      <p class="sub">Everything about you that has changed, newest first.</p>
+      <p class="meta">${all.length ? plural(all.length, "change") : "Nothing has changed yet"}</p>
+    </header>
+    ${all.length ? `<section class="changes" aria-label="Changes">${all.map(x => `<a class="change-card" href="${x.href}">
+        <span class="meta">${esc(x.topic)} · ${esc(x.where)} · changed ${esc(x.latest.when)} · ${x.count} versions</span>
+        <span class="was">${esc(cap(x.prev.text))}</span><span class="is">${esc(cap(x.latest.text))}</span>
+        ${x.latest.why ? `<p class="why-q">${esc(x.latest.why)}</p>` : ""}</a>`).join("")}</section>`
+      : `<p class="empty-note">When you write a new entry in a section that already has one, the old one is kept, and the change shows up here.</p>`}
+    ${notes.length ? `<h2 class="label">Notes</h2>${recordsHTML(notes)}` : ""}
+    ${secNav(c, name)}
+    ${secFoot(c, name)}
+  </div>`;
 }
-function deleteEntry(c, name, tkey) {
-  const e = entriesFor(c, name).find(x => x.tkey === tkey); if (!e) return;
-  const trash = purgeTrash(); trash.unshift({ key: tkey, chapter: c.id, chapterTitle: c.title, part: name, text: e.text, when: e.when, deletedAt: Date.now() });
-  keep("about-me-trash", trash); render();
-  $("#entryStatus").innerHTML = `Moved to Trash for ${TRASH_DAYS} days. <button type="button" class="link" data-undo="${esc(tkey)}">Undo</button>`;
+function secNav(c, name) {   // the neighbouring sections in the curated order, skipping hidden ones
+  const i = c.parts.findIndex(p => p[0] === name), hid = new Set(hiddenOf(c.id));
+  const around = step => { for (let j = i + step; j >= 0 && j < c.parts.length; j += step) if (!hid.has(c.parts[j][0])) return c.parts[j][0]; return null; };
+  const prev = around(-1), next = around(1);
+  return `<nav class="sec-nav" aria-label="Other sections">
+      ${prev ? `<a href="#${c.id}/${slug(prev)}"><span class="meta">‹ Previous</span><b>${esc(prev)}</b></a>` : "<span></span>"}
+      ${next ? `<a class="next" href="#${c.id}/${slug(next)}"><span class="meta">Next ›</span><b>${esc(next)}</b></a>` : "<span></span>"}
+    </nav>`;
+}
+const secFoot = (c, name) => hiddenOf(c.id).includes(name)
+  ? `<div class="sec-foot"><button type="button" class="pill" data-show>Show this section</button>
+      <span class="meta">It’s hidden from ${esc(c.title)}. Everything in it is kept.</span></div>`
+  : `<div class="sec-foot"><button type="button" class="pill" data-hide>Hide this section</button>
+      <span class="meta">Hiding keeps everything. Show it again from ⋯ → Sections on ${esc(c.title)}.</span></div>`;
+
+function initSection(c, name) {
+  const form = $("#compose"); if (!form) return;   // What Changed has nothing to write
+  const add = $("#composeAdd"), fields = [...form.querySelectorAll("textarea")], why = $("#composeWhy");
+  const main = form.querySelector('[data-step="decided"]') || $("#composeText");
+  const grow = t => { t.style.height = "auto"; t.style.height = Math.min(t.scrollHeight, 320) + "px"; };
+  form.addEventListener("input", e => {
+    if (e.target.tagName === "TEXTAREA") grow(e.target);
+    add.disabled = !main.value.trim();
+    if (why) why.hidden = !main.value.trim() && !why.value;
+  });
+  form.addEventListener("keydown", e => { if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) { e.preventDefault(); form.requestSubmit(); } });
+  form.onsubmit = e => {
+    e.preventDefault();
+    const text = main.value.trim(); if (!text) return;
+    const entry = { text };
+    if (main.dataset.step) { entry.steps = {}; for (const t of fields) if (t.value.trim()) entry.steps[t.dataset.step] = t.value.trim(); }
+    if (why && why.value.trim()) entry.why = why.value.trim();
+    if (!addEntry(c.id, name, entry)) { $("#entryStatus").textContent = "Couldn’t save. This device’s storage may be full; your words are still in the box."; return; }
+    render(); $("#entryStatus").textContent = "Saved.";
+  };
 }
 
-function contextHTML(route) {
-  const last = thread.steps.length - 1;
-  return `<div class="ctx-block"><span class="label">What changed</span>
-      <div class="ctx-item"><span class="meta">${thread.topic}</span></div>
-      <div class="thread">${thread.steps.map((st, i) => `<div class="step ${i === last ? "now-step" : ""}">
-        <span class="meta">${st.date}${i === last ? " · now" : ""}</span><p class="quote">“${esc(st.quote)}”</p></div>`).join("")}</div></div>
-    <div class="ctx-block"><div class="change">
-      <span class="meta">${change.topic} · changed ${change.date}</span>
-      <span class="was">${esc(change.was)}</span><span class="is">${esc(change.is)}</span>
-      <p class="why">“${esc(change.why)}”</p></div>
-      <a class="link" href="#history">Full timeline →</a></div>`;
+/* Home, landscape: the side panel. One change as its versions, one as before → after with its why. */
+function contextHTML() {
+  const all = changes(), label = `<span class="label">What changed</span>`;
+  const links = `<div class="ctx-links"><a class="link" href="#history/what-changed">All changes →</a><a class="link" href="#history">Full timeline →</a></div>`;
+  if (!all.length) return `<div class="ctx-block">${label}<p class="ctx-empty">Nothing yet. When you write a new entry in a section, the old one stays, and the change shows up here.</p>${links}</div>`;
+  const why = all.find(x => x.latest.why), thread = all.find(x => x !== why), change = why || all.find(x => x !== thread);
+  const st = thread ? thread.versions.slice(-3) : [], last = st.length - 1;
+  return `${thread ? `<div class="ctx-block">${label}
+      <a class="ctx-item link-row" href="${thread.href}"><span class="meta">${esc(thread.topic)} · ${esc(thread.where)}</span></a>
+      <div class="thread">${st.map((s, i) => `<div class="step ${i === last ? "now-step" : ""}">
+        <span class="meta">${esc(s.when)}${i === last ? " · now" : ""}</span><p class="quote">“${esc(cap(s.text))}”</p></div>`).join("")}</div></div>` : ""}
+    <div class="ctx-block">${thread ? "" : label}${change ? `<a class="change" href="${change.href}">
+      <span class="meta">${esc(change.topic)} · changed ${esc(change.latest.when)}</span>
+      <span class="was">${esc(cap(change.prev.text))}</span><span class="is">${esc(cap(change.latest.text))}</span>
+      ${change.latest.why ? `<p class="why">“${esc(change.latest.why)}”</p>` : ""}</a>` : ""}
+      ${links}</div>`;
 }
 
 function render() {
-  const raw = decodeURIComponent(location.hash.slice(1)) || "home";
+  let raw = "home";
+  try { raw = decodeURIComponent(location.hash.slice(1)) || "home"; } catch (e) {}
   const [cid, sid] = raw.split("/");
   let chapter = chapters.find(c => c.id === cid), section = null;
   if (chapter && sid) { section = (chapter.parts.find(p => slug(p[0]) === sid) || [])[0] || null; if (!section) chapter = null; }
   const route = chapter ? cid : raw === "now" ? "now" : "home";
+  const isHome = route === "home";
   $("#main").innerHTML = section ? sectionHTML(chapter, section) : chapter ? chapterHTML(chapter) : route === "now" ? nowHTML() : homeHTML();
   $("#drawerNav").innerHTML = navHTML(route);
-  $("#context").innerHTML = contextHTML(route);
-  const isHome = route === "home";
+  $("#context").innerHTML = isHome ? contextHTML() : "";   // the panel only shows on home
   $("#menuBtn").hidden = !isHome;
   $("#backBtn").hidden = isHome;
   $("#backBtn").href = section ? `#${chapter.id}` : "#home";
   $("#backBtn").setAttribute("aria-label", section ? `Back to ${chapter.title}` : "Back to About Me");
   $("#layoutBtn").hidden = !chapter || !!section || chapter.id === "history";
-  $("#moreBtn").hidden = !chapter || !!section || chapter.id === "history";
+  $("#moreBtn").hidden = !chapter || !!section;
   $("#trashBtn").hidden = !isHome; trashBadge();
   $("#app").classList.toggle("inner", !isHome);
   document.documentElement.classList.toggle("inner", !isHome);
@@ -1000,97 +1295,137 @@ $("#layoutMenu").onclick = e => {
 document.addEventListener("click", e => { if (!$("#layoutMenu").hidden && !e.target.closest("#layoutMenu")) closeLayoutMenu(); });
 $("#menuBtn").onclick = () => { $("#drawer").classList.add("open"); $("#scrim").classList.add("open"); };
 $("#drawerClose").onclick = closeAll;
+$("#drawerNav").addEventListener("click", e => { if (e.target.closest("a")) closeAll(); });   // also when it's the page you're on
 $("#scrim").onclick = closeAll;
-$("#searchBtn").onclick = () => { $("#sheet").classList.add("open"); $("#scrim").classList.add("open"); search(""); setTimeout(() => $("#q").focus(), 50); };
+$("#searchBtn").onclick = () => {
+  closeAll(); $("#q").value = ""; search("");
+  $("#sheet").classList.add("open"); $("#scrim").classList.add("open"); setTimeout(() => $("#q").focus(), 50);
+};
 document.addEventListener("keydown", e => { if (e.key === "Escape") closeAll(); });
 
-const buildIndex = () => [
-  ...chapters.map(c => ({ text: c.title, where: "Chapter", id: c.id })),
-  ...chapters.flatMap(c => partsFor(c).map(p => ({ text: p[0] + (p[2] ? ` — ${p[2]}` : ""), where: c.title, id: `${c.id}/${slug(p[0])}` }))),
-  ...rightNow.map(r => ({ text: `${r.lead} ${r.text}`, where: "Right Now", id: "now" })),
-  ...thread.steps.map(s => ({ text: s.quote, where: `${thread.topic} · ${s.date}`, id: thread.chapter })),
-];
+/* Search covers every version of everything, not just the latest */
+const norm = s => s.toLowerCase().replace(/[’‘]/g, "'").replace(/[“”]/g, '"');
+function buildIndex() {
+  const idx = [{ text: "Right now", where: "Page", href: "#now" }, ...chapters.map(c => ({ text: c.title, where: "Chapter", href: `#${c.id}` }))];
+  for (const c of chapters) for (const name of visibleNames(c)) {
+    const href = `#${c.id}/${slug(name)}`;
+    idx.push({ text: name, where: c.title, href, also: c.parts.find(p => p[0] === name)[1] });
+    for (const e of entriesFor(c.id, name)) idx.push({ text: e.text, where: `${c.title} › ${name} · ${e.when}`, href, also: [e.why, ...Object.values(e.steps || {})].filter(Boolean).join(" ") });
+  }
+  for (const l of nowLeads) for (const e of entriesFor("now", l.id)) idx.push({ text: `${l.lead} ${e.text}`, where: `Right Now · ${e.when}`, href: "#now" });
+  for (const m of timeline()) if (!m.href) idx.push({ text: m.said, where: `My History · ${m.when}`, href: "#history", also: m.led });
+  return idx;
+}
 function search(q) {
-  const t = q.trim().toLowerCase();
-  const index = buildIndex();
-  const hits = t ? index.filter(i => i.text.toLowerCase().includes(t)).slice(0, 12) : index.slice(0, 6);
+  const t = norm(q.trim()), index = buildIndex();
+  const hits = t ? index.filter(i => norm(`${i.text} ${i.also || ""}`).includes(t)).slice(0, 30) : index.slice(0, chapters.length + 1);
   $("#results").innerHTML = hits.length
-    ? hits.map(h => `<a href="#${h.id}"><span>${esc(h.text)}</span><span class="meta">${esc(h.where)}</span></a>`).join("")
+    ? hits.map(h => `<a href="${h.href}"><span>${esc(h.text)}</span><span class="meta">${esc(h.where)}</span></a>`).join("")
     : `<p class="empty">Nothing in the archive mentions “${esc(q)}” yet.</p>`;
 }
 $("#q").addEventListener("input", e => search(e.target.value));
+$("#q").addEventListener("keydown", e => {   // Return opens the first result
+  const first = $("#results a");
+  if (e.key === "Enter" && first) { e.preventDefault(); location.hash = first.getAttribute("href").slice(1); closeAll(); }
+});
+$("#results").addEventListener("click", e => { if (e.target.closest("a")) closeAll(); });
 
 addEventListener("scroll", () => $("#topbar").classList.toggle("scrolled", scrollY > 8), { passive: true });
-/* ── Sections and Trash ────────────────────────────────────
-   Sections are curated: their order, names and definitions are fixed by the app,
-   so no part of someone ranks above another. People can only hide a section and
-   show it again; hiding never touches its entries. Deleting an entry moves it to
-   Trash for 7 days, then it's gone for good. */
-const TRASH_DAYS = 7, DAY = 86400000;
-function store(key, fallback) { try { const v = JSON.parse(localStorage.getItem(key)); return v ?? fallback; } catch (e) { return fallback; } }
-function keep(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) {} }
-const hiddenOf = id => store("about-me-hidden", {})[id] || [];
-function setHidden(id, name, hide) {
-  const all = store("about-me-hidden", {}), set = new Set(all[id] || []);
-  hide ? set.add(name) : set.delete(name);
-  all[id] = [...set]; keep("about-me-hidden", all);
-}
-function purgeTrash() {   // anything past 7 days is permanently deleted
-  const now = Date.now(), trash = store("about-me-trash", []), purged = new Set(store("about-me-purged", []));
-  const live = trash.filter(t => now - t.deletedAt < TRASH_DAYS * DAY || (purged.add(t.key), false));
-  keep("about-me-trash", live); keep("about-me-purged", [...purged]);
-  return live;
-}
-function isGone(key) { return store("about-me-trash", []).some(t => t.key === key) || store("about-me-purged", []).includes(key); }
-/* Each entry carries its own Trash key: your entries "chapter/Section#id", the sample entry "chapter/Section",
-   sample earlier versions "chapter/Section~n". Deleting any of them moves just that one to Trash. */
-const slug = name => name.toLowerCase().replace(/[’']/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-function fmtWhen(ts) {
-  const d = new Date(ts), now = new Date(), time = d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
-  const days = Math.round((new Date(now.toDateString()) - new Date(d.toDateString())) / DAY);
-  return days === 0 ? `Today ${time}` : days === 1 ? `Yesterday ${time}` : d.toLocaleDateString("en-US", { month: "short", day: "numeric", ...(d.getFullYear() !== now.getFullYear() ? { year: "numeric" } : {}) });
-}
-function entriesFor(c, name) {
-  const key = `${c.id}/${name}`, part = c.parts.find(p => p[0] === name);
-  const mine = (store("about-me-entries", {})[key] || []).map(e => ({ tkey: `${key}#${e.id}`, text: e.text, when: fmtWhen(e.at), mine: true, at: e.at })).reverse();
-  const sample = part && part[2] ? [{ tkey: key, text: part[2], when: when[key] || "Earlier" }] : [];
-  const older = (past[key] || []).map((e, i) => ({ tkey: `${key}~${i}`, text: e.text, when: e.when })).reverse();
-  return [...mine, ...sample, ...older].filter(e => !isGone(e.tkey));
-}
-function addEntry(c, name, text) {
-  const all = store("about-me-entries", {}), key = `${c.id}/${name}`;
-  (all[key] = all[key] || []).push({ id: Date.now().toString(36), text, at: Date.now() });
-  keep("about-me-entries", all);
-}
-function partsFor(c) {   // [name, context, latest entry, when]
-  const hid = new Set(hiddenOf(c.id));
-  return c.parts.filter(p => !hid.has(p[0])).map(([n, d]) => { const e = entriesFor(c, n)[0]; return [n, d, e ? e.text : null, e ? e.when : ""]; });
-}
+
 function timeLeft(t) {
   const ms = t.deletedAt + TRASH_DAYS * DAY - Date.now();
   const d = Math.ceil(ms / DAY), h = Math.ceil(ms / 3600000), m = Math.max(1, Math.ceil(ms / 60000));
   return ms > DAY ? `${d} days left` : ms > 3600000 ? `${h} hour${h > 1 ? "s" : ""} left` : `${m} minute${m > 1 ? "s" : ""} left`;
 }
 function openSheet(id) { closeAll(); $(id).hidden = false; $("#scrim").classList.add("open"); }
-function closeSheets() { ["#sectionsSheet", "#trashSheet", "#settingsSheet"].forEach(s => $(s).hidden = true); }
+function closeSheets() { ["#sectionsSheet", "#trashSheet", "#settingsSheet", "#nowSheet"].forEach(s => $(s).hidden = true); }
+const closeIcon = `<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>`;
 
-// Section pages: delete an entry (to Trash), undo it, or hide the section
+// Pages: Right Now sentences, deleting an entry (to Trash) and undoing it, finishing a decision, hiding a section
 $("#main").addEventListener("click", e => {
   if (e.target.closest("[data-open-sections]")) return openSections();
+  const nowBtn = e.target.closest("[data-lead], [data-now-add]");
+  if (nowBtn) return openNow(nowBtn.dataset.lead, { focus: !nowBtn.dataset.lead });
   const page = e.target.closest(".entry-page"); if (!page) return;
   const c = chapters.find(x => x.id === page.dataset.chapter), name = page.dataset.name;
-  const del = e.target.closest("[data-del]"), undo = e.target.closest("[data-undo]");
-  if (del) return deleteEntry(c, name, del.dataset.del);
-  if (undo) { keep("about-me-trash", purgeTrash().filter(t => t.key !== undo.dataset.undo)); render(); return; }
-  if (e.target.closest("[data-hide]")) { setHidden(c.id, name, true); location.hash = c.id; }
+  const del = e.target.closest("[data-del]"), undo = e.target.closest("[data-undo]"), fill = e.target.closest("[data-fill]");
+  if (del) {
+    if (!trashEntry(c.id, name, del.dataset.del)) return;
+    render();
+    $("#entryStatus").innerHTML = `Moved to Trash for ${TRASH_DAYS} days. <button type="button" class="link" data-undo="${esc(del.dataset.del)}">Undo</button>`;
+    return;
+  }
+  if (undo) { restoreEntry(undo.dataset.undo); render(); return; }
+  if (fill) {   // fill in a step of a decision you wrote earlier
+    const [, label, , ph] = steps.find(s => s[0] === fill.dataset.fill), li = fill.closest("li");
+    li.innerHTML = `<form class="ds-form" data-tkey="${esc(fill.dataset.tkey)}" data-step="${fill.dataset.fill}"><span class="ds-k">${label}</span>
+      <textarea rows="2" aria-label="${label}" placeholder="${ph}"></textarea>
+      <div class="ds-row"><button type="button" class="pill" data-fill-cancel>Cancel</button><button type="submit" class="btn-primary">Save</button></div></form>`;
+    li.querySelector("textarea").focus();
+    return;
+  }
+  if (e.target.closest("[data-fill-cancel]")) return render();
+  if (e.target.closest("[data-hide]")) { setHidden(c.id, name, true); location.hash = c.id; return; }
+  if (e.target.closest("[data-show]")) { setHidden(c.id, name, false); render(); }
 });
+$("#main").addEventListener("submit", e => {
+  const f = e.target.closest(".ds-form"); if (!f) return;
+  e.preventDefault();
+  const t = f.querySelector("textarea").value.trim(); if (!t) return;
+  if (updateEntry(f.dataset.tkey, x => { x.steps = { ...(x.steps || { decided: x.text }), [f.dataset.step]: t }; })) render();
+  else $("#entryStatus").textContent = "Couldn’t save that. Try again in a moment.";
+});
+
+/* Right Now: tap a sentence to update it. The old one is kept as an earlier version. */
+let nowDraft = "";
+function openNow(id, { status = "", focus = false, keepDraft = false } = {}) {
+  if (!keepDraft) nowDraft = "";
+  const lead = nowLeads.find(l => l.id === id) || nowLeads.find(l => !entriesFor("now", l.id).length) || nowLeads[0];
+  const [cur, ...older] = entriesFor("now", lead.id);
+  $("#nowSheet").innerHTML = `<div class="as-head"><h2>Right now</h2><button type="button" class="icon-btn" data-close aria-label="Close">${closeIcon}</button></div>
+    <div class="lead-pick" role="radiogroup" aria-label="Which part of right now">${nowLeads.map(l => `<button type="button" class="chip" role="radio" aria-checked="${l.id === lead.id}" data-pick="${l.id}">${esc(l.lead)}</button>`).join("")}</div>
+    <form class="compose now-compose" id="nowForm">
+      <label for="nowText">${esc(lead.lead)}…</label>
+      <textarea id="nowText" rows="2" placeholder="${cur ? "What’s true now?" : "Finish the sentence."}"></textarea>
+      <div class="compose-row"><span class="meta">${cur ? "What’s here now becomes an earlier version." : "Only you can see this."}</span><button type="submit" class="btn-primary" id="nowSave" disabled>Save</button></div>
+    </form>
+    <p class="as-status" id="nowStatus" role="status">${status}</p>
+    ${cur ? `<div class="now-versions"><h3 class="label">Now · since ${monthYear(cur.at)}</h3>
+      <div class="nv"><p>${esc(cap(cur.text))}</p>${delBtn(cur.tkey)}</div>
+      ${older.length ? `<h3 class="label">Earlier</h3>${older.map(e => `<div class="nv old"><div><p>${esc(cap(e.text))}</p><span class="meta">${esc(e.when)}</span></div>${delBtn(e.tkey, "Delete this version")}</div>`).join("")}` : ""}
+    </div>` : ""}`;
+  openSheet("#nowSheet");
+  const ta = $("#nowText"), save = $("#nowSave");
+  ta.value = nowDraft; save.disabled = !ta.value.trim();
+  ta.oninput = () => { nowDraft = ta.value; save.disabled = !ta.value.trim(); };
+  ta.onkeydown = e => { if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) { e.preventDefault(); $("#nowForm").requestSubmit(); } };
+  $("#nowForm").onsubmit = e => {
+    e.preventDefault();
+    const t = ta.value.trim(); if (!t) return;
+    if (!addEntry("now", lead.id, { text: t })) { $("#nowStatus").textContent = "Couldn’t save. This device’s storage may be full."; return; }
+    nowDraft = ""; render();
+  };
+  $("#nowSheet").onclick = e => {
+    if (e.target.closest("[data-close]")) return closeAll();
+    const pick = e.target.closest("[data-pick]");
+    if (pick) return openNow(pick.dataset.pick, { keepDraft: true, focus: document.activeElement === ta });
+    const del = e.target.closest("[data-del]");
+    if (del) {
+      if (trashEntry("now", lead.id, del.dataset.del)) { render(); openNow(lead.id, { status: `Moved to Trash for ${TRASH_DAYS} days. <button type="button" class="link" data-undo="${esc(del.dataset.del)}">Undo</button>` }); }
+      return;
+    }
+    const undo = e.target.closest("[data-undo]");
+    if (undo) { restoreEntry(undo.dataset.undo); render(); openNow(lead.id); }
+  };
+  if (focus) setTimeout(() => ta.focus(), 50);
+}
 
 // ⋯ on a category page: show or hide its sections, in the app's fixed order
 function openSections() {
   const c = chapters.find(x => x.id === location.hash.slice(1)); if (!c) return;
   const hid = new Set(hiddenOf(c.id));
   $("#sectionsSheet").innerHTML = `<div class="as-head"><h2>Sections</h2>
-      <button type="button" class="icon-btn" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+      <button type="button" class="icon-btn" data-close aria-label="Close">${closeIcon}</button></div>
     <p class="as-where">Choose which sections of ${esc(c.title)} you see. Hidden sections keep all their entries. The order is set by the app so no part of you ranks above another.</p>
     <div class="switches">${c.parts.map(([n]) => `<label class="sw-row"><span>${esc(n)}</span>
       <input type="checkbox" role="switch" data-sec="${esc(n)}" ${hid.has(n) ? "" : "checked"}><i aria-hidden="true"></i></label>`).join("")}</div>`;
@@ -1105,7 +1440,7 @@ function trashBadge() { const n = purgeTrash().length; $("#trashCount").textCont
 function openTrash() {
   const items = purgeTrash();
   $("#trashSheet").innerHTML = `<div class="as-head"><h2>Trash</h2>
-      <button type="button" class="icon-btn" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+      <button type="button" class="icon-btn" data-close aria-label="Close">${closeIcon}</button></div>
     <p class="as-where">Deleted entries stay here for ${TRASH_DAYS} days, then they’re deleted for good. Hidden sections never come here.</p>
     <div class="as-list">${items.length ? items.map(t => `<div class="trash-item" data-key="${esc(t.key)}">
       <div><p class="meta">${esc(t.chapterTitle)} › ${esc(t.part)}</p><p class="et">${esc(t.text)}</p><p class="left">${timeLeft(t)}</p></div>
@@ -1114,8 +1449,7 @@ function openTrash() {
   $("#trashSheet").onclick = e => {
     if (e.target.closest("[data-close]")) return closeAll();
     const r = e.target.closest("[data-restore]"); if (!r) return;
-    const key = r.closest("[data-key]").dataset.key;
-    keep("about-me-trash", purgeTrash().filter(t => t.key !== key)); render(); openTrash();
+    restoreEntry(r.closest("[data-key]").dataset.key); render(); openTrash();
   };
 }
 $("#trashBtn").onclick = openTrash;
@@ -1136,23 +1470,107 @@ function applyTint(id) {
   root.dataset.look = "studio"; root.dataset.tint = id;
   document.querySelectorAll('meta[name="theme-color"]').forEach(m => m.setAttribute("content", "#ffffff"));
 }
-/* Settings: the colour of the Studio look (more settings can join this sheet later) */
-function openSettings() {
-  const now = currentTint(), tint = TINTS.find(t => t.id === now);
+
+/* Backup: the whole archive as one file you can keep, and bring back on any device */
+function backupData() {
+  const data = {};
+  try {
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (!k.startsWith("about-me-") || k === "about-me-annotations") continue;   // design comments aren't part of the archive
+      const raw = localStorage.getItem(k);
+      try { data[k] = k.startsWith("about-me-layout") ? raw : JSON.parse(raw); } catch (e) {}
+    }
+  } catch (e) {}
+  return { app: "About Me", format: 1, exportedAt: new Date().toISOString(), data };
+}
+async function exportBackup() {
+  const name = `About Me backup ${new Date().toISOString().slice(0, 10)}.json`;
+  const file = new File([JSON.stringify(backupData(), null, 2)], name, { type: "application/json" });
+  try {
+    if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], title: "About Me backup" }); return "shared"; }
+  } catch (e) { if (e.name === "AbortError") return "cancelled"; }
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(file); a.download = name; document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+  return "downloaded";
+}
+function importBackup(text) {   // adds whatever this device doesn't have; never replaces or removes an entry
+  const b = JSON.parse(text), d = b && b.app === "About Me" && b.data;
+  if (!d || typeof d !== "object") throw new Error("Not an About Me backup");
+  const entries = store("about-me-entries", {});
+  let added = 0;
+  for (const [key, list] of Object.entries(d["about-me-entries"] || {})) {
+    if (!Array.isArray(list)) continue;
+    const have = new Set((entries[key] = entries[key] || []).map(e => e.id));
+    for (const e of list) if (e && typeof e.id === "string" && typeof e.text === "string" && typeof e.at === "number" && !have.has(e.id)) { entries[key].push(e); have.add(e.id); added++; }
+    entries[key].sort((x, y) => x.at - y.at);
+    if (!entries[key].length) delete entries[key];
+  }
+  keep("about-me-entries", entries);
+  const trash = purgeTrash(), inTrash = new Set(trash.map(t => t.key));
+  for (const t of Array.isArray(d["about-me-trash"]) ? d["about-me-trash"] : []) if (t && typeof t.key === "string" && typeof t.deletedAt === "number" && !inTrash.has(t.key)) { trash.push(t); inTrash.add(t.key); }
+  keep("about-me-trash", trash);
+  keep("about-me-purged", [...new Set([...store("about-me-purged", []), ...(Array.isArray(d["about-me-purged"]) ? d["about-me-purged"] : [])])]);
+  const hidden = store("about-me-hidden", {});
+  for (const [id, names] of Object.entries(d["about-me-hidden"] || {})) if (Array.isArray(names)) hidden[id] = [...new Set([...(hidden[id] || []), ...names])];
+  keep("about-me-hidden", hidden);
+  // Preferences come back as they were when the backup was made
+  for (const k of ["about-me-tint", "about-me-person", "about-me-examples"]) if (k in d) keep(k, d[k]);
+  for (const [k, v] of Object.entries(d)) if (k.startsWith("about-me-layout-v2:") && typeof v === "string") try { localStorage.setItem(k, v); } catch (e) {}
+  applyTint(currentTint());
+  purgeTrash();
+  return added;
+}
+
+/* Settings: colour, your name, example entries and backups */
+function openSettings(status = "") {
+  const now = currentTint(), tint = TINTS.find(t => t.id === now), { name, line } = me();
+  const total = chapters.reduce((n, c) => n + c.parts.reduce((m, [p]) => m + entriesFor(c.id, p).length, 0), 0) + nowLeads.reduce((n, l) => n + entriesFor("now", l.id).length, 0);
   $("#settingsSheet").innerHTML = `<div class="as-head"><h2>Settings</h2>
-      <button type="button" class="icon-btn" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+      <button type="button" class="icon-btn" data-close aria-label="Close">${closeIcon}</button></div>
     <section class="set-group" aria-labelledby="setColor">
       <div class="set-row"><h3 id="setColor">Color</h3><span class="meta">${esc(tint.name)}</span></div>
       <div class="swatches" role="radiogroup" aria-labelledby="setColor">${TINTS.map(t => `<button type="button" class="swatch-opt" role="radio" aria-checked="${t.id === now}" data-tint="${t.id}">
         <span class="dot" style="--c1:${t.c1};--c2:${t.c2}"></span><span class="nm">${t.name}</span></button>`).join("")}</div>
       <p class="set-preview" aria-hidden="true"><span>About Me.</span></p>
     </section>
+    <section class="set-group" aria-labelledby="setYou">
+      <div class="set-row"><h3 id="setYou">You</h3></div>
+      <label class="field"><span>Name</span><input id="setName" type="text" value="${esc(name)}" autocomplete="name" maxlength="40" placeholder="Your name"></label>
+      <label class="field"><span>Under About Me</span><input id="setLine" type="text" value="${esc(line)}" maxlength="80" placeholder="An ongoing record of me."></label>
+    </section>
+    <section class="set-group" aria-labelledby="setData">
+      <div class="set-row"><h3 id="setData">Your archive</h3><span class="meta">${plural(total, "entry", "entries")}</span></div>
+      <label class="sw-row"><span>Example entries<small>The entries About Me came with. Turning them off hides them; your own entries stay.</small></span>
+        <input type="checkbox" role="switch" id="setExamples" ${examplesOn() ? "checked" : ""}><i aria-hidden="true"></i></label>
+      <p class="meta">Everything is saved only on this device. Export a backup now and then, and keep it in Files or iCloud Drive.</p>
+      <div class="set-btns"><button type="button" class="pill" id="setExport">Export backup</button><button type="button" class="pill" id="setImport">Import a backup</button>
+        <input type="file" id="setFile" accept=".json,application/json" hidden></div>
+      <p class="as-status" id="setStatus" role="status">${status}</p>
+    </section>
     ${$("#appVersion").textContent ? `<p class="meta set-ver">${esc($("#appVersion").textContent)}</p>` : ""}`;
   openSheet("#settingsSheet");
-  $("#settingsSheet").onclick = e => {
+  $("#settingsSheet").onclick = async e => {
     if (e.target.closest("[data-close]")) return closeAll();
-    const b = e.target.closest(".swatch-opt[data-tint]"); if (!b) return;
-    keep("about-me-tint", b.dataset.tint); applyTint(b.dataset.tint); openSettings();
+    const b = e.target.closest(".swatch-opt[data-tint]");
+    if (b) { keep("about-me-tint", b.dataset.tint); applyTint(b.dataset.tint); return openSettings(); }
+    if (e.target.closest("#setExport")) { const how = await exportBackup(); $("#setStatus").textContent = how === "cancelled" ? "" : "Backup ready. Keep it somewhere safe, like Files or iCloud Drive."; }
+    if (e.target.closest("#setImport")) $("#setFile").click();
+  };
+  $("#setFile").onchange = async e => {
+    const f = e.target.files[0]; if (!f) return;
+    let msg;
+    try { const n = importBackup(await f.text()); msg = n ? `Imported ${plural(n, "entry", "entries")}. Nothing here was replaced.` : "Everything in that backup is already here."; }
+    catch (err) { msg = "That file isn’t an About Me backup."; }
+    render(); openSettings(esc(msg));
+  };
+  const setMe = (k, v) => { keep("about-me-person", { ...store("about-me-person", {}), [k]: v.trim() }); const sub = $("#homeSub"); if (sub) sub.innerHTML = subLine(); };
+  $("#setName").oninput = e => setMe("name", e.target.value);
+  $("#setLine").oninput = e => setMe("line", e.target.value);
+  $("#setExamples").onchange = e => {
+    keep("about-me-examples", e.target.checked); render();
+    openSettings(e.target.checked ? "Example entries are back." : "Example entries are hidden. Turn them on again any time.");
   };
 }
 $("#settingsBtn").onclick = e => { e.stopPropagation(); closeAll(); openSettings(); };
@@ -1253,8 +1671,9 @@ async function captureScreen() {
   return url;
 }
 function pageName() {
-  const raw = location.hash.slice(1) || "home", c = chapters.find(x => x.id === raw);
-  return c ? c.title : raw === "now" ? "Right Now" : "Home";
+  const [cid, sid] = (location.hash.slice(1) || "home").split("/"), c = chapters.find(x => x.id === cid);
+  const s = c && sid && c.parts.find(p => slug(p[0]) === sid);
+  return s ? `${c.title} › ${s[0]}` : c ? c.title : cid === "now" ? "Right Now" : "Home";
 }
 $("#annotDone").onclick = async () => {
   $("#annotDone").disabled = true; $("#annotDone").textContent = "…";
